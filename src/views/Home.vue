@@ -5,7 +5,7 @@
         <figure class="image is-200x200 has-image-centered">
           <img class="is-rounded" src="@/assets/img/marco_polo.png" />
         </figure>
-        <a class="button is-primary mt-25">Marco Polo</a>
+        <router-link tag="button" class="button is-primary mt-25" to="marco-polo">Marco Polo</router-link>
       </div>
       <div class="column">Second column</div>
       <div class="column">Third column</div>
@@ -16,8 +16,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
-
 @Component({
   components: {}
 })
