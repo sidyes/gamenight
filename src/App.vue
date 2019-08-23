@@ -1,11 +1,7 @@
 <template>
   <div id="app">
     <Header />
-    <section class="section">
-      <div class="container">
-        <router-view />
-      </div>
-    </section>
+    <router-view />
     <Footer />
   </div>
 </template>
