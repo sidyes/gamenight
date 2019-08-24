@@ -39,10 +39,10 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
+              <a class="button is-primary" @click="signUp()">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light">Log in</a>
+              <a class="button is-light" @click="login()">Log in</a>
             </div>
           </div>
         </div>
@@ -53,10 +53,27 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import netlifyIdentity from "netlify-identity-widget";
 
 @Component
 export default class Header extends Vue {
   isOpen = false;
+  // https://github.com/whizjs/netlify-identity-demo-vue/blob/master/src/App.vue
+  public created(): void {
+    netlifyIdentity.init({});
+  }
+
+  public signUp(): void {
+    netlifyIdentity.open("signup");
+  }
+
+  public login(): void {
+    netlifyIdentity.open("login"); // open the modal to the login tab
+  }
+
+  public logout(): void {
+    netlifyIdentity.logout();
+  }
 
   @Watch("$route", { immediate: true, deep: true })
   onUrlChange(newVal: any) {
