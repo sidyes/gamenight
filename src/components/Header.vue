@@ -109,7 +109,7 @@ export default class Header extends Vue {
         currentUser: this.currentUser
       });
       netlifyIdentity.logout();
-      this.$router.push({ name: "Home" });
+      this.$router.push({ name: "home" });
     }
   }
 }
