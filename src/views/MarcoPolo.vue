@@ -35,7 +35,11 @@
                   <div class="control">
                     <div class="select" @change="onNrOfPlayersChange($event)">
                       <select v-model="selectedNrOfPlayers">
-                        <option v-for="player in nrOfPlayers" :value="player">{{ player }}</option>
+                        <option
+                          v-for="player in nrOfPlayers"
+                          :value="player"
+                          v-bind:key="player"
+                        >{{ player }}</option>
                       </select>
                     </div>
                   </div>
@@ -52,7 +56,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="player in players">
+                      <tr v-for="player in players" v-bind:key="player">
                         <td>
                           <input class="input" type="text" v-model="player.name" />
                         </td>
@@ -60,7 +64,11 @@
                           <div class="control">
                             <div class="select">
                               <select v-model="player.character">
-                                <option v-for="char in characters" :value="char">{{ char }}</option>
+                                <option
+                                  v-for="char in characters"
+                                  :value="char"
+                                  v-bind:key="char"
+                                >{{ char }}</option>
                               </select>
                             </div>
                           </div>
