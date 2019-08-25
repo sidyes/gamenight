@@ -38,12 +38,19 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-primary" @click="signUp()">
+            <div class="buttons" v-if="!isLoggedIn">
+              <a class="button is-primary" @click="triggerNetlifyIdentityAction('signup')">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light" @click="login()">Log in</a>
+              <a class="button is-light" @click="triggerNetlifyIdentityAction('login')">Log in</a>
             </div>
+            <a
+              class="button is-primary"
+              v-if="isLoggedIn"
+              @click="triggerNetlifyIdentityAction('logout')"
+            >
+              <strong>Logout</strong>
+            </a>
           </div>
         </div>
       </div>
@@ -52,32 +59,58 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import netlifyIdentity from "netlify-identity-widget";
+
+import { Getter, Action } from "vuex-class";
+
+const namespace: string = "user";
 
 @Component
 export default class Header extends Vue {
   isOpen = false;
-  // https://github.com/whizjs/netlify-identity-demo-vue/blob/master/src/App.vue
+
+  @Getter("getUser", { namespace }) user: any;
+  @Getter("getUserStatus", { namespace }) isLoggedIn!: boolean;
+
+  @Action("updateUser", { namespace }) updateUser: any;
+
+  currentUser: any = null;
+
   public created(): void {
     netlifyIdentity.init({});
-  }
-
-  public signUp(): void {
-    netlifyIdentity.open("signup");
-  }
-
-  public login(): void {
-    netlifyIdentity.open("login"); // open the modal to the login tab
-  }
-
-  public logout(): void {
-    netlifyIdentity.logout();
   }
 
   @Watch("$route", { immediate: true, deep: true })
   onUrlChange(newVal: any) {
     this.isOpen = false;
+  }
+
+  public triggerNetlifyIdentityAction(action: any) {
+    if (action == "login" || action == "signup") {
+      netlifyIdentity.open(action);
+      netlifyIdentity.on(action, (user: any) => {
+        this.currentUser = {
+          username: user.user_metadata.full_name,
+          email: user.email,
+          access_token: user.token.access_token,
+          expires_at: user.token.expires_at,
+          refresh_token: user.token.refresh_token,
+          token_type: user.token.token_type
+        };
+        this.updateUser({
+          currentUser: this.currentUser
+        });
+        netlifyIdentity.close();
+      });
+    } else if (action == "logout") {
+      this.currentUser = null;
+      this.updateUser({
+        currentUser: this.currentUser
+      });
+      netlifyIdentity.logout();
+      this.$router.push({ name: "Home" });
+    }
   }
 }
 </script>
