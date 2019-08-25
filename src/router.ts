@@ -16,8 +16,7 @@ export default new Router({
     {
       path: "/marco-polo",
       name: "marco-polo",
-      component: () =>
-        import("./views/MarcoPolo.vue")
+      component: () => import("./views/MarcoPolo.vue")
     }
   ]
 });

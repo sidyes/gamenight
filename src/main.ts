@@ -8,21 +8,21 @@ import "@/assets/main.scss";
 
 Vue.config.productionTip = false;
 
-Vue.filter('placement', function (placement: number) {
+Vue.filter("placement", function(placement: number) {
   if (!placement) {
-    return '-';
+    return "-";
   }
-  let medal = '';
+  let medal = "";
 
   switch (placement) {
     case 1:
-      medal = '🥇';
+      medal = "🥇";
       break;
     case 2:
-      medal = '🥈';
+      medal = "🥈";
       break;
     case 3:
-      medal = '🥉';
+      medal = "🥉";
       break;
     default:
       medal = placement.toString();
@@ -30,8 +30,7 @@ Vue.filter('placement', function (placement: number) {
   }
 
   return medal;
-})
-
+});
 
 new Vue({
   router,

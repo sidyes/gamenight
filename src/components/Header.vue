@@ -15,7 +15,7 @@
           aria-expanded="false"
           data-target="navbarMenu"
           @click="isOpen = !isOpen"
-          v-bind:class="{'is-active': isOpen}"
+          v-bind:class="{ 'is-active': isOpen }"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -23,15 +23,23 @@
         </a>
       </div>
 
-      <div id="navbarMenu" class="navbar-menu" v-bind:class="{'is-active': isOpen}">
+      <div
+        id="navbarMenu"
+        class="navbar-menu"
+        v-bind:class="{ 'is-active': isOpen }"
+      >
         <div class="navbar-start">
-          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen">Home</router-link>
+          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen"
+            >Home</router-link
+          >
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">Games</a>
 
             <div class="navbar-dropdown">
-              <router-link to="/marco-polo" class="navbar-item">Marco Polo</router-link>
+              <router-link to="/marco-polo" class="navbar-item"
+                >Marco Polo</router-link
+              >
             </div>
           </div>
         </div>
@@ -39,10 +47,17 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons" v-if="!isLoggedIn">
-              <a class="button is-primary" @click="triggerNetlifyIdentityAction('signup')">
+              <a
+                class="button is-primary"
+                @click="triggerNetlifyIdentityAction('signup')"
+              >
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light" @click="triggerNetlifyIdentityAction('login')">Log in</a>
+              <a
+                class="button is-light"
+                @click="triggerNetlifyIdentityAction('login')"
+                >Log in</a
+              >
             </div>
             <a
               class="button is-primary"

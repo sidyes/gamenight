@@ -19,7 +19,8 @@
                 class="button is-medium is-success"
                 @click="newGameActive = !newGameActive"
                 :disabled="newGameActive"
-              >New Game</a>
+                >New Game</a
+              >
             </p>
           </div>
         </nav>
@@ -39,7 +40,8 @@
                           v-for="player in nrOfPlayers"
                           :value="player"
                           v-bind:key="player"
-                        >{{ player }}</option>
+                          >{{ player }}</option
+                        >
                       </select>
                     </div>
                   </div>
@@ -58,7 +60,11 @@
                     <tbody>
                       <tr v-for="player in players" v-bind:key="player">
                         <td>
-                          <input class="input" type="text" v-model="player.name" />
+                          <input
+                            class="input"
+                            type="text"
+                            v-model="player.name"
+                          />
                         </td>
                         <td>
                           <div class="control">
@@ -68,7 +74,8 @@
                                   v-for="char in characters"
                                   :value="char"
                                   v-bind:key="char"
-                                >{{ char }}</option>
+                                  >{{ char }}</option
+                                >
                               </select>
                             </div>
                           </div>
@@ -95,7 +102,12 @@
                     <button class="button is-link">Save</button>
                   </div>
                   <div class="control">
-                    <button class="button is-text" @click.prevent="newGameActive = false">Cancel</button>
+                    <button
+                      class="button is-text"
+                      @click.prevent="newGameActive = false"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </div>
               </form>
