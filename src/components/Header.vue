@@ -23,23 +23,15 @@
         </a>
       </div>
 
-      <div
-        id="navbarMenu"
-        class="navbar-menu"
-        v-bind:class="{ 'is-active': isOpen }"
-      >
+      <div id="navbarMenu" class="navbar-menu" v-bind:class="{ 'is-active': isOpen }">
         <div class="navbar-start">
-          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen"
-            >Home</router-link
-          >
+          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen">Home</router-link>
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">Games</a>
 
             <div class="navbar-dropdown">
-              <router-link to="/marco-polo" class="navbar-item"
-                >Marco Polo</router-link
-              >
+              <router-link to="/marco-polo" class="navbar-item">Marco Polo</router-link>
             </div>
           </div>
         </div>
@@ -47,23 +39,12 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons" v-if="!isLoggedIn">
-              <a
-                class="button is-primary"
-                @click="triggerNetlifyIdentityAction('signup')"
-              >
+              <a class="button is-primary" @click="signup()">
                 <strong>Sign up</strong>
               </a>
-              <a
-                class="button is-light"
-                @click="triggerNetlifyIdentityAction('login')"
-                >Log in</a
-              >
+              <a class="button is-light" @click="login(login)">Log in</a>
             </div>
-            <a
-              class="button is-primary"
-              v-if="isLoggedIn"
-              @click="triggerNetlifyIdentityAction('logout')"
-            >
+            <a class="button is-primary" v-if="isLoggedIn" @click="logout()">
               <strong>Logout</strong>
             </a>
           </div>
@@ -78,6 +59,8 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import netlifyIdentity from "netlify-identity-widget";
 
 import { Getter, Action } from "vuex-class";
+
+const axios = require("axios");
 
 const namespace: string = "user";
 
@@ -101,6 +84,48 @@ export default class Header extends Vue {
     this.isOpen = false;
   }
 
+  public login(): void {
+    netlifyIdentity.open("login");
+    netlifyIdentity.on("login", (user: any) => {
+      this.currentUser = {
+        username: user.user_metadata.full_name,
+        email: user.email,
+        access_token: user.token.access_token,
+        expires_at: user.token.expires_at,
+        refresh_token: user.token.refresh_token,
+        token_type: user.token.token_type
+      };
+      this.updateUser({
+        currentUser: this.currentUser
+      });
+
+      const member = {
+        username: this.currentUser.username,
+        email: this.currentUser.email
+      };
+
+      axios
+        .post("/.netlify/functions/members-create", member)
+        .then((response: any) => {
+          console.log("Member added", member);
+        });
+      netlifyIdentity.close();
+    });
+  }
+
+  public signup(): void {
+    netlifyIdentity.open("signup");
+  }
+
+  public logout(): void {
+    this.currentUser = null;
+    this.updateUser({
+      currentUser: this.currentUser
+    });
+    netlifyIdentity.logout();
+    this.$router.push({ name: "home" });
+  }
+
   public triggerNetlifyIdentityAction(action: any) {
     if (action == "login" || action == "signup") {
       netlifyIdentity.open(action);
@@ -118,13 +143,6 @@ export default class Header extends Vue {
         });
         netlifyIdentity.close();
       });
-    } else if (action == "logout") {
-      this.currentUser = null;
-      this.updateUser({
-        currentUser: this.currentUser
-      });
-      netlifyIdentity.logout();
-      this.$router.push({ name: "home" });
     }
   }
 }

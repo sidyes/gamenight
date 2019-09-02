@@ -19,8 +19,7 @@
                 class="button is-medium is-success"
                 @click="newGameActive = !newGameActive"
                 :disabled="newGameActive"
-                >New Game</a
-              >
+              >New Game</a>
             </p>
           </div>
         </nav>
@@ -30,7 +29,7 @@
             class="column is-6-fullhd is-8-desktop is-8-tablet is-offset-3-fullhd is-offset-2-desktop is-offset-2-tablet"
           >
             <div class="box">
-              <form>
+              <form @submit.prevent="handleSubmit">
                 <div class="field">
                   <label class="label">Number of players</label>
                   <div class="control">
@@ -40,8 +39,7 @@
                           v-for="player in nrOfPlayers"
                           :value="player"
                           v-bind:key="player"
-                          >{{ player }}</option
-                        >
+                        >{{ player }}</option>
                       </select>
                     </div>
                   </div>
@@ -58,13 +56,19 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="player in players" v-bind:key="player">
+                      <tr v-for="player in players" v-bind:key="player.email">
                         <td>
-                          <input
-                            class="input"
-                            type="text"
-                            v-model="player.name"
-                          />
+                          <div class="control">
+                            <div class="select">
+                              <select v-model="player.username">
+                                <option
+                                  v-for="mem in members"
+                                  :value="mem.username"
+                                  v-bind:key="mem.email"
+                                >{{ mem.username }}</option>
+                              </select>
+                            </div>
+                          </div>
                         </td>
                         <td>
                           <div class="control">
@@ -74,8 +78,7 @@
                                   v-for="char in characters"
                                   :value="char"
                                   v-bind:key="char"
-                                  >{{ char }}</option
-                                >
+                                >{{ char }}</option>
                               </select>
                             </div>
                           </div>
@@ -99,15 +102,10 @@
                 </div>
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link">Save</button>
+                    <button class="button is-link" :disabled="!isFormComplete()">Save</button>
                   </div>
                   <div class="control">
-                    <button
-                      class="button is-text"
-                      @click.prevent="newGameActive = false"
-                    >
-                      Cancel
-                    </button>
+                    <button class="button is-text" @click.prevent="newGameActive = false">Cancel</button>
                   </div>
                 </div>
               </form>
@@ -121,15 +119,24 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { Action, Getter } from "vuex-class";
+import { Member } from "@/models/member.model";
+import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
+
+const axios = require("axios");
 
 @Component({
   components: {}
 })
 export default class MarcoPolo extends Vue {
+  @Action("fetchMembers", { namespace: "user" }) fetchMembers: any;
+
+  @Getter("getMembers", { namespace: "user" }) members!: Member[];
+
   nrOfPlayers = [2, 3, 4];
   selectedNrOfPlayers = "";
 
-  players: any[] = [];
+  players: MarcoPoloPlayer[] = [];
 
   characters = [
     "Berke Khan",
@@ -143,15 +150,46 @@ export default class MarcoPolo extends Vue {
 
   newGameActive = false;
 
+  public created(): void {
+    this.fetchMembers();
+  }
+
+  public handleSubmit(): void {
+    const game = new MarcoPoloGame(this.players, Date.now());
+    axios
+      .post("/.netlify/functions/marco-polo-create", game)
+      .then((response: any) => {
+        this.newGameActive = false;
+        this.players = [];
+        this.selectedNrOfPlayers = "";
+      });
+  }
+
+  public isFormComplete(): boolean {
+    if (this.players.length === 0) {
+      return false;
+    }
+
+    let valid = true;
+
+    this.players.forEach(pl => {
+      if (!pl.username || !pl.character || !pl.points || !pl.placement) {
+        valid = false;
+      }
+    });
+
+    return valid;
+  }
+
   public onNrOfPlayersChange(event: any): void {
     this.players = [];
     for (let i = 0; i < event.target.value; i++) {
-      const player = {
+      const player = ({
         name: "",
         character: "",
         points: undefined,
         placement: undefined
-      };
+      } as any) as MarcoPoloPlayer;
       this.players.push(player);
     }
   }

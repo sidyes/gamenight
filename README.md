@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/fa7630db-6505-4eb5-9bde-8cb95c248a43/deploy-status)](https://app.netlify.com/sites/reverent-hopper-111d9f/deploys)
+
 # game-night
 
 ## Project setup
