@@ -2,32 +2,29 @@
   <div class="marco-polo">
     <section class="section">
       <div class="container">
-        <nav class="level">
-          <!-- Left side -->
-          <div class="level-left">
-            <div class="level-item">
-              <p class="subtitle is-5">
-                <a class="button is-medium">Change Game</a>
-              </p>
-            </div>
+        <div class="columns">
+          <div class="column is-four-fifths">
+            <game-summary :items="gameSummaryItems"></game-summary>
           </div>
-
-          <!-- Right side -->
-          <div class="level-right">
-            <p class="level-item">
-              <a
-                class="button is-medium is-success"
-                @click="newGameActive = !newGameActive"
-                :disabled="newGameActive"
-              >New Game</a>
-            </p>
+          <div class="column has-text-right">
+            <a
+              class="button is-medium is-success"
+              @click="newGameActive = !newGameActive"
+              :disabled="newGameActive"
+              >New Game</a
+            >
           </div>
-        </nav>
+        </div>
 
-        <div class="columns" v-if="newGameActive">
-          <div
-            class="column is-6-fullhd is-8-desktop is-8-tablet is-offset-3-fullhd is-offset-2-desktop is-offset-2-tablet"
-          >
+        <div class="columns">
+          <div class="column is-half">
+            <result-table
+              @row-clicked="onRowClicked"
+              :data="resultTable"
+              :headings="headings"
+            ></result-table>
+          </div>
+          <div class="column" v-if="newGameActive">
             <div class="box">
               <form @submit.prevent="handleSubmit">
                 <div class="field">
@@ -39,7 +36,8 @@
                           v-for="player in nrOfPlayers"
                           :value="player"
                           v-bind:key="player"
-                        >{{ player }}</option>
+                          >{{ player }}</option
+                        >
                       </select>
                     </div>
                   </div>
@@ -65,7 +63,8 @@
                                   v-for="mem in members"
                                   :value="mem.username"
                                   v-bind:key="mem.email"
-                                >{{ mem.username }}</option>
+                                  >{{ mem.username }}</option
+                                >
                               </select>
                             </div>
                           </div>
@@ -78,7 +77,8 @@
                                   v-for="char in characters"
                                   :value="char"
                                   v-bind:key="char"
-                                >{{ char }}</option>
+                                  >{{ char }}</option
+                                >
                               </select>
                             </div>
                           </div>
@@ -102,10 +102,20 @@
                 </div>
                 <div class="field is-grouped">
                   <div class="control">
-                    <button class="button is-link" :disabled="!isFormComplete()">Save</button>
+                    <button
+                      class="button is-link"
+                      :disabled="!isFormComplete()"
+                    >
+                      Save
+                    </button>
                   </div>
                   <div class="control">
-                    <button class="button is-text" @click.prevent="newGameActive = false">Cancel</button>
+                    <button
+                      class="button is-text"
+                      @click.prevent="newGameActive = false"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </div>
               </form>
@@ -122,6 +132,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
 import { Member } from "@/models/member.model";
 import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
+import { GameSummaryItem, ResultTableHeading } from "../models";
 
 const axios = require("axios");
 
@@ -133,25 +144,31 @@ export default class MarcoPolo extends Vue {
 
   @Getter("getMembers", { namespace: "user" }) members!: Member[];
 
+  @Getter("getSummary", { namespace: "marcoPolo" })
+  gameSummaryItems!: GameSummaryItem[];
+
+  @Getter("getResultTable", { namespace: "marcoPolo" })
+  resultTable!: any[];
+
+  @Getter("getResultTableHeadings", { namespace: "marcoPolo" })
+  headings!: ResultTableHeading[];
+
+  @Getter("getCharacters", { namespace: "marcoPolo" })
+  characters!: string[];
+
   nrOfPlayers = [2, 3, 4];
   selectedNrOfPlayers = "";
 
   players: MarcoPoloPlayer[] = [];
 
-  characters = [
-    "Berke Khan",
-    "Johannes Caprini",
-    "Kubilai Khan",
-    "Matteo Polo",
-    "Mercator ex Tabriz",
-    "Niccolo und Marco Polo",
-    "Wilhelm von Rubruk"
-  ];
-
   newGameActive = false;
 
   public created(): void {
     this.fetchMembers();
+  }
+
+  public onRowClicked(row: number): void {
+    console.log("clicked row", row);
   }
 
   public handleSubmit(): void {

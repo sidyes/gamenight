@@ -3,10 +3,15 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
+import GameSummary from "@/components/GameSummary.vue";
+import ResultTable from "@/components/ResultTable.vue";
 
 import "@/assets/main.scss";
 
 Vue.config.productionTip = false;
+
+Vue.component("game-summary", GameSummary);
+Vue.component("result-table", ResultTable);
 
 Vue.filter("placement", function(placement: number) {
   if (!placement) {

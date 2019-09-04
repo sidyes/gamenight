@@ -23,15 +23,23 @@
         </a>
       </div>
 
-      <div id="navbarMenu" class="navbar-menu" v-bind:class="{ 'is-active': isOpen }">
+      <div
+        id="navbarMenu"
+        class="navbar-menu"
+        v-bind:class="{ 'is-active': isOpen }"
+      >
         <div class="navbar-start">
-          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen">Home</router-link>
+          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen"
+            >Home</router-link
+          >
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">Games</a>
 
             <div class="navbar-dropdown">
-              <router-link to="/marco-polo" class="navbar-item">Marco Polo</router-link>
+              <router-link to="/marco-polo" class="navbar-item"
+                >Marco Polo</router-link
+              >
             </div>
           </div>
         </div>

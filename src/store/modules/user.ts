@@ -1,6 +1,6 @@
-import { Member } from '@/models/member.model';
+import { Member } from "@/models/member.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import { } from "axios";
+import {} from "axios";
 const axios = require("axios");
 
 interface UserState {
@@ -41,15 +41,13 @@ const actions: ActionTree<UserState, any> = {
     commit("setUser", payload.currentUser);
   },
   fetchMembers: ({ commit }) => {
-    axios
-      .get("/.netlify/functions/members-read")
-      .then((response: any) => {
-        commit("setMembers", response.data);
-      });
+    axios.get("/.netlify/functions/members-read").then((response: any) => {
+      commit("setMembers", response.data);
+    });
   }
 };
 
-export default {
+export const user = {
   namespaced: true,
   state,
   getters,
