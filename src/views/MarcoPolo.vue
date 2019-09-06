@@ -1,9 +1,94 @@
 <template>
   <div class="marco-polo">
     <section class="section">
+      <new-game-modal
+        :isOpened.sync="newGameActive"
+        :title="'New Game'"
+        :disableSaveBtn="!isFormComplete()"
+        :location="location"
+        @players-changed="onNrOfPlayersChange"
+        @closed="newGameActive = false"
+        @game-saved="saveGame"
+        @location-changed="onLocationChange"
+      >
+        <div class="table-container">
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Start Position</th>
+                <th>Character</th>
+                <th>Points</th>
+                <th>Placement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(player, idx) in players" v-bind:key="idx">
+                <td>
+                  <div class="control">
+                    <div class="select">
+                      <select v-model="player.user">
+                        <option
+                          v-for="mem in members"
+                          :value="mem"
+                          v-bind:key="mem.email"
+                        >{{ mem.username }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="control">
+                    <div class="select">
+                      <select v-model="player.startPosition" @change="handleStartPositions(player)">
+                        <option
+                          v-for="position in players.length"
+                          :value="position"
+                          v-bind:key="position"
+                        >{{ position }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="control">
+                    <div class="select">
+                      <select v-model="player.character">
+                        <option
+                          v-for="char in characters"
+                          :value="char"
+                          v-bind:key="char"
+                        >{{ char }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input
+                    class="input"
+                    type="number"
+                    min="0"
+                    max="200"
+                    v-model="player.points"
+                    @change="onPointsChange($event)"
+                  />
+                </td>
+                <td>
+                  <p>{{ player.placement | placement }}</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </new-game-modal>
       <div class="container">
-        <div class="columns">
-          <div class="column is-four-fifths">
+        <div class="columns is-vcentered">
+          <div class="column is-one-fifth">
+            <figure class="image is-128x128 has-image-centered">
+              <img class="is-rounded" src="@/assets/img/marco_polo.png" />
+            </figure>
+          </div>
+          <div class="column is-three-fifths">
             <game-summary :items="gameSummaryItems"></game-summary>
           </div>
           <div class="column has-text-right">
@@ -11,115 +96,13 @@
               class="button is-medium is-success"
               @click="newGameActive = !newGameActive"
               :disabled="newGameActive"
-              >New Game</a
-            >
+            >New Game</a>
           </div>
         </div>
 
         <div class="columns">
           <div class="column is-half">
-            <result-table
-              @row-clicked="onRowClicked"
-              :data="resultTable"
-              :headings="headings"
-            ></result-table>
-          </div>
-          <div class="column" v-if="newGameActive">
-            <div class="box">
-              <form @submit.prevent="handleSubmit">
-                <div class="field">
-                  <label class="label">Number of players</label>
-                  <div class="control">
-                    <div class="select" @change="onNrOfPlayersChange($event)">
-                      <select v-model="selectedNrOfPlayers">
-                        <option
-                          v-for="player in nrOfPlayers"
-                          :value="player"
-                          v-bind:key="player"
-                          >{{ player }}</option
-                        >
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="table-container">
-                  <table class="table is-fullwidth">
-                    <thead>
-                      <tr>
-                        <th>Player</th>
-                        <th>Character</th>
-                        <th>Points</th>
-                        <th>Placement</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="player in players" v-bind:key="player.email">
-                        <td>
-                          <div class="control">
-                            <div class="select">
-                              <select v-model="player.username">
-                                <option
-                                  v-for="mem in members"
-                                  :value="mem.username"
-                                  v-bind:key="mem.email"
-                                  >{{ mem.username }}</option
-                                >
-                              </select>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="control">
-                            <div class="select">
-                              <select v-model="player.character">
-                                <option
-                                  v-for="char in characters"
-                                  :value="char"
-                                  v-bind:key="char"
-                                  >{{ char }}</option
-                                >
-                              </select>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <input
-                            class="input"
-                            type="number"
-                            min="0"
-                            max="200"
-                            v-model="player.points"
-                            @change="onPointsChange($event)"
-                          />
-                        </td>
-                        <td>
-                          <p>{{ player.placement | placement }}</p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="field is-grouped">
-                  <div class="control">
-                    <button
-                      class="button is-link"
-                      :disabled="!isFormComplete()"
-                    >
-                      Save
-                    </button>
-                  </div>
-                  <div class="control">
-                    <button
-                      class="button is-text"
-                      @click.prevent="newGameActive = false"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
+            <result-table @row-clicked="onRowClicked" :data="resultTable" :headings="headings"></result-table>
           </div>
         </div>
       </div>
@@ -156,10 +139,9 @@ export default class MarcoPolo extends Vue {
   @Getter("getCharacters", { namespace: "marcoPolo" })
   characters!: string[];
 
-  nrOfPlayers = [2, 3, 4];
-  selectedNrOfPlayers = "";
-
   players: MarcoPoloPlayer[] = [];
+
+  location: string = "";
 
   newGameActive = false;
 
@@ -171,14 +153,14 @@ export default class MarcoPolo extends Vue {
     console.log("clicked row", row);
   }
 
-  public handleSubmit(): void {
-    const game = new MarcoPoloGame(this.players, Date.now());
+  public saveGame(): void {
+    const game = new MarcoPoloGame(this.players, Date.now(), this.location);
     axios
       .post("/.netlify/functions/marco-polo-create", game)
       .then((response: any) => {
         this.newGameActive = false;
         this.players = [];
-        this.selectedNrOfPlayers = "";
+        this.location = "";
       });
   }
 
@@ -190,7 +172,14 @@ export default class MarcoPolo extends Vue {
     let valid = true;
 
     this.players.forEach(pl => {
-      if (!pl.username || !pl.character || !pl.points || !pl.placement) {
+      if (
+        !pl.user ||
+        !pl.character ||
+        !pl.points ||
+        !pl.placement ||
+        !pl.startPosition ||
+        !this.location
+      ) {
         valid = false;
       }
     });
@@ -198,17 +187,34 @@ export default class MarcoPolo extends Vue {
     return valid;
   }
 
-  public onNrOfPlayersChange(event: any): void {
+  public handleStartPositions(player: MarcoPoloPlayer): void {
+    this.players.forEach(pl => {
+      if (
+        pl !== player &&
+        pl.startPosition &&
+        pl.startPosition === player.startPosition
+      ) {
+        pl.startPosition = undefined;
+      }
+    });
+  }
+
+  public onNrOfPlayersChange(nr: number): void {
     this.players = [];
-    for (let i = 0; i < event.target.value; i++) {
-      const player = ({
-        name: "",
-        character: "",
-        points: undefined,
-        placement: undefined
-      } as any) as MarcoPoloPlayer;
+    for (let i = 0; i < nr; i++) {
+      const player = new MarcoPoloPlayer(
+        undefined,
+        "",
+        undefined,
+        undefined,
+        undefined
+      );
       this.players.push(player);
     }
+  }
+
+  public onLocationChange(loc: string): void {
+    this.location = loc;
   }
 
   public onPointsChange(event: any): void {
@@ -223,7 +229,7 @@ export default class MarcoPolo extends Vue {
     }
     let placement = 1;
     this.players.forEach(pl => {
-      if (pl !== player && +player.points < (+pl.points || 0)) {
+      if (pl !== player && +player.points < (pl.points ? +pl.points : 0)) {
         placement++;
       }
     });

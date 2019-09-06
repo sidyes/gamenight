@@ -20,8 +20,9 @@ const state: MarcoPoloState = {
   resultTable: {
     headings: [
       new ResultTableHeading("Date", "date"),
-      new ResultTableHeading("Players", "players"),
-      new ResultTableHeading("Winner", "winner")
+      new ResultTableHeading("Location", "location"),
+      new ResultTableHeading("Players (Start Position)", "players"),
+      new ResultTableHeading("Winner (Points", "winner")
     ],
     items: []
   },

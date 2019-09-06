@@ -3,15 +3,25 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 import GameSummary from "@/components/GameSummary.vue";
 import ResultTable from "@/components/ResultTable.vue";
+import NewGameModal from "@/components/NewGameModal.vue";
 
 import "@/assets/main.scss";
 
 Vue.config.productionTip = false;
 
+library.add(faHome);
+
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("game-summary", GameSummary);
 Vue.component("result-table", ResultTable);
+Vue.component("new-game-modal", NewGameModal);
 
 Vue.filter("placement", function(placement: number) {
   if (!placement) {

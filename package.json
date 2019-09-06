@@ -12,6 +12,9 @@
     "build:functions": "netlify-lambda build src/lambda -c ./webpack.config.js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.22",
+    "@fortawesome/free-solid-svg-icons": "^5.10.2",
+    "@fortawesome/vue-fontawesome": "^0.1.7",
     "@types/netlify-identity-widget": "^1.4.1",
     "axios": "^0.19.0",
     "bulma": "^0.7.5",

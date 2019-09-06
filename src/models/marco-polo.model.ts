@@ -1,16 +1,18 @@
 import { Member } from "@/models/member.model";
-export class MarcoPoloPlayer extends Member {
+export class MarcoPoloPlayer {
   constructor(
-    public username: string,
-    public email: string,
+    public user: Member | undefined,
     public character: string,
-    public points: number,
-    public placement: number | undefined
-  ) {
-    super(username, email);
-  }
+    public points: number | undefined,
+    public placement: number | undefined,
+    public startPosition: number | undefined
+  ) {}
 }
 
 export class MarcoPoloGame {
-  constructor(public players: MarcoPoloPlayer[], public time: number) {}
+  constructor(
+    public players: MarcoPoloPlayer[],
+    public time: number,
+    public location: string
+  ) {}
 }

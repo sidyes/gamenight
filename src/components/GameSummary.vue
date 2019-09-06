@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit, Prop } from "vue-property-decorator";
-import { ResultTableHeading, GameSummaryItem } from "@/models";
+import { Component, Vue, Prop } from "vue-property-decorator";
+import { GameSummaryItem } from "@/models";
 
 @Component
 export default class GameSummary extends Vue {
