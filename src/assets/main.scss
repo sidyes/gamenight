@@ -16,6 +16,10 @@ $primary: blue;
   margin-right: auto;
 }
 
+.box {
+  overflow: auto;
+}
+
 $sizes: (0, 10, 15, 20, 25, 30, 50);
 $positions: ("top", "left", "bottom", "right");
 
