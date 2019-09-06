@@ -13,6 +13,7 @@ import GameSummary from "@/components/GameSummary.vue";
 import ResultTable from "@/components/ResultTable.vue";
 import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
+import GameScores from "@/components/GameScores.vue";
 
 import "@/assets/main.scss";
 
@@ -28,8 +29,9 @@ Vue.component("game-summary", GameSummary);
 Vue.component("result-table", ResultTable);
 Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
+Vue.component("game-scores", GameScores);
 
-Vue.filter("placement", function(placement: number) {
+Vue.filter("placement", function (placement: number) {
   if (!placement) {
     return "-";
   }

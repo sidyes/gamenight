@@ -23,6 +23,14 @@ $primary: blue;
 $sizes: (0, 10, 15, 20, 25, 30, 50);
 $positions: ("top", "left", "bottom", "right");
 
+.apexcharts-title-text {
+  font-weight: bold !important;
+  font-size: 1em !important;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
+  line-height: 1.5 !important;
+}
+
 @each $size in $sizes {
   @each $position in $positions {
     .m#{str-slice($position, 0, 1)}-#{$size} {

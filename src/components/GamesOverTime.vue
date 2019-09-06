@@ -1,11 +1,5 @@
 <template>
-  <apexchart
-    width="100%"
-    height="250"
-    type="bar"
-    :options="options"
-    :series="series"
-  ></apexchart>
+  <apexchart width="100%" height="250" type="bar" :options="options" :series="series"></apexchart>
 </template>
 
 <script lang="ts">
@@ -20,15 +14,13 @@ export default class GamesOverTime extends Vue {
     title: {
       text: "Games played this year",
       floating: true,
-      offsetY: 220,
+      offsetY: 232,
       align: "center",
       style: {
-        color: "#444"
+        color: "#363636"
       }
     },
     chart: {
-      height: 350,
-      type: "bar",
       toolbar: {
         show: false
       }
@@ -124,4 +116,3 @@ export default class GamesOverTime extends Vue {
 }
 </script>
 
-<style scoped></style>

@@ -32,8 +32,7 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                          >{{ mem.username }}</option
-                        >
+                        >{{ mem.username }}</option>
                       </select>
                     </div>
                   </div>
@@ -41,16 +40,12 @@
                 <td>
                   <div class="control">
                     <div class="select">
-                      <select
-                        v-model="player.startPosition"
-                        @change="handleStartPositions(player)"
-                      >
+                      <select v-model="player.startPosition" @change="handleStartPositions(player)">
                         <option
                           v-for="position in players.length"
                           :value="position"
                           v-bind:key="position"
-                          >{{ position }}</option
-                        >
+                        >{{ position }}</option>
                       </select>
                     </div>
                   </div>
@@ -63,8 +58,7 @@
                           v-for="char in characters"
                           :value="char"
                           v-bind:key="char"
-                          >{{ char }}</option
-                        >
+                        >{{ char }}</option>
                       </select>
                     </div>
                   </div>
@@ -105,28 +99,29 @@
                     class="button is-medium is-success"
                     @click="newGameActive = !newGameActive"
                     :disabled="newGameActive"
-                    >New Game</a
-                  >
+                  >New Game</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="columns ">
-          <div class="column is-half ">
+        <div class="columns">
+          <div class="column is-half">
             <div class="box">
-              <result-table
-                @row-clicked="onRowClicked"
-                :data="resultTable"
-                :headings="headings"
-              ></result-table>
+              <game-scores></game-scores>
             </div>
           </div>
-          <div class="column is-half ">
+          <div class="column is-half">
             <div class="box">
               <games-over-time></games-over-time>
             </div>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column is-half is-offset-one-quarter">
+            <result-table @row-clicked="onRowClicked" :data="resultTable" :headings="headings"></result-table>
           </div>
         </div>
       </div>
