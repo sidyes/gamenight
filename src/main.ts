@@ -5,7 +5,7 @@ import store from "./store";
 import "./registerServiceWorker";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faHome, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueApexCharts from "vue-apexcharts";
 
@@ -22,6 +22,8 @@ Vue.config.productionTip = false;
 Vue.use(VueApexCharts);
 
 library.add(faHome);
+library.add(faUser);
+library.add(faEnvelope);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("apexchart", VueApexCharts);
