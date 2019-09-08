@@ -142,9 +142,7 @@ const axios = require("axios");
   components: {}
 })
 export default class MarcoPolo extends Vue {
-  @Action("fetchMembers", { namespace: "user" }) fetchMembers: any;
-
-  @Getter("getMembers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
 
   @Getter("getSummary", { namespace: "marcoPolo" })
   gameSummaryItems!: GameSummaryItem[];
@@ -163,10 +161,6 @@ export default class MarcoPolo extends Vue {
   location: string = "";
 
   newGameActive = false;
-
-  public created(): void {
-    this.fetchMembers();
-  }
 
   public onRowClicked(row: number): void {
     console.log("clicked row", row);

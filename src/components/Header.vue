@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch, Emit, Prop } from "vue-property-decorator";
 import netlifyIdentity from "netlify-identity-widget";
 
 import { Getter, Action } from "vuex-class";
@@ -76,82 +76,26 @@ const namespace: string = "user";
 export default class Header extends Vue {
   isOpen = false;
 
-  @Getter("getUser", { namespace }) user: any;
-  @Getter("getUserStatus", { namespace }) isLoggedIn!: boolean;
+  @Prop({ default: false }) isLoggedIn!: boolean;
+  @Prop({ default: undefined }) user: any;
 
   @Action("updateUser", { namespace }) updateUser: any;
-
-  currentUser: any = null;
-
-  public created(): void {
-    netlifyIdentity.init({});
-  }
 
   @Watch("$route", { immediate: true, deep: true })
   onUrlChange(newVal: any) {
     this.isOpen = false;
   }
 
-  public login(): void {
-    netlifyIdentity.open("login");
-    netlifyIdentity.on("login", (user: any) => {
-      this.currentUser = {
-        username: user.user_metadata.full_name,
-        email: user.email,
-        access_token: user.token.access_token,
-        expires_at: user.token.expires_at,
-        refresh_token: user.token.refresh_token,
-        token_type: user.token.token_type
-      };
-      this.updateUser({
-        currentUser: this.currentUser
-      });
-
-      const member = {
-        username: this.currentUser.username,
-        email: this.currentUser.email
-      };
-
-      axios
-        .post("/.netlify/functions/members-create", member)
-        .then((response: any) => {
-          console.log("Member added", member);
-        });
-      netlifyIdentity.close();
-    });
+  @Emit() login(): boolean {
+    return true;
   }
 
-  public signup(): void {
-    netlifyIdentity.open("signup");
+  @Emit() logout(): boolean {
+    return true;
   }
 
-  public logout(): void {
-    this.currentUser = null;
-    this.updateUser({
-      currentUser: this.currentUser
-    });
-    netlifyIdentity.logout();
-    this.$router.push({ name: "home" });
-  }
-
-  public triggerNetlifyIdentityAction(action: any) {
-    if (action == "login" || action == "signup") {
-      netlifyIdentity.open(action);
-      netlifyIdentity.on(action, (user: any) => {
-        this.currentUser = {
-          username: user.user_metadata.full_name,
-          email: user.email,
-          access_token: user.token.access_token,
-          expires_at: user.token.expires_at,
-          refresh_token: user.token.refresh_token,
-          token_type: user.token.token_type
-        };
-        this.updateUser({
-          currentUser: this.currentUser
-        });
-        netlifyIdentity.close();
-      });
-    }
+  @Emit() signup(): boolean {
+    return true;
   }
 }
 </script>

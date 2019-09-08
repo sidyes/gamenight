@@ -40,13 +40,18 @@
                   <div class="column">
                     <div class="field has-addons has-addons-centered">
                       <p class="control has-icons-left">
-                        <input class="input" type="email" placeholder="Friend's E-Mail" />
+                        <input
+                          class="input"
+                          type="email"
+                          placeholder="Friend's E-Mail"
+                          v-model="mail"
+                        />
                         <span class="icon is-left">
                           <font-awesome-icon :icon="['fas', 'envelope']" />
                         </span>
                       </p>
                       <div class="control">
-                        <a class="button is-info">Add</a>
+                        <a class="button is-info" :disabled="isMailInvalid()" @click="addFriend">Add</a>
                       </div>
                     </div>
                   </div>
@@ -60,63 +65,9 @@
               <p class="subtitle">All my buddies in one place! 👬</p>
               <div class="content">
                 <div class="field is-grouped is-grouped-multiline is-grouped-centered">
-                  <div class="control">
+                  <div class="control" v-for="friend in friends" v-bind:key="friend.email">
                     <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
-                      <a class="tag is-delete"></a>
-                    </div>
-                  </div>
-                  <div class="control">
-                    <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">Alex Smith</span>
+                      <span class="tag is-dark">{{friend.username}}</span>
                       <a class="tag is-delete"></a>
                     </div>
                   </div>
@@ -133,10 +84,41 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Getter } from "vuex-class";
+import { Member } from "@/models";
+const axios = require("axios");
+
 @Component({
   components: {}
 })
 export default class Profile extends Vue {
   @Getter("getUser", { namespace: "user" }) user: any;
+  @Getter("getFriends", { namespace: "user" }) friends!: Member[];
+
+  public mail: string = "";
+
+  public isMailInvalid(): boolean {
+    return (
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.mail) === false
+    );
+  }
+
+  public addFriend(): void {
+    axios
+      .post("/.netlify/functions/friends-add", {
+        user: {
+          username: this.user.username,
+          email: this.user.email
+        },
+        friend: this.mail
+      })
+      .then((response: any) => {
+        if (response.status === 200) {
+          this.mail = "";
+          // TODO: friend added call
+        } else {
+          // TODO: show error
+        }
+      });
+  }
 }
 </script>
