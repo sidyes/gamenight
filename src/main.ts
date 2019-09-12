@@ -15,6 +15,7 @@ import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
 
+import 'vuex-toast/dist/vuex-toast.css'
 import "@/assets/main.scss";
 
 Vue.config.productionTip = false;

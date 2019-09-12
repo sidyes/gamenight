@@ -3,6 +3,7 @@
     <Header :isLoggedIn="isLoggedIn" :user="user" @login="login" @logout="logout" @signup="signup" />
     <router-view />
     <Footer />
+    <toast position="s"></toast>
   </div>
 </template>
 
@@ -15,10 +16,13 @@ import { Action, Getter } from "vuex-class";
 import netlifyIdentity from "netlify-identity-widget";
 import { Member } from "./models";
 
+const toastLib = require("vuex-toast");
 const axios = require("axios");
 
+const Toast = toastLib.Toast;
+
 @Component({
-  components: { Header, Footer },
+  components: { Header, Footer, Toast },
   name: "App"
 })
 export default class App extends Vue {
