@@ -7,16 +7,35 @@
             <figure class="image is-200x200 has-image-centered">
               <img class="is-rounded" src="@/assets/img/marco_polo.png" />
             </figure>
-            <router-link
-              tag="button"
-              class="button is-primary mt-25"
-              to="marco-polo"
-              >Marco Polo</router-link
-            >
+            <router-link tag="button" class="button is-primary mt-25" to="marco-polo">Marco Polo</router-link>
           </div>
-          <div class="column">Second column</div>
-          <div class="column">Third column</div>
-          <div class="column">Fourth column</div>
+          <div class="column has-text-centered">
+            <figure class="image is-200x200 has-image-centered">
+              <img
+                class="is-rounded"
+                src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+              />
+            </figure>
+            <button class="button is-primary mt-25" disabled>Coming soon...</button>
+          </div>
+          <div class="column has-text-centered">
+            <figure class="image is-200x200 has-image-centered">
+              <img
+                class="is-rounded"
+                src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+              />
+            </figure>
+            <button class="button is-primary mt-25" disabled>Coming soon...</button>
+          </div>
+          <div class="column has-text-centered">
+            <figure class="image is-200x200 has-image-centered">
+              <img
+                class="is-rounded"
+                src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+              />
+            </figure>
+            <button class="button is-primary mt-25" disabled>Coming soon...</button>
+          </div>
         </div>
       </div>
     </section>

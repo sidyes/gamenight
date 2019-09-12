@@ -86,7 +86,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { Member } from "@/models";
+
 const axios = require("axios");
+const toast = require("vuex-toast");
 
 @Component({
   components: {}
@@ -129,10 +131,20 @@ export default class Profile extends Vue {
         this.mail = "";
         this.addFriendError = "";
         this.addBuddy(response.data.friend);
-        // TODO: friend added call
+
+        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+          text: "Buddy added! 🥳",
+          type: "success",
+          dismissAfter: 2000
+        });
       })
       .catch((err: any) => {
         this.addFriendError = err.response.data.message;
+        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+          text: "Adding buddy failed! 😱",
+          type: "danger",
+          dismissAfter: 2000
+        });
       })
       .finally(() => (this.addFriendLoading = false));
   }
@@ -148,10 +160,18 @@ export default class Profile extends Vue {
       })
       .then((response: any) => {
         this.removeBuddy(response.data.friend);
-        // TODO: friend removed call
+        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+          text: "Removed buddy! 🥳",
+          type: "success",
+          dismissAfter: 2000
+        });
       })
       .catch((err: any) => {
-        // TODO: friend remove failed call
+        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+          text: "Removing buddy failed! 😱",
+          type: "danger",
+          dismissAfter: 2000
+        });
       });
   }
 }

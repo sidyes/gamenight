@@ -177,14 +177,14 @@ export default class MarcoPolo extends Vue {
         this.location = "";
 
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Game saved",
+          text: "Game saved! 🥳",
           type: "success",
           dismissAfter: 2000
         });
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Game could not be saved",
+          text: "Game could not be saved! 😱",
           type: "danger",
           dismissAfter: 1000
         });
