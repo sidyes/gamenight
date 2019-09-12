@@ -12,6 +12,15 @@ exports.handler = (event, context) => {
     const data = JSON.parse(event.body);
     console.log("Function `friends-add` invoked", data);
 
+    if (data.friend === data.user.email) {
+        const message = "You cannot add yourself as a friend!";
+
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message })
+        };
+    }
+
     return client
         .query(q.Exists(q.Match(q.Index("members_email"), data.friend)))
         .then(result => {
@@ -29,13 +38,23 @@ exports.handler = (event, context) => {
                                         .query(q.Map(q.Paginate(q.Match(q.Index("my_friends"), data.user.email)), q.Lambda("X", q.Get(q.Var("X"))))).then(response => {
 
                                             const friends = response.data[0].data.friends;
+                                            friends.forEach(fr => {
+                                                if (fr.email === friend.email) {
+                                                    const message = `${friend.username} is already your friend!`;
+
+                                                    return {
+                                                        statusCode: 400,
+                                                        body: JSON.stringify({ message })
+                                                    }
+                                                }
+                                            })
                                             friends.push(friend);
-                                            console.log(friends)
+
                                             return client
                                                 .query(q.Update(response.data[0].ref, { data: { friends: friends } })).then(response => {
                                                     return {
                                                         statusCode: 200,
-                                                        body: JSON.stringify(response)
+                                                        body: JSON.stringify({ friend })
                                                     };
                                                 }).catch(error => {
                                                     console.log("error", error);
@@ -59,7 +78,7 @@ exports.handler = (event, context) => {
 
                                             return {
                                                 statusCode: 200,
-                                                body: JSON.stringify(response)
+                                                body: JSON.stringify({ friend })
                                             };
                                         }).catch(error => {
                                             console.log("error", error);

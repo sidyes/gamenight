@@ -39,7 +39,7 @@
                 <div class="columns is-vcentered">
                   <div class="column">
                     <div class="field has-addons has-addons-centered">
-                      <p class="control has-icons-left">
+                      <p class="control has-icons-left" :class="{'is-loading': addFriendLoading}">
                         <input
                           class="input"
                           type="email"
@@ -54,6 +54,7 @@
                         <a class="button is-info" :disabled="isMailInvalid()" @click="addFriend">Add</a>
                       </div>
                     </div>
+                    <p class="has-text-centered is-danger has-text-danger">{{addFriendError}}</p>
                   </div>
                 </div>
               </div>
@@ -68,7 +69,7 @@
                   <div class="control" v-for="friend in friends" v-bind:key="friend.email">
                     <div class="tags has-addons are-normal">
                       <span class="tag is-dark">{{friend.username}}</span>
-                      <a class="tag is-delete"></a>
+                      <a class="tag is-delete" @click="removeFriend(friend.email)"></a>
                     </div>
                   </div>
                 </div>
@@ -83,7 +84,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Getter } from "vuex-class";
+import { Getter, Action } from "vuex-class";
 import { Member } from "@/models";
 const axios = require("axios");
 
@@ -94,7 +95,12 @@ export default class Profile extends Vue {
   @Getter("getUser", { namespace: "user" }) user: any;
   @Getter("getFriends", { namespace: "user" }) friends!: Member[];
 
+  @Action("addFriend", { namespace: "user" }) addBuddy!: any;
+  @Action("removeFriend", { namespace: "user" }) removeBuddy!: any;
+
   public mail: string = "";
+  public addFriendError: string = "";
+  public addFriendLoading = false;
 
   public isMailInvalid(): boolean {
     return (
@@ -103,21 +109,49 @@ export default class Profile extends Vue {
   }
 
   public addFriend(): void {
+    if (this.mail === this.user.email) {
+      this.addFriendError = "You cannot add yourself as a friend!";
+
+      return;
+    }
+
+    this.addFriendLoading = true;
+    const body = {
+      user: {
+        username: this.user.username,
+        email: this.user.email
+      },
+      friend: this.mail
+    };
     axios
-      .post("/.netlify/functions/friends-add", {
+      .post("/.netlify/functions/friends-add", body)
+      .then((response: any) => {
+        this.mail = "";
+        this.addFriendError = "";
+        this.addBuddy(response.data.friend);
+        // TODO: friend added call
+      })
+      .catch((err: any) => {
+        this.addFriendError = err.response.data.message;
+      })
+      .finally(() => (this.addFriendLoading = false));
+  }
+
+  public removeFriend(email: string): void {
+    axios
+      .post("/.netlify/functions/friends-remove", {
         user: {
           username: this.user.username,
           email: this.user.email
         },
-        friend: this.mail
+        friend: email
       })
       .then((response: any) => {
-        if (response.status === 200) {
-          this.mail = "";
-          // TODO: friend added call
-        } else {
-          // TODO: show error
-        }
+        this.removeBuddy(response.data.friend);
+        // TODO: friend removed call
+      })
+      .catch((err: any) => {
+        // TODO: friend remove failed call
       });
   }
 }

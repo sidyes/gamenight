@@ -40,6 +40,12 @@ const mutations: MutationTree<UserState> = {
   },
   setFriends: (state, friends: Member[]) => {
     state.friends = friends;
+  },
+  addFriend: (state, friend: Member) => {
+    state.friends = [...state.friends, friend];
+  },
+  removeFriend: (state, friend: Member) => {
+    state.friends = state.friends.filter(fr => fr.email !== friend.email)
   }
 };
 
@@ -51,6 +57,12 @@ const actions: ActionTree<UserState, any> = {
     axios.get("/.netlify/functions/friends-read", { params: payload }).then((response: any) => {
       commit("setFriends", response.data);
     })
+  },
+  addFriend: ({ commit }, payload) => {
+    commit("addFriend", payload);
+  },
+  removeFriend: ({ commit }, payload) => {
+    commit("removeFriend", payload);
   }
 };
 

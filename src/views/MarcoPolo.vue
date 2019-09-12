@@ -174,6 +174,10 @@ export default class MarcoPolo extends Vue {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
+        // TODO: show successful created msg
+      })
+      .catch((err: any) => {
+        // TODO: show error
       });
   }
 

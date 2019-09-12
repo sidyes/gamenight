@@ -13,7 +13,7 @@ import Footer from "@/components/Footer.vue";
 import { Action, Getter } from "vuex-class";
 
 import netlifyIdentity from "netlify-identity-widget";
-import { Member } from './models';
+import { Member } from "./models";
 
 const axios = require("axios");
 
@@ -60,7 +60,10 @@ export default class App extends Vue {
     });
 
     if (this.isLoggedIn) {
-      this.fetchFriends({ username: this.user.username, email: this.user.email });
+      this.fetchFriends({
+        username: this.user.username,
+        email: this.user.email
+      });
     }
   }
 

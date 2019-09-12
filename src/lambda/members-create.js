@@ -23,7 +23,6 @@ exports.handler = (event, context) => {
         client
           .query(q.Create(q.Collection("members"), { data }))
           .then(response => {
-            console.log("success", response);
             /* Success! return the response with statusCode 200 */
             return {
               statusCode: 200,
@@ -31,7 +30,6 @@ exports.handler = (event, context) => {
             };
           })
           .catch(error => {
-            console.log("error", error);
             /* Error! return the error with statusCode 400 */
             return {
               statusCode: 400,

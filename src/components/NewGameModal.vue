@@ -18,8 +18,7 @@
                       v-for="player in nrOfPlayers"
                       :value="player"
                       v-bind:key="player"
-                      >{{ player }}</option
-                    >
+                    >{{ player }}</option>
                   </select>
                 </div>
               </div>
@@ -35,7 +34,7 @@
                 <input
                   class="input is-info"
                   type="text"
-                  v-model="location"
+                  :value="location"
                   @change="locationChanged"
                 />
                 <span class="icon is-left">
@@ -51,13 +50,7 @@
         </slot>
       </section>
       <footer class="modal-card-foot">
-        <button
-          class="button is-success"
-          :disabled="disableSaveBtn"
-          @click="gameSaved"
-        >
-          Save Game
-        </button>
+        <button class="button is-success" :disabled="disableSaveBtn" @click="gameSaved">Save Game</button>
         <button class="button" @click="closed">Cancel</button>
       </footer>
     </div>
@@ -71,8 +64,8 @@ import { Component, Vue, Emit, Prop } from "vue-property-decorator";
 export default class NewGameModal extends Vue {
   @Prop({ default: false }) isOpened!: boolean;
   @Prop({ default: "" }) title!: string;
-  @Prop({ default: () => [2, 3, 4] }) nrOfPlayers!: number[];
   @Prop({ default: "" }) location!: string;
+  @Prop({ default: () => [2, 3, 4] }) nrOfPlayers!: number[];
   @Prop({ default: true }) disableSaveBtn!: boolean;
 
   selectedNrOfPlayers = "";
