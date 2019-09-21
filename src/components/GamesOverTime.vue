@@ -10,9 +10,19 @@ import { Series } from "@/models";
 export default class GamesOverTime extends Vue {
   @Prop({ default: () => [] }) series!: Series[];
 
+  public created(): void {
+    this.options = {
+      ...this.options,
+      xaxis: {
+        ...this.options.xaxis,
+        categories: this.generateLastYear()
+      }
+    };
+  }
+
   options = {
     title: {
-      text: "Games played this year",
+      text: "Games played last 12 months",
       floating: true,
       offsetY: 232,
       align: "center",
@@ -59,10 +69,6 @@ export default class GamesOverTime extends Vue {
         "Nov",
         "Dec"
       ],
-      position: "top",
-      labels: {
-        offsetY: -25
-      },
       axisBorder: {
         show: false
       },
@@ -113,6 +119,37 @@ export default class GamesOverTime extends Vue {
       }
     }
   };
+
+  monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+
+  public generateLastYear(): string[] {
+    const today = new Date();
+    let d, month, year;
+
+    let series = [];
+
+    for (let i = 11; i >= 0; i -= 1) {
+      d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      month = this.monthNames[d.getMonth()];
+
+      series.push(month);
+    }
+
+    return series;
+  }
 }
 </script>
 

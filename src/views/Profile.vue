@@ -119,10 +119,7 @@ export default class Profile extends Vue {
 
     this.addFriendLoading = true;
     const body = {
-      user: {
-        username: this.user.username,
-        email: this.user.email
-      },
+      user: this.user,
       friend: this.mail
     };
     axios
@@ -152,10 +149,7 @@ export default class Profile extends Vue {
   public removeFriend(email: string): void {
     axios
       .post("/.netlify/functions/friends-remove", {
-        user: {
-          username: this.user.username,
-          email: this.user.email
-        },
+        user: this.user,
         friend: email
       })
       .then((response: any) => {

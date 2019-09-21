@@ -1,12 +1,12 @@
 import { Member } from "@/models/member.model";
 export class MarcoPoloPlayer {
   constructor(
-    public user: Member | undefined,
+    public user: Member,
     public character: string,
-    public points: number | undefined,
-    public placement: number | undefined,
-    public startPosition: number | undefined
-  ) {}
+    public points: number,
+    public placement: number,
+    public startPosition: number
+  ) { }
 }
 
 export class MarcoPoloGame {
@@ -14,5 +14,5 @@ export class MarcoPoloGame {
     public players: MarcoPoloPlayer[],
     public time: number,
     public location: string
-  ) {}
+  ) { }
 }

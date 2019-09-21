@@ -92,13 +92,13 @@
                   </figure>
                 </div>
                 <div class="column is-three-fifths">
-                  <game-summary :items="gameSummaryItems"></game-summary>
+                  <game-summary :items="gameSummary"></game-summary>
                 </div>
                 <div class="column has-text-right">
                   <a
                     class="button is-medium is-success"
                     @click="newGameActive = !newGameActive"
-                    :disabled="newGameActive"
+                    :disabled="newGameActive || !isLoggedIn"
                   >New Game</a>
                 </div>
               </div>
@@ -109,12 +109,12 @@
         <div class="columns">
           <div class="column is-half">
             <div class="box">
-              <game-scores></game-scores>
+              <game-scores :data="gameScores"></game-scores>
             </div>
           </div>
           <div class="column is-half">
             <div class="box">
-              <games-over-time></games-over-time>
+              <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
 import { Member } from "@/models/member.model";
 import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
-import { GameSummaryItem, ResultTableHeading } from "../models";
+import { GameSummaryItem, ResultTableHeading, GameScoreItem, Series } from "../models";
 
 const axios = require("axios");
 const toast = require("vuex-toast");
@@ -143,10 +143,12 @@ const toast = require("vuex-toast");
   components: {}
 })
 export default class MarcoPolo extends Vue {
+  @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getUser", { namespace: "user" }) user!: Member;
 
   @Getter("getSummary", { namespace: "marcoPolo" })
-  gameSummaryItems!: GameSummaryItem[];
+  gameSummary!: GameSummaryItem[];
 
   @Getter("getResultTable", { namespace: "marcoPolo" })
   resultTable!: any[];
@@ -157,11 +159,25 @@ export default class MarcoPolo extends Vue {
   @Getter("getCharacters", { namespace: "marcoPolo" })
   characters!: string[];
 
-  players: MarcoPoloPlayer[] = [];
+  @Getter("getGameScores", { namespace: "marcoPolo" })
+  gameScores!: GameScoreItem[];
+
+  @Getter("getGamesLastYear", { namespace: "marcoPolo" })
+  gamesOverTime!: Series[];
+
+  @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
+
+  players: MarcoPoloPlayer[] | any[] = [];
 
   location: string = "";
 
   newGameActive = false;
+
+  public created(): void {
+    if (this.isLoggedIn) {
+      this.fetchGames(this.user);
+    }
+  }
 
   public onRowClicked(row: number): void {
     console.log("clicked row", row);
@@ -221,7 +237,7 @@ export default class MarcoPolo extends Vue {
         pl.startPosition &&
         pl.startPosition === player.startPosition
       ) {
-        pl.startPosition = undefined;
+        pl.startPosition = 0;
       }
     });
   }
@@ -229,14 +245,15 @@ export default class MarcoPolo extends Vue {
   public onNrOfPlayersChange(nr: number): void {
     this.players = [];
     for (let i = 0; i < nr; i++) {
-      const player = new MarcoPoloPlayer(
-        undefined,
-        "",
-        undefined,
-        undefined,
-        undefined
-      );
-      this.players.push(player);
+      const player = {
+        user: undefined,
+        character: undefined,
+        points: undefined,
+        placement: undefined,
+        startPosition: undefined
+      };
+      
+      this.players.push(player as any);
     }
   }
 

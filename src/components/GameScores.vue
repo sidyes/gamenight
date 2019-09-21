@@ -1,27 +1,16 @@
 <template>
-  <apexchart type="bar" height="250" :options="chartOptions" :series="series" />
+  <apexchart type="bar" height="250" :options="chartOptions" :series="generateSeries()" />
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import { GameScoreItem } from "@/models";
 
 @Component
 export default class GameScores extends Vue {
-  data = [
-    new GameScoreItem("Top Score", 102, "Stefan"),
-    new GameScoreItem("Highest Losing Score", 53, "Hannes"),
-    new GameScoreItem("Avg Score", 48, "Hannes"),
-    new GameScoreItem("Lowest Score", 26, "Xtos"),
-    new GameScoreItem("Lowest Win Score", 47, "Cpt")
-  ];
+  @Prop({ default: () => [] }) data!: GameScoreItem[];
 
-  series = [
-    {
-      name: "Count",
-      data: this.data.map(el => el.count)
-    }
-  ];
+  series = [];
   chartOptions = {
     title: {
       text: "Game Scores",
@@ -61,6 +50,15 @@ export default class GameScores extends Vue {
       show: false
     }
   };
+
+  public generateSeries(): any {
+    return [
+      {
+        name: "Count",
+        data: this.data.map(el => el.count)
+      }
+    ];
+  }
 }
 </script>
 

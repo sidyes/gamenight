@@ -29,7 +29,7 @@ export default class App extends Vue {
   @Action("fetchFriends", { namespace: "user" }) fetchFriends: any;
   @Action("updateUser", { namespace: "user" }) updateUser: any;
 
-  @Getter("getUser", { namespace: "user" }) user: any;
+  @Getter("getUser", { namespace: "user" }) user!: Member;
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
 
   currentUser: any = null;
@@ -64,10 +64,7 @@ export default class App extends Vue {
     });
 
     if (this.isLoggedIn) {
-      this.fetchFriends({
-        username: this.user.username,
-        email: this.user.email
-      });
+      this.fetchFriends(this.user);
     }
   }
 

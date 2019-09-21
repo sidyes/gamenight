@@ -15,12 +15,22 @@ const state: UserState = {
 
 const getters: GetterTree<UserState, any> = {
   getUserStatus: state => !!state.user,
-  getUser: (state: any) => JSON.parse(state.user),
+  getUser: (state: any, getters): Member | undefined => {
+    if (!getters.getUserStatus) {
+      return undefined;
+    }
+    const user = JSON.parse(state.user);
+
+    return new Member(user.username, user.email);
+  },
   getFriends: state => state.friends,
-  getPlayers: state => {
+  getPlayers: (state, getters) => {
     let players = [...state.friends];
-    const me = JSON.parse(state.user);
-    players.push(new Member(me.username, me.email));
+    const me = getters.getUser;
+
+    if (me) {
+      players.push(me);
+    }
 
     return players;
   }

@@ -11,7 +11,7 @@
       <tr
         v-for="(elem, idxRow) in data"
         @click="rowClicked(idxRow)"
-        v-bind:key="elem"
+        v-bind:key="idxRow"
       >
         <td v-for="n in headings.length" v-bind:key="n">
           {{ elem[headings[n - 1].key] }}
