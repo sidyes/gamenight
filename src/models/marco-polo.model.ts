@@ -6,7 +6,7 @@ export class MarcoPoloPlayer {
     public points: number,
     public placement: number,
     public startPosition: number
-  ) { }
+  ) {}
 }
 
 export class MarcoPoloGame {
@@ -14,5 +14,5 @@ export class MarcoPoloGame {
     public players: MarcoPoloPlayer[],
     public time: number,
     public location: string
-  ) { }
+  ) {}
 }

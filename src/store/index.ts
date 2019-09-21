@@ -5,7 +5,6 @@ import { marcoPolo } from "./modules/marco-polo";
 
 const toast = require("vuex-toast");
 
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({

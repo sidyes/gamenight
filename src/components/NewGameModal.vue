@@ -18,7 +18,8 @@
                       v-for="player in nrOfPlayers"
                       :value="player"
                       v-bind:key="player"
-                    >{{ player }}</option>
+                      >{{ player }}</option
+                    >
                   </select>
                 </div>
               </div>
@@ -50,7 +51,13 @@
         </slot>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-success" :disabled="disableSaveBtn" @click="gameSaved">Save Game</button>
+        <button
+          class="button is-success"
+          :disabled="disableSaveBtn"
+          @click="gameSaved"
+        >
+          Save Game
+        </button>
         <button class="button" @click="closed">Cancel</button>
       </footer>
     </div>

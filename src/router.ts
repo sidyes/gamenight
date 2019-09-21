@@ -31,10 +31,9 @@ export default new Router({
 });
 
 export function checkAuth(to: any, from: any, next: any) {
-  if (!!store.state.user.user) {
-    next()
-
+  if (store.state.user.user) {
+    next();
   } else {
-    next('/home')
+    next("/home");
   }
 }

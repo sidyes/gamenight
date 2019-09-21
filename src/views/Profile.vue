@@ -20,13 +20,13 @@
                   <div class="column">
                     <strong>Username</strong>
                   </div>
-                  <div class="column">{{user.username}}</div>
+                  <div class="column">{{ user.username }}</div>
                 </div>
                 <div class="columns">
                   <div class="column">
                     <strong>E-Mail</strong>
                   </div>
-                  <div class="column">{{user.email}}</div>
+                  <div class="column">{{ user.email }}</div>
                 </div>
               </div>
             </article>
@@ -39,7 +39,10 @@
                 <div class="columns is-vcentered">
                   <div class="column">
                     <div class="field has-addons has-addons-centered">
-                      <p class="control has-icons-left" :class="{'is-loading': addFriendLoading}">
+                      <p
+                        class="control has-icons-left"
+                        :class="{ 'is-loading': addFriendLoading }"
+                      >
                         <input
                           class="input"
                           type="email"
@@ -51,10 +54,17 @@
                         </span>
                       </p>
                       <div class="control">
-                        <a class="button is-info" :disabled="isMailInvalid()" @click="addFriend">Add</a>
+                        <a
+                          class="button is-info"
+                          :disabled="isMailInvalid()"
+                          @click="addFriend"
+                          >Add</a
+                        >
                       </div>
                     </div>
-                    <p class="has-text-centered is-danger has-text-danger">{{addFriendError}}</p>
+                    <p class="has-text-centered is-danger has-text-danger">
+                      {{ addFriendError }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -65,11 +75,20 @@
               <p class="title">Friendlist</p>
               <p class="subtitle">All my buddies in one place! 👬</p>
               <div class="content">
-                <div class="field is-grouped is-grouped-multiline is-grouped-centered">
-                  <div class="control" v-for="friend in friends" v-bind:key="friend.email">
+                <div
+                  class="field is-grouped is-grouped-multiline is-grouped-centered"
+                >
+                  <div
+                    class="control"
+                    v-for="friend in friends"
+                    v-bind:key="friend.email"
+                  >
                     <div class="tags has-addons are-normal">
-                      <span class="tag is-dark">{{friend.username}}</span>
-                      <a class="tag is-delete" @click="removeFriend(friend.email)"></a>
+                      <span class="tag is-dark">{{ friend.username }}</span>
+                      <a
+                        class="tag is-delete"
+                        @click="removeFriend(friend.email)"
+                      ></a>
                     </div>
                   </div>
                 </div>
@@ -106,7 +125,7 @@ export default class Profile extends Vue {
 
   public isMailInvalid(): boolean {
     return (
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.mail) === false
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.mail) === false
     );
   }
 

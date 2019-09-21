@@ -15,7 +15,7 @@ import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
 
-import 'vuex-toast/dist/vuex-toast.css'
+import "vuex-toast/dist/vuex-toast.css";
 import "@/assets/main.scss";
 
 Vue.config.productionTip = false;
@@ -34,7 +34,7 @@ Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
 Vue.component("game-scores", GameScores);
 
-Vue.filter("placement", function (placement: number) {
+Vue.filter("placement", function(placement: number) {
   if (!placement) {
     return "-";
   }

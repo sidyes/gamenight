@@ -23,15 +23,23 @@
         </a>
       </div>
 
-      <div id="navbarMenu" class="navbar-menu" v-bind:class="{ 'is-active': isOpen }">
+      <div
+        id="navbarMenu"
+        class="navbar-menu"
+        v-bind:class="{ 'is-active': isOpen }"
+      >
         <div class="navbar-start">
-          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen">Home</router-link>
+          <router-link to="/" class="navbar-item" @click="isOpen = !isOpen"
+            >Home</router-link
+          >
 
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">Games</a>
 
             <div class="navbar-dropdown">
-              <router-link to="/marco-polo" class="navbar-item">Marco Polo</router-link>
+              <router-link to="/marco-polo" class="navbar-item"
+                >Marco Polo</router-link
+              >
             </div>
           </div>
         </div>
@@ -44,15 +52,22 @@
               </a>
               <a class="button is-light" @click="login(login)">Log in</a>
             </div>
-            <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
+            <div
+              class="navbar-item has-dropdown is-hoverable"
+              v-if="isLoggedIn"
+            >
               <a class="navbar-link">
                 <font-awesome-icon :icon="['fas', 'user']" class="mr-10" />
-                {{user.username}}
+                {{ user.username }}
               </a>
 
               <div class="navbar-dropdown">
-                <router-link to="/profile" class="navbar-item">Profile</router-link>
-                <a class="navbar-item has-text-danger" @click="logout()">Logout</a>
+                <router-link to="/profile" class="navbar-item"
+                  >Profile</router-link
+                >
+                <a class="navbar-item has-text-danger" @click="logout()"
+                  >Logout</a
+                >
               </div>
             </div>
           </div>

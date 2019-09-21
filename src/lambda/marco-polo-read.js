@@ -3,39 +3,43 @@ import faunadb from "faunadb"; /* Import faunaDB sdk */
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
 const client = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
+  secret: process.env.FAUNADB_SERVER_SECRET
 });
 
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context) => {
-    console.log("Function `marco-polo-read` invoked");
+  console.log("Function `marco-polo-read` invoked");
 
-    const params = event.queryStringParameters;
+  const params = event.queryStringParameters;
 
-    const user = {
-        username: params.username,
-        email: params.email
-    };
+  const user = {
+    username: params.username,
+    email: params.email
+  };
 
-    /* construct the fauna query */
-    return client
-        .query(q.Map(q.Paginate(q.Match(q.Index("my-marco-polo"), user.email)), q.Lambda("X", q.Get(q.Var("X")))))
-        .then(response => {
+  /* construct the fauna query */
+  return client
+    .query(
+      q.Map(
+        q.Paginate(q.Match(q.Index("my-marco-polo"), user.email)),
+        q.Lambda("X", q.Get(q.Var("X")))
+      )
+    )
+    .then(response => {
+      const items = {
+        items: response.data.map(entry => entry.data)
+      };
 
-            const items = {
-                items: response.data.map(entry => entry.data)
-            };
-
-            return {
-                statusCode: 200,
-                body: JSON.stringify(items)
-            };
-        })
-        .catch(error => {
-            /* Error! return the error with statusCode 400 */
-            return {
-                statusCode: 404,
-                body: JSON.stringify(error)
-            };
-        });
-}
+      return {
+        statusCode: 200,
+        body: JSON.stringify(items)
+      };
+    })
+    .catch(error => {
+      /* Error! return the error with statusCode 400 */
+      return {
+        statusCode: 404,
+        body: JSON.stringify(error)
+      };
+    });
+};

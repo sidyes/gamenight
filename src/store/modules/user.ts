@@ -1,6 +1,6 @@
 import { Member } from "@/models/member.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import { } from "axios";
+import {} from "axios";
 const axios = require("axios");
 
 interface UserState {
@@ -55,7 +55,7 @@ const mutations: MutationTree<UserState> = {
     state.friends = [...state.friends, friend];
   },
   removeFriend: (state, friend: Member) => {
-    state.friends = state.friends.filter(fr => fr.email !== friend.email)
+    state.friends = state.friends.filter(fr => fr.email !== friend.email);
   }
 };
 
@@ -64,9 +64,11 @@ const actions: ActionTree<UserState, any> = {
     commit("setUser", payload.currentUser);
   },
   fetchFriends: ({ commit }, payload) => {
-    axios.get("/.netlify/functions/friends-read", { params: payload }).then((response: any) => {
-      commit("setFriends", response.data);
-    })
+    axios
+      .get("/.netlify/functions/friends-read", { params: payload })
+      .then((response: any) => {
+        commit("setFriends", response.data);
+      });
   },
   addFriend: ({ commit }, payload) => {
     commit("addFriend", payload);

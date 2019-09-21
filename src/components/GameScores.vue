@@ -1,5 +1,10 @@
 <template>
-  <apexchart type="bar" height="250" :options="chartOptions" :series="generateSeries()" />
+  <apexchart
+    type="bar"
+    height="250"
+    :options="chartOptions"
+    :series="generateSeries()"
+  />
 </template>
 
 <script lang="ts">
