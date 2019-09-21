@@ -26,6 +26,16 @@ export default new Router({
       name: "profile",
       component: () => import("./views/Profile.vue"),
       beforeEnter: checkAuth
+    },
+    {
+      path: "/data-privacy",
+      name: "data-privacy",
+      component: () => import("./views/DataPrivacy.vue")
+    },
+    {
+      path: "/imprint",
+      name: "imprint",
+      component: () => import("./views/Imprint.vue")
     }
   ]
 });
