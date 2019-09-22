@@ -1,3 +1,4 @@
+import { WinDistribution } from "@/models/win-distribution.model";
 import { GameScoreItem } from "@/models/game-score-item.model";
 import { ResultTableHeading } from "@/models/result-table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
@@ -191,6 +192,30 @@ const getters: GetterTree<MarcoPoloState, any> = {
     }
 
     return [new Series("Played", monthBuckets.map(x => x.toString()))];
+  },
+  getWinDistribution: state => {
+    let players: string[] = [];
+    let wins: number[] = [];
+
+    state.games.forEach(game => {
+      game.players.forEach(player => {
+        let idx = players.indexOf(player.user.username);
+
+        if (idx === -1) {
+          players.push(player.user.username);
+          idx = players.length - 1;
+          wins.push(0);
+        }
+
+        if (getWinner(game, false) === player.user.username) {
+          wins[idx] += 1;
+        }
+      });
+    });
+
+    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1));
+
+    return new WinDistribution(players, wins);
   }
 };
 

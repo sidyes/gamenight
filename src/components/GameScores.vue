@@ -15,7 +15,6 @@ import { GameScoreItem } from "@/models";
 export default class GameScores extends Vue {
   @Prop({ default: () => [] }) data!: GameScoreItem[];
 
-  series = [];
   chartOptions = {
     title: {
       text: "Game Scores",

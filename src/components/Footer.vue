@@ -6,13 +6,13 @@
           <router-link to="/imprint" class="navbar-item">Impressum</router-link>
         </div>
         <div class="column is-narrow">
-          <router-link to="/data-privacy" class="navbar-item">Datenschutzerklärung</router-link>
+          <router-link to="/data-privacy" class="navbar-item"
+            >Datenschutzerklärung</router-link
+          >
         </div>
       </div>
       <div></div>
-      <p>
-        <strong>GameNight</strong> - Play. Track. Repeat.
-      </p>
+      <p><strong>GameNight</strong> - Play. Track. Repeat.</p>
     </div>
   </footer>
 </template>
