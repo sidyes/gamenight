@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar has-shadow is-spaced">
+  <nav class="navbar has-shadow">
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
