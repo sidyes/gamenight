@@ -7,6 +7,7 @@ const toast = require("vuex-toast");
 
 Vue.use(Vuex);
 
+
 export default new Vuex.Store({
   strict: true,
   modules: {
@@ -15,5 +16,11 @@ export default new Vuex.Store({
     }),
     user,
     marcoPolo
+  },
+  actions: {
+    clearStore({ commit }) {
+      commit("user/reset")
+      commit("marcoPolo/reset")
+    }
   }
 });

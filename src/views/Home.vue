@@ -4,21 +4,59 @@
     <section class="hero is-medium">
       <div class="hero-body">
         <div class="container">
-          <div class="columns">
+          <div class="columns is-variable is-8">
             <div class="column is-6">
               <h2
                 class="title is-2 is-family-sans-serif has-text-weight-bold has-text-white"
               >Play. Track. Repeat.</h2>
+
+              <div class="column is-6 has-text-centered is-hidden-desktop">
+                <transition
+                  name="bounce"
+                  enter-active-class="animated bounceInRight faster delay-1s"
+                  v-on:after-enter="afterEnter"
+                >
+                  <figure
+                    class="image is-128x128 has-image-centered"
+                    v-if="showDice"
+                    v-bind:class="[animationEnd]"
+                  >
+                    <img src="@/assets/logo.svg" />
+                  </figure>
+                </transition>
+              </div>
+
               <p
-                class="has-text-white"
+                class="has-text-white mt-25"
               >GameNight bietet dir die Möglichkeit deine Spieleabende für die Ewigkeit festzuhalten - Probiere es aus!</p>
+            </div>
+            <div class="column is-6 has-text-centered is-hidden-touch">
+              <transition
+                name="bounce"
+                enter-active-class="animated bounceInRight faster delay-1s"
+                v-on:after-enter="afterEnter"
+              >
+                <figure
+                  class="image is-128x128 has-image-centered"
+                  v-if="showDice"
+                  v-bind:class="[animationEnd]"
+                >
+                  <img src="@/assets/logo.svg" />
+                </figure>
+              </transition>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <section class="section">
+    <section class="section pt-0">
       <div class="container">
+        <div class="columns">
+          <div class="column">
+            <h2 class="title is-2 has-text-white">Unsere Spiele</h2>
+            <h3 class="subtitle has-text-white">Bald kommen mehr - versprochen! 🤞</h3>
+          </div>
+        </div>
         <div class="columns">
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
@@ -66,7 +104,18 @@ import { Component, Vue } from "vue-property-decorator";
 @Component({
   components: {}
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  public showDice = false;
+  public animationEnd = "";
+
+  public mounted(): void {
+    this.showDice = true;
+  }
+
+  public afterEnter(): void {
+    this.animationEnd = "animated bounce";
+  }
+}
 </script>
 
 <style scoped>

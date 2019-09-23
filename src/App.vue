@@ -1,12 +1,6 @@
 <template>
   <div id="app">
-    <Header
-      :isLoggedIn="isLoggedIn"
-      :user="user"
-      @login="login"
-      @logout="logout"
-      @signup="signup"
-    />
+    <Header :isLoggedIn="isLoggedIn" :user="user" @login="login" @logout="logout" @signup="signup" />
     <router-view />
     <Footer />
     <toast position="s"></toast>
@@ -14,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { Action, Getter } from "vuex-class";
@@ -34,6 +28,7 @@ const Toast = toastLib.Toast;
 export default class App extends Vue {
   @Action("fetchFriends", { namespace: "user" }) fetchFriends: any;
   @Action("updateUser", { namespace: "user" }) updateUser: any;
+  @Action("clearStore") clearStore: any;
 
   @Getter("getUser", { namespace: "user" }) user!: Member;
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
@@ -68,8 +63,11 @@ export default class App extends Vue {
         });
       netlifyIdentity.close();
     });
+  }
 
-    if (this.isLoggedIn) {
+  @Watch("isLoggedIn", { immediate: true, deep: true })
+  onIsLoggedInChange(newVal: boolean) {
+    if (newVal) {
       this.fetchFriends(this.user);
     }
   }
@@ -89,6 +87,8 @@ export default class App extends Vue {
     });
     netlifyIdentity.logout();
     this.$router.push({ name: "home" });
+
+    this.clearStore();
   }
 }
 </script>

@@ -102,14 +102,17 @@ export default class Header extends Vue {
   }
 
   @Emit() login(): boolean {
+    this.isOpen = false;
     return true;
   }
 
   @Emit() logout(): boolean {
+    this.isOpen = false;
     return true;
   }
 
   @Emit() signup(): boolean {
+    this.isOpen = false;
     return true;
   }
 }

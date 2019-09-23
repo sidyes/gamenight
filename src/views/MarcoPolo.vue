@@ -83,6 +83,7 @@
       </new-game-modal>
       <div class="container">
         <banner-notification
+          v-if="!isLoggedIn"
           :color="'is-danger'"
           :message="'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'"
         ></banner-notification>
@@ -141,7 +142,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
 import { Member } from "@/models/member.model";
 import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
@@ -193,8 +194,9 @@ export default class MarcoPolo extends Vue {
 
   newGameActive = false;
 
-  public created(): void {
-    if (this.isLoggedIn) {
+  @Watch("isLoggedIn", { immediate: true, deep: true })
+  onIsLoggedInChange(newVal: boolean) {
+    if (newVal) {
       this.fetchGames(this.user);
     }
   }

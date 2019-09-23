@@ -227,6 +227,9 @@ const getters: GetterTree<MarcoPoloState, any> = {
 const mutations: MutationTree<MarcoPoloState> = {
   setGames: (state, games: MarcoPoloGame[]) => {
     state.games = games;
+  },
+  reset: (state) => {
+    state.games = [];
   }
 };
 
