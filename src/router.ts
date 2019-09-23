@@ -1,9 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-import { Store } from "vuex";
 
-const store: Store<any> = require("@/store");
+import store from "@/store";
 
 Vue.use(Router);
 
