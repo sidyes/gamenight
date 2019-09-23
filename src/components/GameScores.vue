@@ -1,10 +1,7 @@
 <template>
-  <apexchart
-    type="bar"
-    height="250"
-    :options="chartOptions"
-    :series="generateSeries()"
-  />
+  <div>
+    <apexchart type="bar" height="250" :options="chartOptions" :series="generateSeries()" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,12 +15,7 @@ export default class GameScores extends Vue {
   chartOptions = {
     title: {
       text: "Game Scores",
-      floating: true,
-      offsetY: 232,
-      align: "center",
-      style: {
-        color: "#363636"
-      }
+      align: "center"
     },
     chart: {
       toolbar: {

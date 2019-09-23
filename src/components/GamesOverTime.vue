@@ -1,11 +1,7 @@
 <template>
-  <apexchart
-    width="100%"
-    height="250"
-    type="bar"
-    :options="options"
-    :series="series"
-  ></apexchart>
+  <div>
+    <apexchart width="100%" height="250" type="bar" :options="options" :series="series"></apexchart>
+  </div>
 </template>
 
 <script lang="ts">
@@ -29,12 +25,7 @@ export default class GamesOverTime extends Vue {
   options = {
     title: {
       text: "Games played last 12 months",
-      floating: true,
-      offsetY: 232,
-      align: "center",
-      style: {
-        color: "#363636"
-      }
+      align: "center"
     },
     chart: {
       toolbar: {

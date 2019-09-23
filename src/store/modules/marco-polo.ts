@@ -4,7 +4,7 @@ import { ResultTableHeading } from "@/models/result-table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
 
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import {} from "axios";
+import { } from "axios";
 import { MarcoPoloGame, MarcoPoloPlayer } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
 const axios = require("axios");
@@ -73,7 +73,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       state.summaryHeadings[1],
       state.games
         .map(game => getWinner(game, false))
-        .filter(winner => winner === user.username)
+        .filter(winner => user && winner === user.username)
         .length.toString()
     );
 
@@ -85,7 +85,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
     const avgPoints = (
       (state.games
         .map(game => {
-          const player = game.players.find(pl => pl.user.email === user.email);
+          const player = game.players.find(pl => user && pl.user.email === user.email);
           return player ? player.points : 0;
         })
         .reduce((a, b) => {
@@ -214,6 +214,10 @@ const getters: GetterTree<MarcoPoloState, any> = {
     });
 
     wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1));
+
+    if (wins.length === 0) {
+      wins.push(1);
+    }
 
     return new WinDistribution(players, wins);
   }

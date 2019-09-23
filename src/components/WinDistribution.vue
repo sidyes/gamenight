@@ -1,11 +1,11 @@
 <template>
-  <apexchart
-    width="380"
-    height="250"
-    type="pie"
-    :options="generateOptions()"
-    :series="wins"
-  ></apexchart>
+  <div>
+    <apexchart width="380" height="250" type="pie" :options="generateOptions()" :series="wins"></apexchart>
+    <p
+      v-if="!players.length"
+      class="has-text-warning has-text-centered is-italic has-text-weight-medium"
+    >No Data Available.</p>
+  </div>
 </template>
 
 <script lang="ts">
@@ -17,6 +17,9 @@ export default class WinDistribution extends Vue {
   @Prop({ default: () => [] }) players!: string[];
 
   options = {
+    title: {
+      text: "Win Distribution"
+    },
     chart: {
       width: 380,
       type: "pie"
@@ -40,7 +43,13 @@ export default class WinDistribution extends Vue {
   public generateOptions(): any {
     return {
       ...this.options,
-      labels: this.players
+      labels: this.players,
+      legend: {
+        show: this.players.length
+      },
+      tooltip: {
+        enabled: this.players.length
+      }
     };
   }
 }
