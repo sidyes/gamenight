@@ -15,6 +15,7 @@ import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
 import WinDistribution from "@/components/WinDistribution.vue";
+import BannerNotification from "@/components/BannerNotification.vue";
 
 import "vuex-toast/dist/vuex-toast.css";
 import "@/assets/main.scss";
@@ -35,6 +36,7 @@ Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
 Vue.component("game-scores", GameScores);
 Vue.component("win-distribution", WinDistribution);
+Vue.component("banner-notification", BannerNotification);
 
 Vue.filter("placement", function(placement: number) {
   if (!placement) {
