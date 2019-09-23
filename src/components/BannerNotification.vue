@@ -3,7 +3,7 @@
     <div class="column is-full">
       <div class="notification" v-bind:class="[color]">
         <button class="delete" @click="show = !show"></button>
-        {{message}}
+        {{ message }}
       </div>
     </div>
   </div>

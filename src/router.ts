@@ -40,7 +40,8 @@ export default new Router({
 });
 
 export function checkAuth(to: any, from: any, next: any) {
-  if (store.state.user.user) {
+  const storeUpdated = store as any;
+  if (storeUpdated.state.user.user) {
     next();
   } else {
     next("/home");

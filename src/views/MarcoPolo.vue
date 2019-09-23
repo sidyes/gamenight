@@ -32,7 +32,8 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                        >{{ mem.username }}</option>
+                          >{{ mem.username }}</option
+                        >
                       </select>
                     </div>
                   </div>
@@ -40,12 +41,16 @@
                 <td>
                   <div class="control">
                     <div class="select">
-                      <select v-model="player.startPosition" @change="handleStartPositions(player)">
+                      <select
+                        v-model="player.startPosition"
+                        @change="handleStartPositions(player)"
+                      >
                         <option
                           v-for="position in players.length"
                           :value="position"
                           v-bind:key="position"
-                        >{{ position }}</option>
+                          >{{ position }}</option
+                        >
                       </select>
                     </div>
                   </div>
@@ -58,7 +63,8 @@
                           v-for="char in characters"
                           :value="char"
                           v-bind:key="char"
-                        >{{ char }}</option>
+                          >{{ char }}</option
+                        >
                       </select>
                     </div>
                   </div>
@@ -85,7 +91,9 @@
         <banner-notification
           v-if="!isLoggedIn"
           :color="'is-danger'"
-          :message="'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'"
+          :message="
+            'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'
+          "
         ></banner-notification>
         <div class="columns">
           <div class="column is-full">
@@ -104,7 +112,8 @@
                     class="button is-medium is-success"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
-                  >New Game</a>
+                    >New Game</a
+                  >
                 </div>
               </div>
             </div>
@@ -127,12 +136,19 @@
         <div class="columns">
           <div class="column is-narrow">
             <div class="box">
-              <win-distribution :wins="winDistribution.wins" :players="winDistribution.players"></win-distribution>
+              <win-distribution
+                :wins="winDistribution.wins"
+                :players="winDistribution.players"
+              ></win-distribution>
             </div>
           </div>
           <div class="column">
             <div class="box">
-              <result-table @row-clicked="onRowClicked" :data="resultTable" :headings="headings"></result-table>
+              <result-table
+                @row-clicked="onRowClicked"
+                :data="resultTable"
+                :headings="headings"
+              ></result-table>
             </div>
           </div>
         </div>

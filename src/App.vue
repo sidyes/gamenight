@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <Header :isLoggedIn="isLoggedIn" :user="user" @login="login" @logout="logout" @signup="signup" />
+    <Header
+      :isLoggedIn="isLoggedIn"
+      :user="user"
+      @login="login"
+      @logout="logout"
+      @signup="signup"
+    />
     <router-view />
     <Footer />
     <toast position="s"></toast>

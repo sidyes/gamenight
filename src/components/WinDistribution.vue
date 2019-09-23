@@ -1,10 +1,18 @@
 <template>
   <div>
-    <apexchart width="380" height="250" type="pie" :options="generateOptions()" :series="wins"></apexchart>
+    <apexchart
+      width="380"
+      height="250"
+      type="pie"
+      :options="generateOptions()"
+      :series="wins"
+    ></apexchart>
     <p
       v-if="!players.length"
       class="has-text-warning has-text-centered is-italic has-text-weight-medium"
-    >No Data Available.</p>
+    >
+      No Data Available.
+    </p>
   </div>
 </template>
 

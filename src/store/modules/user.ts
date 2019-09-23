@@ -1,6 +1,6 @@
 import { Member } from "@/models/member.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import { } from "axios";
+import {} from "axios";
 const axios = require("axios");
 
 interface UserState {
@@ -57,7 +57,7 @@ const mutations: MutationTree<UserState> = {
   removeFriend: (state, friend: Member) => {
     state.friends = state.friends.filter(fr => fr.email !== friend.email);
   },
-  reset: (state) => {
+  reset: state => {
     state.friends = [];
   }
 };

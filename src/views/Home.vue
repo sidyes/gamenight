@@ -8,7 +8,9 @@
             <div class="column is-6">
               <h2
                 class="title is-2 is-family-sans-serif has-text-weight-bold has-text-white"
-              >Play. Track. Repeat.</h2>
+              >
+                Play. Track. Repeat.
+              </h2>
 
               <div class="column is-6 has-text-centered is-hidden-desktop">
                 <transition
@@ -26,9 +28,10 @@
                 </transition>
               </div>
 
-              <p
-                class="has-text-white mt-25"
-              >GameNight bietet dir die Möglichkeit deine Spieleabende für die Ewigkeit festzuhalten - Probiere es aus!</p>
+              <p class="has-text-white mt-25">
+                GameNight bietet dir die Möglichkeit deine Spieleabende für die
+                Ewigkeit festzuhalten - Probiere es aus!
+              </p>
             </div>
             <div class="column is-6 has-text-centered is-hidden-touch">
               <transition
@@ -54,7 +57,9 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-2 has-text-white">Unsere Spiele</h2>
-            <h3 class="subtitle has-text-white">Bald kommen mehr - versprochen! 🤞</h3>
+            <h3 class="subtitle has-text-white">
+              Bald kommen mehr - versprochen! 🤞
+            </h3>
           </div>
         </div>
         <div class="columns">
@@ -64,7 +69,12 @@
                 <img class="is-rounded" src="@/assets/img/marco_polo.png" />
               </router-link>
             </figure>
-            <router-link tag="button" class="button is-primary mt-25" to="marco-polo">Marco Polo</router-link>
+            <router-link
+              tag="button"
+              class="button is-primary mt-25"
+              to="marco-polo"
+              >Marco Polo</router-link
+            >
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
@@ -73,7 +83,9 @@
                 src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
               />
             </figure>
-            <button class="button is-primary mt-25" disabled>Coming soon...</button>
+            <button class="button is-primary mt-25" disabled>
+              Coming soon...
+            </button>
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
@@ -82,7 +94,9 @@
                 src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
               />
             </figure>
-            <button class="button is-primary mt-25" disabled>Coming soon...</button>
+            <button class="button is-primary mt-25" disabled>
+              Coming soon...
+            </button>
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
@@ -91,7 +105,9 @@
                 src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
               />
             </figure>
-            <button class="button is-primary mt-25" disabled>Coming soon...</button>
+            <button class="button is-primary mt-25" disabled>
+              Coming soon...
+            </button>
           </div>
         </div>
       </div>

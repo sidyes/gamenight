@@ -4,7 +4,7 @@ import { ResultTableHeading } from "@/models/result-table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
 
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import { } from "axios";
+import {} from "axios";
 import { MarcoPoloGame, MarcoPoloPlayer } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
 const axios = require("axios");
@@ -85,7 +85,9 @@ const getters: GetterTree<MarcoPoloState, any> = {
     const avgPoints = (
       (state.games
         .map(game => {
-          const player = game.players.find(pl => user && pl.user.email === user.email);
+          const player = game.players.find(
+            pl => user && pl.user.email === user.email
+          );
           return player ? player.points : 0;
         })
         .reduce((a, b) => {
@@ -228,7 +230,7 @@ const mutations: MutationTree<MarcoPoloState> = {
   setGames: (state, games: MarcoPoloGame[]) => {
     state.games = games;
   },
-  reset: (state) => {
+  reset: state => {
     state.games = [];
   }
 };
