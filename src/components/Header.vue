@@ -34,7 +34,7 @@
           >
 
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">Games</a>
+            <a class="navbar-link">Spiele</a>
 
             <div class="navbar-dropdown">
               <router-link to="/marco-polo" class="navbar-item"
@@ -48,9 +48,9 @@
           <div class="navbar-item">
             <div class="buttons" v-if="!isLoggedIn">
               <a class="button is-primary" @click="signup()">
-                <strong>Sign up</strong>
+                <strong>Registrieren</strong>
               </a>
-              <a class="button is-light" @click="login(login)">Log in</a>
+              <a class="button is-light" @click="login(login)">Einloggen</a>
             </div>
             <div
               class="navbar-item has-dropdown is-hoverable"
@@ -63,7 +63,7 @@
 
               <div class="navbar-dropdown">
                 <router-link to="/profile" class="navbar-item"
-                  >Profile</router-link
+                  >Profil</router-link
                 >
                 <a class="navbar-item has-text-danger" @click="logout()"
                   >Logout</a

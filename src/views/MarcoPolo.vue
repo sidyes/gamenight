@@ -15,11 +15,11 @@
           <table class="table is-fullwidth">
             <thead>
               <tr>
-                <th>Player</th>
-                <th>Start Position</th>
-                <th>Character</th>
-                <th>Points</th>
-                <th>Placement</th>
+                <th>Spieler</th>
+                <th>Startposition</th>
+                <th>Charakter</th>
+                <th>Punkte</th>
+                <th>Platzierung</th>
               </tr>
             </thead>
             <tbody>
@@ -32,8 +32,7 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                          >{{ mem.username }}</option
-                        >
+                        >{{ mem.username }}</option>
                       </select>
                     </div>
                   </div>
@@ -41,16 +40,12 @@
                 <td>
                   <div class="control">
                     <div class="select">
-                      <select
-                        v-model="player.startPosition"
-                        @change="handleStartPositions(player)"
-                      >
+                      <select v-model="player.startPosition" @change="handleStartPositions(player)">
                         <option
                           v-for="position in players.length"
                           :value="position"
                           v-bind:key="position"
-                          >{{ position }}</option
-                        >
+                        >{{ position }}</option>
                       </select>
                     </div>
                   </div>
@@ -63,8 +58,7 @@
                           v-for="char in characters"
                           :value="char"
                           v-bind:key="char"
-                          >{{ char }}</option
-                        >
+                        >{{ char }}</option>
                       </select>
                     </div>
                   </div>
@@ -112,21 +106,25 @@
                     class="button is-medium is-success"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
-                    >New Game</a
-                  >
+                  >Neues Spiel</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="columns">
-          <div class="column is-half">
+        <div class="columns equal-heights">
+          <div class="column is-third">
+            <div class="box">
+              <all-time-table :data="allTimeTable" :headings="allTimeHeadings"></all-time-table>
+            </div>
+          </div>
+          <div class="column is-third">
             <div class="box">
               <game-scores :data="gameScores"></game-scores>
             </div>
           </div>
-          <div class="column is-half">
+          <div class="column is-third">
             <div class="box">
               <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
@@ -136,19 +134,12 @@
         <div class="columns">
           <div class="column is-narrow">
             <div class="box">
-              <win-distribution
-                :wins="winDistribution.wins"
-                :players="winDistribution.players"
-              ></win-distribution>
+              <win-distribution :wins="winDistribution.wins" :players="winDistribution.players"></win-distribution>
             </div>
           </div>
           <div class="column">
             <div class="box">
-              <result-table
-                @row-clicked="onRowClicked"
-                :data="resultTable"
-                :headings="headings"
-              ></result-table>
+              <result-table @row-clicked="onRowClicked" :data="resultTable" :headings="headings"></result-table>
             </div>
           </div>
         </div>
@@ -163,10 +154,11 @@ import { Action, Getter } from "vuex-class";
 import { Member } from "@/models/member.model";
 import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
 import {
-  GameSummaryItem,
-  ResultTableHeading,
+  AllTimeTableEntry,
   GameScoreItem,
+  GameSummaryItem,
   Series,
+  TableHeading,
   WinDistribution
 } from "@/models";
 
@@ -188,7 +180,13 @@ export default class MarcoPolo extends Vue {
   resultTable!: any[];
 
   @Getter("getResultTableHeadings", { namespace: "marcoPolo" })
-  headings!: ResultTableHeading[];
+  headings!: TableHeading[];
+
+  @Getter("getAllTimeTable", { namespace: "marcoPolo" })
+  allTimeTable!: AllTimeTableEntry[];
+
+  @Getter("getAllTimeTableHeadings", { namespace: "marcoPolo" })
+  allTimeHeadings!: TableHeading[];
 
   @Getter("getCharacters", { namespace: "marcoPolo" })
   characters!: string[];
@@ -237,14 +235,14 @@ export default class MarcoPolo extends Vue {
         this.location = "";
 
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Game saved! 🥳",
+          text: "Spiel gespeichert! 🥳",
           type: "success",
           dismissAfter: 2000
         });
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Game could not be saved! 😱",
+          text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 1000
         });
@@ -326,3 +324,20 @@ export default class MarcoPolo extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.columns.equal-heights {
+  flex-wrap: wrap;
+  align-items: stretch;
+
+  .column {
+    display: flex;
+    width: 100%;
+    position: relative;
+
+    .box {
+      width: 100%;
+    }
+  }
+}
+</style>

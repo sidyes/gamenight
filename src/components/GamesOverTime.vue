@@ -30,7 +30,7 @@ export default class GamesOverTime extends Vue {
 
   options = {
     title: {
-      text: "Games played last 12 months",
+      text: "Spiele in den letzten 12 Monaten",
       align: "center"
     },
     chart: {
@@ -117,25 +117,25 @@ export default class GamesOverTime extends Vue {
       labels: {
         show: false,
         formatter: function(val: number) {
-          return val + " times";
+          return val + " mal";
         }
       }
     }
   };
 
   monthNames = [
-    "January",
-    "February",
-    "March",
+    "Januar",
+    "Februar",
+    "März",
     "April",
-    "May",
-    "June",
-    "July",
+    "Mai",
+    "Juni",
+    "Juli",
     "August",
     "September",
-    "October",
+    "Oktober",
     "November",
-    "December"
+    "Dezember"
   ];
 
   public generateLastYear(): string[] {

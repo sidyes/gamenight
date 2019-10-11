@@ -69,9 +69,7 @@ const actions: ActionTree<UserState, any> = {
   fetchFriends: ({ commit }, payload) => {
     axios
       .get("/.netlify/functions/friends-read", { params: payload })
-      .then((response: any) => {
-        commit("setFriends", response.data);
-      });
+      .then((response: any) => commit("setFriends", response.data.friends));
   },
   addFriend: ({ commit }, payload) => {
     commit("addFriend", payload);

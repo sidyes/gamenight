@@ -10,7 +10,7 @@
         <div class="columns">
           <div class="column is-one-third-desktop is-one-third-tablet">
             <div class="field">
-              <label class="label">Number of players</label>
+              <label class="label">Anzahl Spieler</label>
               <div class="control">
                 <div class="select" @change="playersChanged($event)">
                   <select v-model="selectedNrOfPlayers">
@@ -30,7 +30,7 @@
             class="column is-one-third-desktop is-one-third-tablet is-offset-one-third-tablet is-offset-one-third-desktop"
           >
             <div class="field">
-              <label class="label">Location</label>
+              <label class="label">Ort</label>
               <div class="control has-icons-left">
                 <input
                   class="input is-info"
@@ -56,9 +56,9 @@
           :disabled="disableSaveBtn"
           @click="gameSaved"
         >
-          Save Game
+          Spiel speichern
         </button>
-        <button class="button" @click="closed">Cancel</button>
+        <button class="button" @click="closed">Abbrechen</button>
       </footer>
     </div>
   </div>

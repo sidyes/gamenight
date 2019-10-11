@@ -32,7 +32,7 @@ exports.handler = (event, context) => {
           .then(response => {
             return {
               statusCode: 200,
-              body: JSON.stringify(response.data[0].data.friends)
+              body: JSON.stringify({ friends: response.data[0].data.friends })
             };
           })
           .catch(error => {

@@ -11,6 +11,7 @@ import VueApexCharts from "vue-apexcharts";
 
 import GameSummary from "@/components/GameSummary.vue";
 import ResultTable from "@/components/ResultTable.vue";
+import AllTimeTable from "@/components/AllTimeTable.vue";
 import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
@@ -32,6 +33,7 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("apexchart", VueApexCharts);
 Vue.component("game-summary", GameSummary);
 Vue.component("result-table", ResultTable);
+Vue.component("all-time-table", AllTimeTable);
 Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
 Vue.component("game-scores", GameScores);

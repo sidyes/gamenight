@@ -68,7 +68,7 @@ exports.handler = (event, context) => {
           });
       } else {
         const message =
-          "You do not even have friends. You can not delete noone!";
+          "Du hast keine Freunde! Wie willst du dann welche löschen?!";
 
         return {
           statusCode: 400,

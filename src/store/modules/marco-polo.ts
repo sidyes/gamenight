@@ -1,16 +1,18 @@
+import { AllTimeTableEntry } from "@/models/all-time-table-entry.model";
 import { WinDistribution } from "@/models/win-distribution.model";
 import { GameScoreItem } from "@/models/game-score-item.model";
-import { ResultTableHeading } from "@/models/result-table-heading.model";
+import { TableHeading } from "@/models/table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
 
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import {} from "axios";
-import { MarcoPoloGame, MarcoPoloPlayer } from "@/models/marco-polo.model";
+import { } from "axios";
+import { MarcoPoloGame } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
 const axios = require("axios");
 
 interface MarcoPoloState {
-  resultTableHeadings: ResultTableHeading[];
+  resultTableHeadings: TableHeading[];
+  allTimeTableHeadings: TableHeading[];
   summaryHeadings: string[];
   gameScoresHeadings: string[];
   games: MarcoPoloGame[];
@@ -19,12 +21,26 @@ interface MarcoPoloState {
 
 const state: MarcoPoloState = {
   resultTableHeadings: [
-    new ResultTableHeading("Date", "date"),
-    new ResultTableHeading("Location", "location"),
-    new ResultTableHeading("Players (Start Position)", "players"),
-    new ResultTableHeading("Winner (Points)", "winner")
+    new TableHeading("Datum", "date"),
+    new TableHeading("Ort", "location"),
+    new TableHeading("Spieler (Startposition)", "players"),
+    new TableHeading("Ø Punkte", "avg"),
+    new TableHeading("Gewinner (Punkte)", "winner")
   ],
-  summaryHeadings: ["Games", "Wins", "Win Percentage", "Avg Points"],
+  allTimeTableHeadings: [
+    new TableHeading("Spieler", "username"),
+    new TableHeading("Spiele", "games"),
+    new TableHeading("🥇", "wins"),
+    new TableHeading("🥈", "secondPlaces"),
+    new TableHeading("🥉", "thirdPlaces"),
+    new TableHeading("Punkte", "points")
+  ],
+  summaryHeadings: [
+    "Spiele",
+    "Sieger",
+    "Gewinn Prozentsatz",
+    "Ø Punkte"
+  ],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -40,25 +56,77 @@ const state: MarcoPoloState = {
     "Matteo Polo",
     "Mercator ex Tabriz",
     "Niccolo und Marco Polo",
+    "Raschi ad-Din Sinan",
     "Wilhelm von Rubruk"
   ]
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
+  getAllTimeTable: state => {
+    const allTimeEntries: AllTimeTableEntry[] = [];
+
+    state.games.map(game => {
+      game.players.forEach(player => {
+        let entry = allTimeEntries.find(
+          elem => elem.username === player.user.username
+        );
+
+        if (!entry) {
+          entry = new AllTimeTableEntry(player.user.username, state.games.length, 0, 0, 0, 0);
+          allTimeEntries.push(entry);
+        }
+
+        switch (player.placement) {
+          case 1: {
+            entry.wins++;
+            entry.points += 5;
+            break;
+          }
+          case 2: {
+            entry.secondPlaces++;
+            entry.points += 3;
+            break;
+          }
+          case 3: {
+            entry.points += 2;
+            entry.thirdPlaces++;
+            break;
+          }
+          default: {
+            entry.points++;
+            break;
+          }
+        }
+      });
+    });
+
+    allTimeEntries.sort(compareAllTimeTableEntries);
+
+    return allTimeEntries;
+  },
+  getAllTimeTableHeadings: state => state.allTimeTableHeadings,
   getResultTable: state =>
     state.games.map(game => {
       const date = new Date(game.time).toDateString();
       const players = game.players
-        .map(user => (user.user ? user.user.username : ""))
+        .map(user =>
+          user.user ? `${user.user.username} (${user.startPosition})` : ""
+        )
         .join(", ");
       const location = game.location;
-      let winner = getWinner(game, true);
+      const playerWon = game.players.find(pl => pl.placement === 1);
+      let winner = playerWon
+        ? `${playerWon.user.username} (${playerWon.points})`
+        : "-";
+
+      const avg = (game.players.map(pl => pl.points).reduce((a, b) => +a + +b) / game.players.length).toFixed(0);
 
       return {
         date,
         players,
         location,
-        winner
+        winner,
+        avg
       };
     }),
   getResultTableHeadings: state => state.resultTableHeadings,
@@ -72,7 +140,11 @@ const getters: GetterTree<MarcoPoloState, any> = {
     const wins = new GameSummaryItem(
       state.summaryHeadings[1],
       state.games
-        .map(game => getWinner(game, false))
+        .map(game => {
+          const winner = game.players.find(pl => pl.placement === 1);
+
+          return winner ? winner.user.username : "";
+        })
         .filter(winner => user && winner === user.username)
         .length.toString()
     );
@@ -119,7 +191,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
     const lowestScore = new GameScoreItem(state.gameScoresHeadings[4], 0, "");
 
     let avg = 0;
-    let highestLosePlayer: MarcoPoloPlayer = undefined as any;
 
     state.games.forEach(game => {
       let avgGame = 0;
@@ -133,7 +204,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
         // lowest win score
         if (
-          getWinner(game, false) === player.user.username &&
+          player.placement === 1 &&
           (+player.points < lowestWinScore.count || lowestWinScore.count === 0)
         ) {
           lowestWinScore.count = +player.points;
@@ -146,12 +217,13 @@ const getters: GetterTree<MarcoPoloState, any> = {
           lowestScore.player = player.user.username;
         }
 
+        // highest lose score
         if (
-          !highestLosePlayer ||
-          (player.placement === game.players.length &&
-            player.points > highestLosingScore.count)
+          player.placement === game.players.length &&
+          player.points > highestLosingScore.count
         ) {
-          highestLosePlayer = player;
+          highestLosingScore.player = player.user.username;
+          highestLosingScore.count = +player.points;
         }
 
         avgGame += +player.points;
@@ -162,9 +234,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     if (state.games.length) {
       avgScore.count = +(avg / state.games.length).toFixed(2);
-
-      highestLosingScore.count = highestLosePlayer.points;
-      highestLosingScore.player = highestLosePlayer.user.username;
     }
 
     return [
@@ -209,7 +278,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
           wins.push(0);
         }
 
-        if (getWinner(game, false) === player.user.username) {
+        if (player.placement === 1) {
           wins[idx] += 1;
         }
       });
@@ -245,20 +314,36 @@ const actions: ActionTree<MarcoPoloState, any> = {
   }
 };
 
-function getWinner(game: MarcoPoloGame, includeHighscore: boolean): any {
-  let winner = "";
-  let highscore = 0;
+function compareAllTimeTableEntries(a: AllTimeTableEntry, b: AllTimeTableEntry): number {
+  if (a.points < b.points) {
+    return 1;
+  }
+  if (a.points > b.points) {
+    return -1;
+  }
 
-  game.players.forEach(player => {
-    if (player.points && player.user && player.points > highscore) {
-      highscore = player.points;
-      winner = winner = includeHighscore
-        ? `${player.user.username} (${highscore})`
-        : `${player.user.username}`;
-    }
-  });
+  if (a.wins < b.wins) {
+    return 1;
+  }
+  if (a.wins > b.wins) {
+    return -1;
+  }
 
-  return winner;
+  if (a.secondPlaces < b.secondPlaces) {
+    return 1;
+  }
+  if (a.secondPlaces > b.secondPlaces) {
+    return -1;
+  }
+
+  if (a.thirdPlaces < b.thirdPlaces) {
+    return 1;
+  }
+  if (a.thirdPlaces > b.thirdPlaces) {
+    return -1;
+  }
+
+  return 0;
 }
 
 export const marcoPolo = {

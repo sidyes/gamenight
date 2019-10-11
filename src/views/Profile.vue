@@ -3,8 +3,8 @@
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
-          <h1 class="title">My Profile</h1>
-          <h2 class="subtitle">Info & friends</h2>
+          <h1 class="title">Mein Profil</h1>
+          <h2 class="subtitle">Info & Freunde</h2>
         </div>
       </div>
     </section>
@@ -14,11 +14,11 @@
           <div class="tile is-parent">
             <article class="tile is-child box">
               <p class="title">Information</p>
-              <p class="subtitle">Who am I? 🙇🏼</p>
+              <p class="subtitle">Wer bin ich? 🙇🏼</p>
               <div class="content">
                 <div class="columns">
                   <div class="column">
-                    <strong>Username</strong>
+                    <strong>Benutzername</strong>
                   </div>
                   <div class="column">{{ user.username }}</div>
                 </div>
@@ -33,8 +33,8 @@
           </div>
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">Friendfinder</p>
-              <p class="subtitle">I want a friend! 🔎</p>
+              <p class="title">Freundefinder</p>
+              <p class="subtitle">Suche nach Freunden! 🔎</p>
               <div class="content">
                 <div class="columns is-vcentered">
                   <div class="column">
@@ -46,7 +46,7 @@
                         <input
                           class="input"
                           type="email"
-                          placeholder="Friend's E-Mail"
+                          placeholder="E-Mail"
                           v-model="mail"
                         />
                         <span class="icon is-left">
@@ -72,9 +72,17 @@
           </div>
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">Friendlist</p>
-              <p class="subtitle">All my buddies in one place! 👬</p>
+              <p class="title">Freundesliste</p>
+              <p class="subtitle">
+                Hier kannst du deine ganzen Homies sehen! 👬
+              </p>
               <div class="content">
+                <p
+                  v-if="!friends.length"
+                  class="has-text-warning has-text-centered is-italic has-text-weight-medium"
+                >
+                  Noch keine Freunde hinzugefügt.
+                </p>
                 <div
                   class="field is-grouped is-grouped-multiline is-grouped-centered"
                 >
@@ -131,7 +139,8 @@ export default class Profile extends Vue {
 
   public addFriend(): void {
     if (this.mail === this.user.email) {
-      this.addFriendError = "You cannot add yourself as a friend!";
+      this.addFriendError =
+        "Du kannst dich nicht selbst als Freund hinzufügen!";
 
       return;
     }
@@ -149,7 +158,7 @@ export default class Profile extends Vue {
         this.addBuddy(response.data.friend);
 
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Buddy added! 🥳",
+          text: "Freund hinzugefügt! 🥳",
           type: "success",
           dismissAfter: 2000
         });
@@ -157,7 +166,7 @@ export default class Profile extends Vue {
       .catch((err: any) => {
         this.addFriendError = err.response.data.message;
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Adding buddy failed! 😱",
+          text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 2000
         });
@@ -174,14 +183,14 @@ export default class Profile extends Vue {
       .then((response: any) => {
         this.removeBuddy(response.data.friend);
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Removed buddy! 🥳",
+          text: "Freund entfernt! 🥳",
           type: "success",
           dismissAfter: 2000
         });
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
-          text: "Removing buddy failed! 😱",
+          text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 2000
         });

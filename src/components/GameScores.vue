@@ -19,7 +19,7 @@ export default class GameScores extends Vue {
 
   chartOptions = {
     title: {
-      text: "Game Scores",
+      text: "Scores",
       align: "center"
     },
     chart: {
@@ -55,7 +55,7 @@ export default class GameScores extends Vue {
   public generateSeries(): any {
     return [
       {
-        name: "Count",
+        name: "Anzahl",
         data: this.data.map(el => el.count)
       }
     ];

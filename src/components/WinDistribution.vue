@@ -11,7 +11,7 @@
       v-if="!players.length"
       class="has-text-warning has-text-centered is-italic has-text-weight-medium"
     >
-      No Data Available.
+      Noch keine Daten vorhanden.
     </p>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default class WinDistribution extends Vue {
         breakpoint: 480,
         options: {
           chart: {
-            width: 200
+            width: 300
           },
           legend: {
             position: "bottom"
