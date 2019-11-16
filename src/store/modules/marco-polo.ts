@@ -50,8 +50,13 @@ const state: MarcoPoloState = {
   ],
   games: [],
   characters: [
+    "Altan Ord",
+    "André de Longjumeau",
     "Berke Khan",
+    "Fratre Nicolao",
+    "Gunj Kököchin",
     "Johannes Caprini",
+    "Khan Arghun",
     "Kubilai Khan",
     "Matteo Polo",
     "Mercator ex Tabriz",
