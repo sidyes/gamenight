@@ -1,3 +1,3 @@
 export class WinDistribution {
-  public constructor(public players: string[], public wins: number[]) {}
+  public constructor(public labels: string[], public wins: number[]) { }
 }

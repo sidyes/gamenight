@@ -1,18 +1,10 @@
 <template>
   <div>
-    <apexchart
-      width="380"
-      height="250"
-      type="pie"
-      :options="generateOptions()"
-      :series="wins"
-    ></apexchart>
+    <apexchart width="380" height="250" type="pie" :options="generateOptions()" :series="wins"></apexchart>
     <p
-      v-if="!players.length"
+      v-if="!positions.length"
       class="has-text-warning has-text-centered is-italic has-text-weight-medium"
-    >
-      Noch keine Daten vorhanden.
-    </p>
+    >Noch keine Daten vorhanden.</p>
   </div>
 </template>
 
@@ -20,19 +12,19 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component
-export default class WinDistribution extends Vue {
+export default class WinDistributionStartPosition extends Vue {
   @Prop({ default: () => [] }) wins!: number[];
-  @Prop({ default: () => [] }) players!: string[];
+  @Prop({ default: () => [] }) positions!: string[];
 
   options = {
     title: {
-      text: "Win Distribution"
+      text: "Gewinnverteilung - Startposition"
     },
     chart: {
       width: 380,
       type: "pie"
     },
-    labels: this.players,
+    labels: this.positions,
     responsive: [
       {
         breakpoint: 480,
@@ -51,12 +43,12 @@ export default class WinDistribution extends Vue {
   public generateOptions(): any {
     return {
       ...this.options,
-      labels: this.players,
+      labels: this.positions,
       legend: {
-        show: this.players.length
+        show: this.positions.length
       },
       tooltip: {
-        enabled: this.players.length
+        enabled: this.positions.length
       }
     };
   }

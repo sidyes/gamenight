@@ -269,7 +269,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return [new Series("Played", monthBuckets.map(x => x.toString()))];
   },
-  getWinDistribution: state => {
+  getWinDistributionPlayer: state => {
     let players: string[] = [];
     let wins: number[] = [];
 
@@ -296,6 +296,26 @@ const getters: GetterTree<MarcoPoloState, any> = {
     }
 
     return new WinDistribution(players, wins);
+  },
+  getWinDistributionStartPosition: state => {
+    let startPositions: string[] = ['1', '2', '3', '4'];
+    let wins: number[] = [0, 0, 0, 0];
+
+    state.games.forEach(game => {
+      game.players.forEach(player => {
+        if (player.placement === 1) {
+          wins[player.startPosition - 1]++;
+        }
+      });
+    });
+
+    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1));
+
+    if (wins.length === 0) {
+      wins.push(1);
+    }
+
+    return new WinDistribution(startPositions, wins);
   }
 };
 

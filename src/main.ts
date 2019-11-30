@@ -15,7 +15,8 @@ import AllTimeTable from "@/components/AllTimeTable.vue";
 import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
-import WinDistribution from "@/components/WinDistribution.vue";
+import WinDistributionPlayer from "@/components/WinDistributionPlayer.vue";
+import WinDistributionStartPosition from "@/components/WinDistributionStartPosition.vue";
 import BannerNotification from "@/components/BannerNotification.vue";
 
 import "vuex-toast/dist/vuex-toast.css";
@@ -37,10 +38,11 @@ Vue.component("all-time-table", AllTimeTable);
 Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
 Vue.component("game-scores", GameScores);
-Vue.component("win-distribution", WinDistribution);
+Vue.component("win-distribution-player", WinDistributionPlayer);
+Vue.component("win-distribution-start-position", WinDistributionStartPosition)
 Vue.component("banner-notification", BannerNotification);
 
-Vue.filter("placement", function(placement: number) {
+Vue.filter("placement", function (placement: number) {
   if (!placement) {
     return "-";
   }

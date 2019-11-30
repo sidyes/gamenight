@@ -131,12 +131,31 @@
           </div>
         </div>
 
-        <div class="columns">
-          <div class="column is-narrow">
+        <div class="columns equal-heights">
+          <div class="column is-third">
             <div class="box">
-              <win-distribution :wins="winDistribution.wins" :players="winDistribution.players"></win-distribution>
+              <all-time-table :data="allTimeTable" :headings="allTimeHeadings"></all-time-table>
             </div>
           </div>
+          <div class="column is-third">
+            <div class="box">
+              <win-distribution-player
+                :wins="winDistributionPlayer.wins"
+                :players="winDistributionPlayer.labels"
+              ></win-distribution-player>
+            </div>
+          </div>
+          <div class="column is-third">
+            <div class="box">
+              <win-distribution-start-position
+                :wins="winDistributionStartPosition.wins"
+                :positions="winDistributionStartPosition.labels"
+              ></win-distribution-start-position>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns">
           <div class="column">
             <div class="box">
               <result-table @row-clicked="onRowClicked" :data="resultTable" :headings="headings"></result-table>
@@ -197,8 +216,11 @@ export default class MarcoPolo extends Vue {
   @Getter("getGamesLastYear", { namespace: "marcoPolo" })
   gamesOverTime!: Series[];
 
-  @Getter("getWinDistribution", { namespace: "marcoPolo" })
-  winDistribution!: WinDistribution[];
+  @Getter("getWinDistributionPlayer", { namespace: "marcoPolo" })
+  winDistributionPlayer!: WinDistribution[];
+
+  @Getter("getWinDistributionStartPosition", { namespace: "marcoPolo" })
+  winDistributionStartPosition!: WinDistribution[];
 
   @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
 
