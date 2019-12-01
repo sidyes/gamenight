@@ -303,7 +303,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       });
     }
 
-    return [new Series("Played", monthBuckets.map(x => x.toString()))];
+    return [new Series("Gespielt", monthBuckets.map(x => x.toString()))];
   },
   getWinDistributionPlayer: state => {
     let players: string[] = [];

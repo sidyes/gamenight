@@ -1,12 +1,6 @@
 <template>
   <div>
-    <apexchart
-      width="100%"
-      height="250"
-      type="bar"
-      :options="options"
-      :series="series"
-    ></apexchart>
+    <apexchart width="100%" height="250" type="bar" :options="options" :series="series"></apexchart>
   </div>
 </template>
 
@@ -50,10 +44,10 @@ export default class GamesOverTime extends Vue {
       formatter: function(val: number) {
         return val > 0 ? "#" + val : "";
       },
-      offsetY: -20,
+      offsetY: 10,
       style: {
         fontSize: "12px",
-        colors: ["#304758"]
+        colors: ["#ffffff"]
       }
     },
 
@@ -89,10 +83,6 @@ export default class GamesOverTime extends Vue {
             opacityTo: 0.5
           }
         }
-      },
-      tooltip: {
-        enabled: true,
-        offsetY: -35
       }
     },
     fill: {
@@ -115,11 +105,12 @@ export default class GamesOverTime extends Vue {
         show: false
       },
       labels: {
-        show: false,
-        formatter: function(val: number) {
-          return val + " mal";
-        }
+        show: false
       }
+    },
+    theme: {
+      mode: "dark",
+      palette: "palette10"
     }
   };
 

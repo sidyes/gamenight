@@ -1,10 +1,33 @@
 $primary: blue;
 $modal-content-width: 700px;
+$table-color: hsl(0, 0%, 100%);
+$table-heading-color: hsl(0, 0%, 100%);
+$table-row-hover-background-color: #707889;
+$table-background-color: #343f57;
+$navbar-background-color: #343f57;
+$navbar-item-color: hsl(0, 0%, 96%);
+$navbar-box-shadow-color: #242c3c;
+$navbar-item-hover-background-color: #242c3c;
+$navbar-item-active-color: hsl(0, 0%, 100%);
+$navbar-dropdown-background-color: #343f57;
+$navbar-dropdown-item-hover-background-color: #242c3c;
+$navbar-dropdown-item-hover-color: hsl(0, 0%, 96%);
+$navbar-dropdown-item-active-color: hsl(0, 0%, 100%);
+
+.router-link-exact-active {
+  background-color: transparent !important;
+  color: white !important;
+  font-weight: bold;
+}
 
 @import "~bulma/bulma";
-@import '~bulma-tooltip';
+@import "~bulma-tooltip";
 
 @import "~animate.css";
+
+body {
+  background-color: #141922;
+}
 
 .is-200x200 {
   height: 200px;
@@ -22,6 +45,7 @@ $modal-content-width: 700px;
 
 .box {
   overflow: auto;
+  background-color: #343f57 !important;
 }
 
 $sizes: (0, 10, 15, 20, 25, 30, 50);

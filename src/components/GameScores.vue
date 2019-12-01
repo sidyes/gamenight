@@ -1,11 +1,6 @@
 <template>
   <div>
-    <apexchart
-      type="bar"
-      height="250"
-      :options="chartOptions"
-      :series="generateSeries()"
-    />
+    <apexchart type="bar" height="250" :options="chartOptions" :series="generateSeries()" />
   </div>
 </template>
 
@@ -38,7 +33,7 @@ export default class GameScores extends Vue {
     },
     dataLabels: {
       enabled: true,
-      offsetX: -15,
+      offsetX: -40,
       formatter: (val: string, { dataPointIndex }: any) => {
         return this.data[dataPointIndex].player;
       }
@@ -49,6 +44,10 @@ export default class GameScores extends Vue {
     },
     tooltip: {
       show: false
+    },
+    theme: {
+      mode: "dark",
+      palette: "palette10"
     }
   };
 

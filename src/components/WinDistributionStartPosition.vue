@@ -1,18 +1,10 @@
 <template>
   <div>
-    <apexchart
-      width="380"
-      height="250"
-      type="pie"
-      :options="generateOptions()"
-      :series="wins"
-    ></apexchart>
+    <apexchart width="380" height="250" type="pie" :options="generateOptions()" :series="wins"></apexchart>
     <p
       v-if="!positions.length"
       class="has-text-warning has-text-centered is-italic has-text-weight-medium"
-    >
-      Noch keine Daten vorhanden.
-    </p>
+    >Noch keine Daten vorhanden.</p>
   </div>
 </template>
 
@@ -45,7 +37,11 @@ export default class WinDistributionStartPosition extends Vue {
           }
         }
       }
-    ]
+    ],
+    theme: {
+      mode: "dark",
+      palette: "palette10"
+    }
   };
 
   public generateOptions(): any {
