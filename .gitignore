@@ -24,3 +24,6 @@ functions-build
 
 # keys & stuff
 secrets.txt
+# Local Netlify folder
+.netlify
+debug.log
