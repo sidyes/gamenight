@@ -7,7 +7,7 @@ import { TableHeading } from "@/models/table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
 
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import {} from "axios";
+import { } from "axios";
 import { MarcoPoloGame } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
 const axios = require("axios");
@@ -44,7 +44,7 @@ const state: MarcoPoloState = {
     new TableHeading("Siege", "wins"),
     new TableHeading("Siegquote (%)", "winrate")
   ],
-  summaryHeadings: ["Spiele", "Sieger", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -153,16 +153,21 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     state.games.map(game => {
       game.players.forEach(player => {
-        if (player.placement === 1) {
-          const elem = characterTableEntries.find(
-            entry => entry.character === player.character
-          );
-          if (elem) {
+        const elem = characterTableEntries.find(
+          entry => entry.character === player.character
+        );
+
+        if (elem) {
+          if (player.placement === 1) {
             ++elem.games;
             ++elem.wins;
             elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+          } else {
+            ++elem.games;
+            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
           }
         }
+
       });
     });
 
