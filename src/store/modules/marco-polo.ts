@@ -124,7 +124,14 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getResultTable: state =>
     state.games.map(game => {
       const date = new Date(game.time).toDateString();
-      const players = game.players
+      const sortedPlayers = game.players.sort((a, b) => {
+        if (a.startPosition < b.startPosition) {
+          return -1;
+        } else {
+          return 1
+        }
+      })
+      const players = sortedPlayers
         .map(user =>
           user.user ? `${user.user.username} (${user.startPosition})` : ""
         )
