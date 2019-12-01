@@ -39,17 +39,32 @@
                 <div class="columns is-vcentered">
                   <div class="column">
                     <div class="field has-addons has-addons-centered">
-                      <p class="control has-icons-left" :class="{ 'is-loading': addFriendLoading }">
-                        <input class="input" type="email" placeholder="E-Mail" v-model="mail" />
+                      <p
+                        class="control has-icons-left"
+                        :class="{ 'is-loading': addFriendLoading }"
+                      >
+                        <input
+                          class="input"
+                          type="email"
+                          placeholder="E-Mail"
+                          v-model="mail"
+                        />
                         <span class="icon is-left">
                           <font-awesome-icon :icon="['fas', 'envelope']" />
                         </span>
                       </p>
                       <div class="control">
-                        <a class="button is-info" :disabled="isMailInvalid()" @click="addFriend">Add</a>
+                        <a
+                          class="button is-info"
+                          :disabled="isMailInvalid()"
+                          @click="addFriend"
+                          >Add</a
+                        >
                       </div>
                     </div>
-                    <p class="has-text-centered is-danger has-text-danger">{{ addFriendError }}</p>
+                    <p class="has-text-centered is-danger has-text-danger">
+                      {{ addFriendError }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -58,17 +73,30 @@
           <div class="tile is-parent">
             <article class="tile is-child box">
               <p class="title has-text-white">Freundesliste</p>
-              <p class="subtitle has-text-light">Hier kannst du deine ganzen Homies sehen! 👬</p>
+              <p class="subtitle has-text-light">
+                Hier kannst du deine ganzen Homies sehen! 👬
+              </p>
               <div class="content">
                 <p
                   v-if="!friends.length"
                   class="has-text-warning has-text-centered is-italic has-text-weight-medium"
-                >Noch keine Freunde hinzugefügt.</p>
-                <div class="field is-grouped is-grouped-multiline is-grouped-centered">
-                  <div class="control" v-for="friend in friends" v-bind:key="friend.email">
+                >
+                  Noch keine Freunde hinzugefügt.
+                </p>
+                <div
+                  class="field is-grouped is-grouped-multiline is-grouped-centered"
+                >
+                  <div
+                    class="control"
+                    v-for="friend in friends"
+                    v-bind:key="friend.email"
+                  >
                     <div class="tags has-addons are-normal">
                       <span class="tag is-dark">{{ friend.username }}</span>
-                      <a class="tag is-delete" @click="removeFriend(friend.email)"></a>
+                      <a
+                        class="tag is-delete"
+                        @click="removeFriend(friend.email)"
+                      ></a>
                     </div>
                   </div>
                 </div>
