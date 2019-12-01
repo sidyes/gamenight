@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="table is-fullwidth">
+    <table class="table is-hoverable is-fullwidth">
       <thead>
         <tr>
           <th v-for="header in headings" v-bind:key="header.label">
@@ -9,7 +9,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(elem, idxRow) in data" v-bind:key="idxRow">
+        <tr
+          v-for="(elem, idxRow) in data"
+          v-bind:key="idxRow"
+          @click="rowClicked(idxRow)"
+        >
           <td v-for="n in headings.length" v-bind:key="n">
             {{ elem[headings[n - 1].key] }}
           </td>
@@ -26,13 +30,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import { TableHeading } from "@/models";
 
 @Component
-export default class AllTimeTable extends Vue {
+export default class Table extends Vue {
   @Prop({ default: () => [] }) headings!: TableHeading[];
   @Prop({ default: () => [] }) data!: any[];
+
+  @Emit() rowClicked(row: number) {
+    return row;
+  }
 }
 </script>
 

@@ -10,8 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueApexCharts from "vue-apexcharts";
 
 import GameSummary from "@/components/GameSummary.vue";
-import ResultTable from "@/components/ResultTable.vue";
-import AllTimeTable from "@/components/AllTimeTable.vue";
+import CustomTable from "@/components/CustomTable.vue";
 import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
@@ -33,13 +32,12 @@ library.add(faEnvelope);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("apexchart", VueApexCharts);
 Vue.component("game-summary", GameSummary);
-Vue.component("result-table", ResultTable);
-Vue.component("all-time-table", AllTimeTable);
+Vue.component("custom-table", CustomTable);
 Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
 Vue.component("game-scores", GameScores);
 Vue.component("win-distribution-player", WinDistributionPlayer);
-Vue.component("win-distribution-start-position", WinDistributionStartPosition)
+Vue.component("win-distribution-start-position", WinDistributionStartPosition);
 Vue.component("banner-notification", BannerNotification);
 
 Vue.filter("placement", function (placement: number) {

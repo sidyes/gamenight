@@ -1,3 +1,5 @@
+import { CharacterTableEntry } from "../../models/character-table-entry.model";
+import { ResultTableEntry } from "./../../models/result-table-entry.model";
 import { AllTimeTableEntry } from "@/models/all-time-table-entry.model";
 import { WinDistribution } from "@/models/win-distribution.model";
 import { GameScoreItem } from "@/models/game-score-item.model";
@@ -13,6 +15,7 @@ const axios = require("axios");
 interface MarcoPoloState {
   resultTableHeadings: TableHeading[];
   allTimeTableHeadings: TableHeading[];
+  characterTableHeadings: TableHeading[];
   summaryHeadings: string[];
   gameScoresHeadings: string[];
   games: MarcoPoloGame[];
@@ -35,12 +38,13 @@ const state: MarcoPoloState = {
     new TableHeading("🥉", "thirdPlaces"),
     new TableHeading("Punkte", "points")
   ],
-  summaryHeadings: [
-    "Spiele",
-    "Sieger",
-    "Gewinn Prozentsatz",
-    "Ø Punkte"
+  characterTableHeadings: [
+    new TableHeading("Charakter", "character"),
+    new TableHeading("Spiele", "games"),
+    new TableHeading("Siege", "wins"),
+    new TableHeading("Siegquote (%)", "winrate")
   ],
+  summaryHeadings: ["Spiele", "Sieger", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -77,7 +81,14 @@ const getters: GetterTree<MarcoPoloState, any> = {
         );
 
         if (!entry) {
-          entry = new AllTimeTableEntry(player.user.username, state.games.length, 0, 0, 0, 0);
+          entry = new AllTimeTableEntry(
+            player.user.username,
+            state.games.length,
+            0,
+            0,
+            0,
+            0
+          );
           allTimeEntries.push(entry);
         }
 
@@ -124,17 +135,42 @@ const getters: GetterTree<MarcoPoloState, any> = {
         ? `${playerWon.user.username} (${playerWon.points})`
         : "-";
 
-      const avg = (game.players.map(pl => pl.points).reduce((a, b) => +a + +b) / game.players.length).toFixed(0);
+      const avg = (
+        game.players.map(pl => pl.points).reduce((a, b) => +a + +b) /
+        game.players.length
+      ).toFixed(0);
 
-      return {
-        date,
-        players,
-        location,
-        winner,
-        avg
-      };
+      return new ResultTableEntry(date, players, location, winner, avg);
     }),
   getResultTableHeadings: state => state.resultTableHeadings,
+  getCharacterTable: (state, getters, _rootState, _rootGetters) => {
+    const characters = getters.getCharacters;
+
+    const characterTableEntries: CharacterTableEntry[] = [];
+    characters.forEach((char: string) =>
+      characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0))
+    );
+
+    state.games.map(game => {
+      game.players.forEach(player => {
+        if (player.placement === 1) {
+          const elem = characterTableEntries.find(
+            entry => entry.character === player.character
+          );
+          if (elem) {
+            ++elem.games;
+            ++elem.wins;
+            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+          }
+        }
+      });
+    });
+
+    characterTableEntries.sort(compareCharacterTableEntries);
+
+    return characterTableEntries;
+  },
+  getCharacterTableHeadings: state => state.characterTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
     const games = new GameSummaryItem(
@@ -298,7 +334,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return new WinDistribution(players, wins);
   },
   getWinDistributionStartPosition: state => {
-    let startPositions: string[] = ['1', '2', '3', '4'];
+    let startPositions: string[] = ["1", "2", "3", "4"];
     let wins: number[] = [0, 0, 0, 0];
 
     state.games.forEach(game => {
@@ -309,7 +345,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       });
     });
 
-    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1));
+    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1) || 0);
 
     if (wins.length === 0) {
       wins.push(1);
@@ -339,7 +375,10 @@ const actions: ActionTree<MarcoPoloState, any> = {
   }
 };
 
-function compareAllTimeTableEntries(a: AllTimeTableEntry, b: AllTimeTableEntry): number {
+function compareAllTimeTableEntries(
+  a: AllTimeTableEntry,
+  b: AllTimeTableEntry
+): number {
   if (a.points < b.points) {
     return 1;
   }
@@ -366,6 +405,31 @@ function compareAllTimeTableEntries(a: AllTimeTableEntry, b: AllTimeTableEntry):
   }
   if (a.thirdPlaces > b.thirdPlaces) {
     return -1;
+  }
+
+  return 0;
+}
+
+function compareCharacterTableEntries(
+  a: CharacterTableEntry,
+  b: CharacterTableEntry
+): number {
+  if (a.winrate > b.winrate) {
+    return -1;
+  }
+
+  if (a.winrate < b.winrate) {
+    return 1;
+  }
+
+  if (a.winrate === b.winrate) {
+    if (a.games > b.games) {
+      return -1;
+    }
+
+    if (a.games < b.games) {
+      return 1;
+    }
   }
 
   return 0;

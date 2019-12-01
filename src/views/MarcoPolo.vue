@@ -113,18 +113,21 @@
           </div>
         </div>
 
-        <div class="columns equal-heights">
-          <div class="column is-third">
+        <div class="columns">
+          <div class="column is-three-fifths is-offset-one-fifth">
             <div class="box">
-              <all-time-table :data="allTimeTable" :headings="allTimeHeadings"></all-time-table>
+              <custom-table :data="allTimeTable" :headings="allTimeHeadings"></custom-table>
             </div>
           </div>
-          <div class="column is-third">
+        </div>
+
+        <div class="columns">
+          <div class="column is-half">
             <div class="box">
               <game-scores :data="gameScores"></game-scores>
             </div>
           </div>
-          <div class="column is-third">
+          <div class="column is-half">
             <div class="box">
               <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
@@ -132,25 +135,30 @@
         </div>
 
         <div class="columns equal-heights">
-          <div class="column is-third">
+          <div class="column is-two-thirds">
             <div class="box">
-              <all-time-table :data="allTimeTable" :headings="allTimeHeadings"></all-time-table>
+              <custom-table :data="characterTable" :headings="characterTableHeadings"></custom-table>
             </div>
           </div>
-          <div class="column is-third">
-            <div class="box">
-              <win-distribution-player
-                :wins="winDistributionPlayer.wins"
-                :players="winDistributionPlayer.labels"
-              ></win-distribution-player>
-            </div>
-          </div>
-          <div class="column is-third">
-            <div class="box">
-              <win-distribution-start-position
-                :wins="winDistributionStartPosition.wins"
-                :positions="winDistributionStartPosition.labels"
-              ></win-distribution-start-position>
+          <div class="column is-one-third">
+            <div class="columns is-multiline">
+              <div class="column is-full">
+                <div class="box">
+                  <win-distribution-player
+                    :wins="winDistributionPlayer.wins"
+                    :players="winDistributionPlayer.labels"
+                  ></win-distribution-player>
+                </div>
+              </div>
+
+              <div class="column is-full">
+                <div class="box">
+                  <win-distribution-start-position
+                    :wins="winDistributionStartPosition.wins"
+                    :positions="winDistributionStartPosition.labels"
+                  ></win-distribution-start-position>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -158,7 +166,11 @@
         <div class="columns">
           <div class="column">
             <div class="box">
-              <result-table @row-clicked="onRowClicked" :data="resultTable" :headings="headings"></result-table>
+              <custom-table
+                @row-clicked="onRowClicked"
+                :data="resultTable"
+                :headings="resultHeadings"
+              ></custom-table>
             </div>
           </div>
         </div>
@@ -178,7 +190,8 @@ import {
   GameSummaryItem,
   Series,
   TableHeading,
-  WinDistribution
+  WinDistribution,
+  ResultTableEntry
 } from "@/models";
 
 const axios = require("axios");
@@ -196,10 +209,16 @@ export default class MarcoPolo extends Vue {
   gameSummary!: GameSummaryItem[];
 
   @Getter("getResultTable", { namespace: "marcoPolo" })
-  resultTable!: any[];
+  resultTable!: ResultTableEntry[];
 
   @Getter("getResultTableHeadings", { namespace: "marcoPolo" })
-  headings!: TableHeading[];
+  resultHeadings!: TableHeading[];
+
+  @Getter("getCharacterTable", { namespace: "marcoPolo" })
+  characterTable!: ResultTableEntry[];
+
+  @Getter("getCharacterTableHeadings", { namespace: "marcoPolo" })
+  characterTableHeadings!: TableHeading[];
 
   @Getter("getAllTimeTable", { namespace: "marcoPolo" })
   allTimeTable!: AllTimeTableEntry[];
@@ -354,7 +373,6 @@ export default class MarcoPolo extends Vue {
 
   .column {
     display: flex;
-    width: 100%;
     position: relative;
 
     .box {
