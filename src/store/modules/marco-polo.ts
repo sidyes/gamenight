@@ -7,7 +7,7 @@ import { TableHeading } from "@/models/table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
 
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import { } from "axios";
+import {} from "axios";
 import { MarcoPoloGame } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
 const axios = require("axios");
@@ -128,9 +128,9 @@ const getters: GetterTree<MarcoPoloState, any> = {
         if (a.startPosition < b.startPosition) {
           return -1;
         } else {
-          return 1
+          return 1;
         }
-      })
+      });
       const players = sortedPlayers
         .map(user =>
           user.user ? `${user.user.username} (${user.startPosition})` : ""
@@ -174,7 +174,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
             elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
           }
         }
-
       });
     });
 
