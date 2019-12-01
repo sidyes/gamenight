@@ -9,7 +9,7 @@
       </div>
     </section>
 
-    <div class="section">
+    <div class="section has-text-light">
       <div class="container">
         <div>
           <h2 class="title is-2">Inhaltsübersicht</h2>
@@ -18,9 +18,7 @@
               <a class="index-link" href="#m3">Verantwortlicher</a>
             </li>
             <li>
-              <a class="index-link" href="#mOverview"
-                >Übersicht der Verarbeitungen</a
-              >
+              <a class="index-link" href="#mOverview">Übersicht der Verarbeitungen</a>
             </li>
             <li>
               <a class="index-link" href="#m13">Maßgebliche Rechtsgrundlagen</a>
@@ -29,40 +27,33 @@
               <a class="index-link" href="#m27">Sicherheitsmaßnahmen</a>
             </li>
             <li>
-              <a class="index-link" href="#m24"
-                >Datenverarbeitung in Drittländern</a
-              >
+              <a class="index-link" href="#m24">Datenverarbeitung in Drittländern</a>
             </li>
             <li>
               <a class="index-link" href="#m367">Registrierung und Anmeldung</a>
             </li>
             <li>
-              <a class="index-link" href="#m225"
-                >Bereitstellung des Onlineangebotes und Webhosting</a
-              >
+              <a class="index-link" href="#m225">Bereitstellung des Onlineangebotes und Webhosting</a>
             </li>
             <li>
               <a class="index-link" href="#m12">Löschung von Daten</a>
             </li>
             <li>
-              <a class="index-link" href="#m15"
-                >Änderung und Aktualisierung der Datenschutzerklärung</a
-              >
+              <a class="index-link" href="#m15">Änderung und Aktualisierung der Datenschutzerklärung</a>
             </li>
           </ul>
           <h2 id="m3" class="title is-2 mt-30">Verantwortlicher</h2>
           <p>
             Stefan Herpich
-            <br />Hubertusstraße 21 <br />90547 Stein
+            <br />Hubertusstraße 21
+            <br />90547 Stein
           </p>
           <p>
             <strong>E-Mail-Adresse</strong>:
             <a href="mailto:s10h@web.de">s10h@web.de</a>
           </p>
           <ul class="m-elements"></ul>
-          <h2 id="mOverview" class="title is-2 mt-30">
-            Übersicht der Verarbeitungen
-          </h2>
+          <h2 id="mOverview" class="title is-2 mt-30">Übersicht der Verarbeitungen</h2>
           <p>
             Die nachfolgende Übersicht fasst die Arten der verarbeiteten Daten
             und die Zwecke ihrer Verarbeitung zusammen und verweist auf die
@@ -111,9 +102,7 @@
             </li>
           </ul>
           <h2></h2>
-          <h3 id="m13" class="title is-3 mt-20">
-            Maßgebliche Rechtsgrundlagen
-          </h3>
+          <h3 id="m13" class="title is-3 mt-20">Maßgebliche Rechtsgrundlagen</h3>
           <p>
             Im Folgenden teilen wir die Rechtsgrundlagen der
             Datenschutzgrundverordnung (DSGVO), auf deren Basis wir die
@@ -133,10 +122,10 @@
             </li>
             <li>
               <p>
-                <strong
-                  >Vertragserfüllung und vorvertragliche Anfragen (Art. 6 Abs. 1
-                  S. 1 lit. b. DSGVO)</strong
-                >
+                <strong>
+                  Vertragserfüllung und vorvertragliche Anfragen (Art. 6 Abs. 1
+                  S. 1 lit. b. DSGVO)
+                </strong>
                 - Die Verarbeitung ist für die Erfüllung eines Vertrags, dessen
                 Vertragspartei die betroffene Person ist, oder zur Durchführung
                 vorvertraglicher Maßnahmen erforderlich, die auf Anfrage der
@@ -145,10 +134,10 @@
             </li>
             <li>
               <p>
-                <strong
-                  >Berechtigte Interessen (Art. 6 Abs. 1 S. 1 lit. f.
-                  DSGVO)</strong
-                >
+                <strong>
+                  Berechtigte Interessen (Art. 6 Abs. 1 S. 1 lit. f.
+                  DSGVO)
+                </strong>
                 - Die Verarbeitung ist zur Wahrung der berechtigten Interessen
                 des Verantwortlichen oder eines Dritten erforderlich, sofern
                 nicht die Interessen oder Grundrechte und Grundfreiheiten der
@@ -208,9 +197,7 @@
             SSL-Verschlüsselung. Sie erkennen derart verschlüsselte Verbindungen
             an dem Präfix https:// in der Adresszeile Ihres Browsers.
           </p>
-          <h2 id="m24" class="title is-2 mt-30">
-            Datenverarbeitung in Drittländern
-          </h2>
+          <h2 id="m24" class="title is-2 mt-30">Datenverarbeitung in Drittländern</h2>
           <p>
             Sofern wir Daten in einem Drittland (d.h., außerhalb der
             Europäischen Union (EU), des Europäischen Wirtschaftsraums (EWR))
@@ -233,13 +220,10 @@
             <a
               href="https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection_de"
               target="_blank"
-              >https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection_de</a
-            >
+            >https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection_de</a>
             ).
           </p>
-          <h2 id="m367" class="title is-2 mt-30">
-            Registrierung und Anmeldung
-          </h2>
+          <h2 id="m367" class="title is-2 mt-30">Registrierung und Anmeldung</h2>
           <p>
             Nutzer können ein Nutzerkonto anlegen. Im Rahmen der Registrierung
             werden den Nutzern die erforderlichen Pflichtangaben mitgeteilt und
@@ -303,9 +287,7 @@
               </p>
             </li>
           </ul>
-          <h2 id="m225" class="title is-2 mt-30">
-            Bereitstellung des Onlineangebotes und Webhosting
-          </h2>
+          <h2 id="m225" class="title is-2 mt-30">Bereitstellung des Onlineangebotes und Webhosting</h2>
           <p>
             Um unser Onlineangebot sicher und effizient bereitstellen zu können,
             nehmen wir die Leistungen von einem oder mehreren
@@ -389,9 +371,7 @@
             Datenschutzerklärung erfolgen.
           </p>
           <ul class="m-elements"></ul>
-          <h2 id="m15" class="title is-2 mt-30">
-            Änderung und Aktualisierung der Datenschutzerklärung
-          </h2>
+          <h2 id="m15" class="title is-2 mt-30">Änderung und Aktualisierung der Datenschutzerklärung</h2>
           <p>
             Wir bitten Sie, sich regelmäßig über den Inhalt unserer
             Datenschutzerklärung zu informieren. Wir passen die

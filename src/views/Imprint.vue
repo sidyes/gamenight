@@ -9,13 +9,14 @@
       </div>
     </section>
 
-    <div class="section">
+    <div class="section has-text-light">
       <div class="container">
         <div>
           <h2 class="title is-2">Angaben gem&auml;&szlig; &sect; 5 TMG</h2>
           <p>
             Stefan Herpich
-            <br />Hubertusstra&szlig;e 21 <br />90547 Stein
+            <br />Hubertusstra&szlig;e 21
+            <br />90547 Stein
           </p>
 
           <h2 class="title is-2 mt-30">Kontakt</h2>

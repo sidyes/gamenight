@@ -13,58 +13,43 @@
         <div class="tile is-ancestor">
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">Information</p>
-              <p class="subtitle">Wer bin ich? 🙇🏼</p>
+              <p class="title has-text-white">Information</p>
+              <p class="subtitle has-text-light">Wer bin ich? 🙇🏼</p>
               <div class="content">
                 <div class="columns">
                   <div class="column">
-                    <strong>Benutzername</strong>
+                    <strong class="has-text-white">Benutzername</strong>
                   </div>
-                  <div class="column">{{ user.username }}</div>
+                  <div class="column has-text-light">{{ user.username }}</div>
                 </div>
                 <div class="columns">
                   <div class="column">
-                    <strong>E-Mail</strong>
+                    <strong class="has-text-white">E-Mail</strong>
                   </div>
-                  <div class="column">{{ user.email }}</div>
+                  <div class="column has-text-light">{{ user.email }}</div>
                 </div>
               </div>
             </article>
           </div>
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">Freundefinder</p>
-              <p class="subtitle">Suche nach Freunden! 🔎</p>
+              <p class="title has-text-white">Freundefinder</p>
+              <p class="subtitle has-text-light">Suche nach Freunden! 🔎</p>
               <div class="content">
                 <div class="columns is-vcentered">
                   <div class="column">
                     <div class="field has-addons has-addons-centered">
-                      <p
-                        class="control has-icons-left"
-                        :class="{ 'is-loading': addFriendLoading }"
-                      >
-                        <input
-                          class="input"
-                          type="email"
-                          placeholder="E-Mail"
-                          v-model="mail"
-                        />
+                      <p class="control has-icons-left" :class="{ 'is-loading': addFriendLoading }">
+                        <input class="input" type="email" placeholder="E-Mail" v-model="mail" />
                         <span class="icon is-left">
                           <font-awesome-icon :icon="['fas', 'envelope']" />
                         </span>
                       </p>
                       <div class="control">
-                        <a
-                          class="button is-info"
-                          :disabled="isMailInvalid()"
-                          @click="addFriend"
-                          >Add</a
-                        >
+                        <a class="button is-info" :disabled="isMailInvalid()" @click="addFriend">Add</a>
                       </div>
                     </div>
-                    <p class="has-text-centered is-danger has-text-danger">
-                      {{ addFriendError }}
-                    </p>
+                    <p class="has-text-centered is-danger has-text-danger">{{ addFriendError }}</p>
                   </div>
                 </div>
               </div>
@@ -72,31 +57,18 @@
           </div>
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">Freundesliste</p>
-              <p class="subtitle">
-                Hier kannst du deine ganzen Homies sehen! 👬
-              </p>
+              <p class="title has-text-white">Freundesliste</p>
+              <p class="subtitle has-text-light">Hier kannst du deine ganzen Homies sehen! 👬</p>
               <div class="content">
                 <p
                   v-if="!friends.length"
                   class="has-text-warning has-text-centered is-italic has-text-weight-medium"
-                >
-                  Noch keine Freunde hinzugefügt.
-                </p>
-                <div
-                  class="field is-grouped is-grouped-multiline is-grouped-centered"
-                >
-                  <div
-                    class="control"
-                    v-for="friend in friends"
-                    v-bind:key="friend.email"
-                  >
+                >Noch keine Freunde hinzugefügt.</p>
+                <div class="field is-grouped is-grouped-multiline is-grouped-centered">
+                  <div class="control" v-for="friend in friends" v-bind:key="friend.email">
                     <div class="tags has-addons are-normal">
                       <span class="tag is-dark">{{ friend.username }}</span>
-                      <a
-                        class="tag is-delete"
-                        @click="removeFriend(friend.email)"
-                      ></a>
+                      <a class="tag is-delete" @click="removeFriend(friend.email)"></a>
                     </div>
                   </div>
                 </div>
