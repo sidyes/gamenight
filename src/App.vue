@@ -1,12 +1,6 @@
 <template>
   <div id="app">
-    <Header
-      :isLoggedIn="isLoggedIn"
-      :user="user"
-      @login="login"
-      @logout="logout"
-      @signup="signup"
-    />
+    <Header :isLoggedIn="isLoggedIn" :user="user" @login="login" @logout="logout" @signup="signup" />
     <router-view />
     <Footer />
     <toast position="s"></toast>
@@ -65,6 +59,7 @@ export default class App extends Vue {
       axios
         .post("/.netlify/functions/members-create", member)
         .then((response: any) => {
+          // eslint-disable-next-line no-console
           console.log("Member added", member);
         });
       netlifyIdentity.close();

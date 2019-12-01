@@ -32,8 +32,7 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                          >{{ mem.username }}</option
-                        >
+                        >{{ mem.username }}</option>
                       </select>
                     </div>
                   </div>
@@ -41,16 +40,12 @@
                 <td>
                   <div class="control">
                     <div class="select">
-                      <select
-                        v-model="player.startPosition"
-                        @change="handleStartPositions(player)"
-                      >
+                      <select v-model="player.startPosition" @change="handleStartPositions(player)">
                         <option
                           v-for="position in players.length"
                           :value="position"
                           v-bind:key="position"
-                          >{{ position }}</option
-                        >
+                        >{{ position }}</option>
                       </select>
                     </div>
                   </div>
@@ -63,8 +58,7 @@
                           v-for="char in characters"
                           :value="char"
                           v-bind:key="char"
-                          >{{ char }}</option
-                        >
+                        >{{ char }}</option>
                       </select>
                     </div>
                   </div>
@@ -112,8 +106,7 @@
                     class="button is-medium is-success"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
-                    >Neues Spiel</a
-                  >
+                  >Neues Spiel</a>
                 </div>
               </div>
             </div>
@@ -123,10 +116,7 @@
         <div class="columns">
           <div class="column is-three-fifths is-offset-one-fifth">
             <div class="box">
-              <custom-table
-                :data="allTimeTable"
-                :headings="allTimeHeadings"
-              ></custom-table>
+              <custom-table :data="allTimeTable" :headings="allTimeHeadings"></custom-table>
             </div>
           </div>
         </div>
@@ -147,10 +137,7 @@
         <div class="columns equal-heights">
           <div class="column is-two-thirds">
             <div class="box">
-              <custom-table
-                :data="characterTable"
-                :headings="characterTableHeadings"
-              ></custom-table>
+              <custom-table :data="characterTable" :headings="characterTableHeadings"></custom-table>
             </div>
           </div>
           <div class="column is-one-third">
@@ -270,6 +257,7 @@ export default class MarcoPolo extends Vue {
   }
 
   public onRowClicked(row: number): void {
+    // eslint-disable-next-line no-console
     console.log("clicked row", row);
   }
 
