@@ -7,7 +7,7 @@ import { TableHeading } from "@/models/table-heading.model";
 import { GameSummaryItem } from "@/models/game-summary-item.model";
 
 import { MutationTree, ActionTree, GetterTree } from "vuex";
-import { } from "axios";
+import {} from "axios";
 import { MarcoPoloGame } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
 const axios = require("axios");
@@ -303,7 +303,12 @@ const getters: GetterTree<MarcoPoloState, any> = {
       });
     }
 
-    return [new Series("Gespielt", monthBuckets.map(x => x.toString()))];
+    return [
+      new Series(
+        "Gespielt",
+        monthBuckets.map(x => x.toString())
+      )
+    ];
   },
   getWinDistributionPlayer: state => {
     let players: string[] = [];

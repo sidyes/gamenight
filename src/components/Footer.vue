@@ -3,10 +3,14 @@
     <div class="content has-text-centered">
       <div class="columns is-centered">
         <div class="column is-narrow">
-          <router-link to="/imprint" class="navbar-item has-text-light">Impressum</router-link>
+          <router-link to="/imprint" class="navbar-item has-text-light"
+            >Impressum</router-link
+          >
         </div>
         <div class="column is-narrow">
-          <router-link to="/data-privacy" class="navbar-item has-text-light">Datenschutzerklärung</router-link>
+          <router-link to="/data-privacy" class="navbar-item has-text-light"
+            >Datenschutzerklärung</router-link
+          >
         </div>
       </div>
       <div></div>
