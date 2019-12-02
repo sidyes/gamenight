@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "SET FAUNADB_SERVER_SECRET=fnADYwSog8ACAJxjrqz9rJk82NaBBA5johO4ePyn && npm-run-all --parallel serve:app serve:server",
+    "serve": "npm-run-all --parallel serve:app serve:server",
     "build": "npm-run-all --parallel build:**",
     "lint": "vue-cli-service lint",
     "build:app": "vue-cli-service build",
