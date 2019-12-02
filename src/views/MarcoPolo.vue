@@ -101,7 +101,11 @@
               <div class="columns is-vcentered">
                 <div class="column is-one-fifth">
                   <figure class="image is-128x128 has-image-centered">
-                    <img class="is-rounded" src="@/assets/img/marco_polo.png" />
+                    <img
+                      class="is-rounded"
+                      src="@/assets/img/marco_polo.png"
+                      alt="Marco Polo"
+                    />
                   </figure>
                 </div>
                 <div class="column is-three-fifths">
@@ -109,6 +113,7 @@
                 </div>
                 <div class="column has-text-right">
                   <a
+                    aria-label="Erstelle ein neues Spiel"
                     class="button is-medium is-success"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"

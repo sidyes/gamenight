@@ -58,6 +58,7 @@
                           class="button is-info"
                           :disabled="isMailInvalid()"
                           @click="addFriend"
+                          aria-label="Füge einen neuen Freund hinzu"
                           >Add</a
                         >
                       </div>
@@ -96,6 +97,7 @@
                       <a
                         class="tag is-delete"
                         @click="removeFriend(friend.email)"
+                        aria-label="Entferne einen Freund"
                       ></a>
                     </div>
                   </div>

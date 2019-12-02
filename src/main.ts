@@ -40,7 +40,7 @@ Vue.component("win-distribution-player", WinDistributionPlayer);
 Vue.component("win-distribution-start-position", WinDistributionStartPosition);
 Vue.component("banner-notification", BannerNotification);
 
-Vue.filter("placement", function(placement: number) {
+Vue.filter("placement", function (placement: number) {
   if (!placement) {
     return "-";
   }

@@ -23,7 +23,7 @@
                     v-if="showDice"
                     v-bind:class="[animationEnd]"
                   >
-                    <img src="@/assets/logo.svg" />
+                    <img src="@/assets/logo.svg" alt="game-night" />
                   </figure>
                 </transition>
               </div>
@@ -44,7 +44,7 @@
                   v-if="showDice"
                   v-bind:class="[animationEnd]"
                 >
-                  <img src="@/assets/logo.svg" />
+                  <img src="@/assets/logo.svg" alt="game-night" />
                 </figure>
               </transition>
             </div>
@@ -66,7 +66,11 @@
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
               <router-link to="marco-polo">
-                <img class="is-rounded" src="@/assets/img/marco_polo.png" />
+                <img
+                  class="is-rounded"
+                  src="@/assets/img/marco_polo.png"
+                  alt="Marco Polo"
+                />
               </router-link>
             </figure>
             <router-link
@@ -81,6 +85,7 @@
               <img
                 class="is-rounded"
                 src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+                alt="placeholder"
               />
             </figure>
             <button class="button is-primary mt-25" disabled>
@@ -92,6 +97,7 @@
               <img
                 class="is-rounded"
                 src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+                alt="placeholder"
               />
             </figure>
             <button class="button is-primary mt-25" disabled>
@@ -103,6 +109,7 @@
               <img
                 class="is-rounded"
                 src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+                alt="placeholder"
               />
             </figure>
             <button class="button is-primary mt-25" disabled>

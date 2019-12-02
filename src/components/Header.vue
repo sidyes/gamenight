@@ -3,7 +3,7 @@
     <div class="container">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">
-          <img src="@/assets/logo.svg" width="50" />
+          <img src="@/assets/logo.svg" width="50" alt="game-night" />
 
           <p class="has-text-weight-semibold">GameNight</p>
         </a>
@@ -34,7 +34,7 @@
           >
 
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">Spiele</a>
+            <a class="navbar-link" aria-label="Spieleübersicht">Spiele</a>
 
             <div class="navbar-dropdown">
               <router-link to="/marco-polo" class="navbar-item"
@@ -47,16 +47,25 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons" v-if="!isLoggedIn">
-              <a class="button is-primary" @click="signup()">
+              <a
+                class="button is-primary"
+                aria-label="Registriere dich bei game-night"
+                @click="signup()"
+              >
                 <strong>Registrieren</strong>
               </a>
-              <a class="button is-light" @click="login(login)">Einloggen</a>
+              <a
+                class="button is-light"
+                @click="login(login)"
+                aria-label="Logge dich bei game-night ein"
+                >Einloggen</a
+              >
             </div>
             <div
               class="navbar-item has-dropdown is-hoverable"
               v-if="isLoggedIn"
             >
-              <a class="navbar-link">
+              <a class="navbar-link" aria-label="User Menü">
                 <font-awesome-icon :icon="['fas', 'user']" class="mr-10" />
                 {{ user.username }}
               </a>
@@ -65,7 +74,10 @@
                 <router-link to="/profile" class="navbar-item"
                   >Profil</router-link
                 >
-                <a class="navbar-item has-text-danger" @click="logout()"
+                <a
+                  class="navbar-item has-text-danger"
+                  @click="logout()"
+                  aria-label="Ausloggen"
                   >Logout</a
                 >
               </div>
