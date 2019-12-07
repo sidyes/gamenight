@@ -125,8 +125,8 @@
           </div>
         </div>
 
-        <div class="columns">
-          <div class="column is-three-fifths is-offset-one-fifth">
+        <div class="columns equal-heights">
+          <div class="column is-half">
             <div class="box">
               <custom-table
                 :data="allTimeTable"
@@ -134,23 +134,43 @@
               ></custom-table>
             </div>
           </div>
-        </div>
-
-        <div class="columns">
           <div class="column is-half">
             <div class="box">
               <game-scores :data="gameScores"></game-scores>
             </div>
           </div>
-          <div class="column is-half">
+        </div>
+
+        <div class="columns equal-heights">
+          <div class="column is-third">
             <div class="box">
-              <games-over-time :series="gamesOverTime"></games-over-time>
+              <win-distribution-player
+                :wins="winDistributionPlayer.wins"
+                :players="winDistributionPlayer.labels"
+              ></win-distribution-player>
+            </div>
+          </div>
+
+          <div class="column is-third">
+            <div class="box">
+              <win-distribution-start-position
+                :wins="winDistributionStartPosition.wins"
+                :positions="winDistributionStartPosition.labels"
+              ></win-distribution-start-position>
+            </div>
+          </div>
+
+          <div class="column is-third">
+            <div class="box">
+              <average-scores-widget
+                :data="averageScores"
+              ></average-scores-widget>
             </div>
           </div>
         </div>
 
-        <div class="columns">
-          <div class="column is-two-thirds">
+        <div class="columns is-vcentered">
+          <div class="column is-half">
             <div class="box">
               <custom-table
                 :data="characterTable"
@@ -158,25 +178,10 @@
               ></custom-table>
             </div>
           </div>
-          <div class="column is-one-third">
-            <div class="columns is-multiline">
-              <div class="column is-full">
-                <div class="box">
-                  <win-distribution-player
-                    :wins="winDistributionPlayer.wins"
-                    :players="winDistributionPlayer.labels"
-                  ></win-distribution-player>
-                </div>
-              </div>
 
-              <div class="column is-full">
-                <div class="box">
-                  <win-distribution-start-position
-                    :wins="winDistributionStartPosition.wins"
-                    :positions="winDistributionStartPosition.labels"
-                  ></win-distribution-start-position>
-                </div>
-              </div>
+          <div class="column is-half ">
+            <div class="box">
+              <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
           </div>
         </div>
@@ -209,7 +214,8 @@ import {
   Series,
   TableHeading,
   WinDistribution,
-  ResultTableEntry
+  ResultTableEntry,
+  AverageScores
 } from "@/models";
 
 const axios = require("axios");
@@ -259,6 +265,9 @@ export default class MarcoPolo extends Vue {
   @Getter("getWinDistributionStartPosition", { namespace: "marcoPolo" })
   winDistributionStartPosition!: WinDistribution[];
 
+  @Getter("getAverageScores", { namespace: "marcoPolo" })
+  averageScores!: AverageScores;
+
   @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
 
   players: MarcoPoloPlayer[] | any[] = [];
@@ -299,6 +308,8 @@ export default class MarcoPolo extends Vue {
           type: "success",
           dismissAfter: 2000
         });
+
+        this.fetchGames(this.user);
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {

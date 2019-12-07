@@ -41,7 +41,7 @@ export default class GamesOverTime extends Vue {
     plotOptions: {
       bar: {
         dataLabels: {
-          position: "top" // top, center, bottom
+          position: "top"
         }
       }
     },

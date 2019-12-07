@@ -11,7 +11,7 @@
       v-if="!positions.length"
       class="has-text-warning has-text-centered is-italic has-text-weight-medium"
     >
-      Noch keine Daten vorhanden.
+      Keine Daten vorhanden.
     </p>
   </div>
 </template>

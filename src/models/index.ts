@@ -8,3 +8,4 @@ export * from "./win-distribution.model";
 export * from "./all-time-table-entry.model";
 export * from "./result-table-entry.model";
 export * from "./character-table-entry.model";
+export * from "./average-scores.model";

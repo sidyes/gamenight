@@ -17,6 +17,7 @@ import GameScores from "@/components/GameScores.vue";
 import WinDistributionPlayer from "@/components/WinDistributionPlayer.vue";
 import WinDistributionStartPosition from "@/components/WinDistributionStartPosition.vue";
 import BannerNotification from "@/components/BannerNotification.vue";
+import AverageScoresWidget from "@/components/AverageScoresWidget.vue";
 
 import "vuex-toast/dist/vuex-toast.css";
 import "@/assets/main.scss";
@@ -39,8 +40,9 @@ Vue.component("game-scores", GameScores);
 Vue.component("win-distribution-player", WinDistributionPlayer);
 Vue.component("win-distribution-start-position", WinDistributionStartPosition);
 Vue.component("banner-notification", BannerNotification);
+Vue.component("average-scores-widget", AverageScoresWidget);
 
-Vue.filter("placement", function (placement: number) {
+Vue.filter("placement", function(placement: number) {
   if (!placement) {
     return "-";
   }

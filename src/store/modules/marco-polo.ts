@@ -1,5 +1,5 @@
-import { CharacterTableEntry } from "../../models/character-table-entry.model";
-import { ResultTableEntry } from "./../../models/result-table-entry.model";
+import { CharacterTableEntry } from "@/models/character-table-entry.model";
+import { ResultTableEntry } from "@/models/result-table-entry.model";
 import { AllTimeTableEntry } from "@/models/all-time-table-entry.model";
 import { WinDistribution } from "@/models/win-distribution.model";
 import { GameScoreItem } from "@/models/game-score-item.model";
@@ -10,6 +10,8 @@ import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
 import { MarcoPoloGame } from "@/models/marco-polo.model";
 import { Series } from "@/models/series.model";
+import { AverageScores } from "@/models/average-scores.model";
+
 const axios = require("axios");
 
 interface MarcoPoloState {
@@ -124,14 +126,15 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getResultTable: state =>
     state.games.map(game => {
       const date = new Date(game.time).toDateString();
-      const sortedPlayers = game.players.sort((a, b) => {
+      const copiedPlayers = [...game.players];
+      copiedPlayers.sort((a, b) => {
         if (a.startPosition < b.startPosition) {
           return -1;
         } else {
           return 1;
         }
       });
-      const players = sortedPlayers
+      const players = copiedPlayers
         .map(user =>
           user.user ? `${user.user.username} (${user.startPosition})` : ""
         )
@@ -363,11 +366,48 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1) || 0);
 
-    if (wins.length === 0) {
-      wins.push(1);
+    if (state.games.length === 0) {
+      wins = [1, 1, 1, 1];
     }
 
     return new WinDistribution(startPositions, wins);
+  },
+  getAverageScores: state => {
+    const average: AverageScores = new AverageScores([], 0);
+
+    state.games.forEach(game => {
+      let gameAverage = 0;
+      game.players.forEach(player => {
+        const user = average.players.find(
+          el => el.username === player.user.username
+        );
+
+        if (!user) {
+          average.players.push({
+            username: player.user.username,
+            average: player.points,
+            games: 1
+          });
+        } else {
+          user.average = +user.average + +player.points;
+          user.games++;
+        }
+
+        gameAverage = +gameAverage + +player.points;
+      });
+
+      gameAverage = gameAverage / game.players.length;
+      average.totalAverage = +average.totalAverage + +gameAverage;
+    });
+
+    average.totalAverage = +(
+      +average.totalAverage / state.games.length
+    ).toFixed(2);
+    average.players.forEach(pl => {
+      pl.average = +(pl.average / pl.games).toFixed(2);
+    });
+
+    return average;
   }
 };
 
