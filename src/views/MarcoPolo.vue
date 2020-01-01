@@ -303,13 +303,13 @@ export default class MarcoPolo extends Vue {
         this.players = [];
         this.location = "";
 
+        this.fetchGames(this.user);
+
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
           type: "success",
           dismissAfter: 2000
         });
-
-        this.fetchGames(this.user);
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {

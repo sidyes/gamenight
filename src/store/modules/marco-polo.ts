@@ -22,6 +22,7 @@ interface MarcoPoloState {
   gameScoresHeadings: string[];
   games: MarcoPoloGame[];
   characters: string[];
+  gamesLoaded: boolean;
 }
 
 const state: MarcoPoloState = {
@@ -69,7 +70,8 @@ const state: MarcoPoloState = {
     "Niccolo und Marco Polo",
     "Raschi ad-Din Sinan",
     "Wilhelm von Rubruk"
-  ]
+  ],
+  gamesLoaded: false
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
@@ -408,6 +410,17 @@ const getters: GetterTree<MarcoPoloState, any> = {
     });
 
     return average;
+  },
+  getGamesLoaded: state => state.gamesLoaded,
+  getGame: state => (time: number): MarcoPoloGame | undefined => {
+    let game = undefined;
+    state.games.forEach((g: MarcoPoloGame) => {
+      if (g.time === time) {
+        game = g;
+      }
+    });
+
+    return game;
   }
 };
 
@@ -415,9 +428,11 @@ const getters: GetterTree<MarcoPoloState, any> = {
 const mutations: MutationTree<MarcoPoloState> = {
   setGames: (state, games: MarcoPoloGame[]) => {
     state.games = games;
+    state.gamesLoaded = true;
   },
   reset: state => {
     state.games = [];
+    state.gamesLoaded = false;
   }
 };
 

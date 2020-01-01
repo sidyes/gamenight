@@ -21,9 +21,17 @@ export default new Router({
       component: () => import("./views/MarcoPolo.vue")
     },
     {
-      path: "/marco-polo/:id",
+      path: "/marco-polo/:time",
       name: "marco-polo-detail",
-      component: () => import("./views/MarcoPoloDetail.vue")
+      component: () => import("./views/MarcoPoloDetail.vue"),
+      props: route => {
+        const time = Number.parseInt(route.params.time);
+        if (Number.isNaN(time)) {
+          return { time: 0 };
+        }
+
+        return { time };
+      }
     },
     {
       path: "/profile",
