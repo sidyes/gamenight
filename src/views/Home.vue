@@ -68,7 +68,7 @@
               <router-link to="marco-polo">
                 <img
                   class="is-rounded"
-                  src="@/assets/img/marco_polo.png"
+                  src="@/assets/img/marco-polo/marco_polo.png"
                   alt="Marco Polo"
                 />
               </router-link>

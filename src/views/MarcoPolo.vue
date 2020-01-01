@@ -103,7 +103,7 @@
                   <figure class="image is-128x128 has-image-centered">
                     <img
                       class="is-rounded"
-                      src="@/assets/img/marco_polo.png"
+                      src="@/assets/img/marco-polo/marco_polo.png"
                       alt="Marco Polo"
                     />
                   </figure>
@@ -284,8 +284,10 @@ export default class MarcoPolo extends Vue {
   }
 
   public onRowClicked(row: number): void {
-    // eslint-disable-next-line no-console
-    console.log("clicked row", row);
+    this.$router.push({
+      name: "marco-polo-detail",
+      params: { time: this.resultTable[row].id.toString() }
+    });
   }
 
   public toggleNewGameActive(): void {
