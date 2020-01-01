@@ -21,6 +21,11 @@ export default new Router({
       component: () => import("./views/MarcoPolo.vue")
     },
     {
+      path: "/marco-polo/:id",
+      name: "marco-polo-detail",
+      component: () => import("./views/MarcoPoloDetail.vue")
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("./views/Profile.vue"),
@@ -35,6 +40,10 @@ export default new Router({
       path: "/imprint",
       name: "imprint",
       component: () => import("./views/Imprint.vue")
+    },
+    {
+      path: "*",
+      component: () => import("./views/NotFound.vue")
     }
   ]
 });
