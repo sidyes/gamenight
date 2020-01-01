@@ -2,6 +2,7 @@ $primary: #242c3c;
 $modal-content-width: 700px;
 $table-color: hsl(0, 0%, 100%);
 $table-heading-color: hsl(0, 0%, 100%);
+$table-head-cell-color: hsl(0, 0%, 100%);
 $table-row-hover-background-color: #707889;
 $table-background-color: #343f57;
 $navbar-background-color: #343f57;
@@ -13,6 +14,16 @@ $navbar-dropdown-background-color: #343f57;
 $navbar-dropdown-item-hover-background-color: #242c3c;
 $navbar-dropdown-item-hover-color: hsl(0, 0%, 96%);
 $navbar-dropdown-item-active-color: hsl(0, 0%, 100%);
+$modal-background-background-color: #141922 !important;
+$modal-card-head-background-color: #343f57 !important;
+$modal-card-body-background-color: #242c3c !important;
+$modal-card-title-color: hsl(0, 0%, 100%) !important;
+
+.modal {
+  label {
+    color: hsl(0, 0%, 100%) !important;
+  }
+}
 
 .router-link-exact-active {
   background-color: transparent !important;
@@ -54,8 +65,9 @@ $positions: ("top", "left", "bottom", "right");
 .apexcharts-title-text {
   font-weight: bold !important;
   font-size: 1em !important;
-  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    "Helvetica", "Arial", sans-serif !important;
   line-height: 1.5 !important;
 }
 
