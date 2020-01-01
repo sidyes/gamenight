@@ -31,7 +31,8 @@ export default new Router({
         }
 
         return { time };
-      }
+      },
+      beforeEnter: checkAuth
     },
     {
       path: "/profile",
