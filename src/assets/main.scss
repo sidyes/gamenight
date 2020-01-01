@@ -36,7 +36,10 @@ $modal-card-title-color: hsl(0, 0%, 100%) !important;
 
 @import "~animate.css";
 
+html,
 body {
+  height: 100%;
+  margin: 0;
   background-color: #141922;
 }
 

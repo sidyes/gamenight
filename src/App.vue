@@ -99,3 +99,12 @@ export default class App extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+}
+</style>
