@@ -36,6 +36,22 @@ $modal-card-title-color: hsl(0, 0%, 100%) !important;
 
 @import "~animate.css";
 
+.border {
+  border: 6px solid;
+
+  &.gold {
+    border-color: #af9500;
+  }
+
+  &.silver {
+    border-color: #d7d7d7;
+  }
+
+  &.bronze {
+    border-color: #6a3805;
+  }
+}
+
 html,
 body {
   height: 100%;

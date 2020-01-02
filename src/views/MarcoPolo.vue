@@ -268,6 +268,9 @@ export default class MarcoPolo extends Vue {
   @Getter("getAverageScores", { namespace: "marcoPolo" })
   averageScores!: AverageScores;
 
+  @Getter("getGamesLoaded", { namespace: "marcoPolo" })
+  gamesLoaded!: boolean;
+
   @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
 
   players: MarcoPoloPlayer[] | any[] = [];
@@ -278,7 +281,7 @@ export default class MarcoPolo extends Vue {
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
-    if (newVal) {
+    if (newVal && !this.gamesLoaded) {
       this.fetchGames(this.user);
     }
   }
