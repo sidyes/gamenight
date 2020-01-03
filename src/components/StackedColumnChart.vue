@@ -38,7 +38,8 @@ export default class StackedColumnChart extends Vue {
 
   options = {
     title: {
-      text: this.title
+      text: this.title,
+      align: "center"
     },
     chart: {
       type: "bar",
@@ -69,10 +70,44 @@ export default class StackedColumnChart extends Vue {
       position: "right",
       offsetY: 40
     },
-    fill: {
-      opacity: 1
+    xaxis: {
+      type: "category",
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      },
+      crosshairs: {
+        fill: {
+          type: "gradient",
+          gradient: {
+            colorFrom: "#D8E3F0",
+            colorTo: "#BED1E6",
+            stops: [0, 100],
+            opacityFrom: 0.4,
+            opacityTo: 0.5
+          }
+        }
+      },
+      categories: this.categories
     },
-    xaxis: {}
+    fill: {
+      gradient: {
+        shade: "light",
+        type: "horizontal",
+        shadeIntensity: 0.25,
+        gradientToColors: undefined,
+        inverseColors: true,
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [50, 0, 100, 100]
+      }
+    },
+    theme: {
+      mode: "dark",
+      palette: "palette10"
+    }
   };
 }
 </script>

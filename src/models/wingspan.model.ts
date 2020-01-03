@@ -3,6 +3,7 @@ export class WingspanPlayer {
   constructor(
     public user: Member,
     public placement: number,
+    public points: number,
     public birds: number,
     public bonusCards: number,
     public endOfRoundGoals: number,

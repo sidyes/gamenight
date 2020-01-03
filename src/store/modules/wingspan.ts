@@ -115,7 +115,6 @@ const getters: GetterTree<WingspanState, any> = {
       state.games
         .map(game => {
           const winner = game.players.find(pl => pl.placement === 1);
-
           return winner ? winner.user.username : "";
         })
         .filter(winner => user && winner === user.username)
@@ -133,7 +132,7 @@ const getters: GetterTree<WingspanState, any> = {
           const player = game.players.find(
             pl => user && pl.user.email === user.email
           );
-          return player ? calcTotalPoints(player) : 0;
+          return player ? player.points : 0;
         })
         .reduce((a, b) => {
           return +a + +b;
@@ -168,7 +167,7 @@ const getters: GetterTree<WingspanState, any> = {
       let avgGame = 0;
 
       game.players.forEach(player => {
-        const points = calcTotalPoints(player);
+        const points = player.points;
         // top score
         if (points > topScore.count) {
           topScore.count = points;
@@ -255,7 +254,7 @@ const getters: GetterTree<WingspanState, any> = {
           el => el.username === player.user.username
         );
 
-        const points = calcTotalPoints(player);
+        const points = player.points;
 
         if (!user) {
           average.players.push({
@@ -302,11 +301,11 @@ const getters: GetterTree<WingspanState, any> = {
           players.push(player.user.username);
           games.push(1);
           birds.data.push(player.birds.toString());
-          bonusCards.data.push(player.birds.toString());
-          endOfRoundGoals.data.push(player.birds.toString());
-          eggs.data.push(player.birds.toString());
-          foodOnCards.data.push(player.birds.toString());
-          tuckedCards.data.push(player.birds.toString());
+          bonusCards.data.push(player.bonusCards.toString());
+          endOfRoundGoals.data.push(player.endOfRoundGoals.toString());
+          eggs.data.push(player.eggs.toString());
+          foodOnCards.data.push(player.foodOnCards.toString());
+          tuckedCards.data.push(player.tuckedCards.toString());
         } else {
           birds.data[idx] = (+birds.data[idx] + +player.birds).toString();
           bonusCards.data[idx] = (
@@ -327,12 +326,24 @@ const getters: GetterTree<WingspanState, any> = {
       });
     });
 
-    birds.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
-    bonusCards.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
-    endOfRoundGoals.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
-    eggs.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
-    foodOnCards.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
-    tuckedCards.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
+    birds.data = birds.data.map((total, idx) =>
+      (+total / +games[idx]).toFixed(2)
+    );
+    bonusCards.data = bonusCards.data.map((total, idx) =>
+      (+total / +games[idx]).toFixed(2)
+    );
+    endOfRoundGoals.data = endOfRoundGoals.data.map((total, idx) =>
+      (+total / +games[idx]).toFixed(2)
+    );
+    eggs.data = eggs.data.map((total, idx) =>
+      (+total / +games[idx]).toFixed(2)
+    );
+    foodOnCards.data = foodOnCards.data.map((total, idx) =>
+      (+total / +games[idx]).toFixed(2)
+    );
+    tuckedCards.data = tuckedCards.data.map((total, idx) =>
+      (+total / +games[idx]).toFixed(2)
+    );
 
     return {
       categories: players,
@@ -382,11 +393,11 @@ const getters: GetterTree<WingspanState, any> = {
         const location = game.location;
         const playerWon = game.players.find(pl => pl.placement === 1);
         let winner = playerWon
-          ? `${playerWon.user.username} (${calcTotalPoints(playerWon)})`
+          ? `${playerWon.user.username} (${playerWon.points})`
           : "-";
 
         const avg = (
-          game.players.map(pl => calcTotalPoints(pl)).reduce((a, b) => a + b) /
+          game.players.map(pl => pl.points).reduce((a, b) => a + b) /
           game.players.length
         ).toFixed(0);
 
@@ -438,19 +449,6 @@ function compareAllTimeTableEntries(
   }
 
   return 0;
-}
-
-function calcTotalPoints(player: WingspanPlayer): number {
-  let sum = 0;
-
-  sum += +player.birds || 0;
-  sum += +player.bonusCards || 0;
-  sum += +player.endOfRoundGoals || 0;
-  sum += +player.eggs || 0;
-  sum += +player.foodOnCards || 0;
-  sum += +player.tuckedCards || 0;
-
-  return sum;
 }
 
 const mutations: MutationTree<WingspanState> = {

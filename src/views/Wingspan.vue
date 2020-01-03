@@ -223,7 +223,7 @@
               <stacked-column-chart
                 :series="averagePointsDistribution.series"
                 :categories="averagePointsDistribution.categories"
-                title="'Durchnittliche Punkte pro Kategorie'"
+                title="Durchnittliche Punkte pro Kategorie"
               />
             </div>
           </div>
