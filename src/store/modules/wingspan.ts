@@ -21,6 +21,7 @@ interface WingspanState {
   summaryHeadings: string[];
   gameScoresHeadings: string[];
   resultTableHeadings: TableHeading[];
+  isLoading: boolean;
 }
 
 const state: WingspanState = {
@@ -48,10 +49,12 @@ const state: WingspanState = {
     new TableHeading("Spieler", "players"),
     new TableHeading("Ø Punkte", "avg"),
     new TableHeading("Gewinner (Punkte)", "winner")
-  ]
+  ],
+  isLoading: false
 };
 
 const getters: GetterTree<WingspanState, any> = {
+  getIsLoading: state => state.isLoading,
   getGamesLoaded: state => state.gamesLoaded,
   getAllTimeTable: state => {
     const allTimeEntries: AllTimeTableEntry[] = [];
@@ -459,6 +462,9 @@ const mutations: MutationTree<WingspanState> = {
     state.games = games;
     state.gamesLoaded = true;
   },
+  setLoadingStatus: (state, isLoading) => {
+    state.isLoading = isLoading;
+  },
   reset: state => {
     state.games = [];
     state.gamesLoaded = false;
@@ -467,11 +473,18 @@ const mutations: MutationTree<WingspanState> = {
 
 const actions: ActionTree<WingspanState, any> = {
   fetchGames: ({ commit }, payload) => {
+    commit("setLoadingStatus", true);
     axios
       .get("/.netlify/functions/wingspan-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
+      })
+      .finally(() => {
+        commit("setLoadingStatus", false);
       });
+  },
+  setLoading: ({ commit }, payload) => {
+    commit("setLoadingStatus", payload);
   }
 };
 

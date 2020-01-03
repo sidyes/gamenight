@@ -23,6 +23,7 @@ interface MarcoPoloState {
   games: MarcoPoloGame[];
   characters: string[];
   gamesLoaded: boolean;
+  isLoading: boolean;
 }
 
 const state: MarcoPoloState = {
@@ -71,10 +72,12 @@ const state: MarcoPoloState = {
     "Raschi ad-Din Sinan",
     "Wilhelm von Rubruk"
   ],
-  gamesLoaded: false
+  gamesLoaded: false,
+  isLoading: false
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
+  getIsLoading: state => state.isLoading,
   getAllTimeTable: state => {
     const allTimeEntries: AllTimeTableEntry[] = [];
 
@@ -446,6 +449,9 @@ const mutations: MutationTree<MarcoPoloState> = {
     state.games = games;
     state.gamesLoaded = true;
   },
+  setLoadingStatus: (state, isLoading) => {
+    state.isLoading = isLoading;
+  },
   reset: state => {
     state.games = [];
     state.gamesLoaded = false;
@@ -454,11 +460,18 @@ const mutations: MutationTree<MarcoPoloState> = {
 
 const actions: ActionTree<MarcoPoloState, any> = {
   fetchGames: ({ commit }, payload) => {
+    commit("setLoadingStatus", true);
     axios
       .get("/.netlify/functions/marco-polo-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
+      })
+      .finally(() => {
+        commit("setLoadingStatus", false);
       });
+  },
+  setLoading: ({ commit }, payload) => {
+    commit("setLoadingStatus", payload);
   }
 };
 

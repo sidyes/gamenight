@@ -1,5 +1,8 @@
 <template>
   <div class="marco-polo">
+    <div class="loading-wrapper" v-if="isLoading">
+      <progress class="progress is-small is-primary" max="100">15%</progress>
+    </div>
     <section class="section">
       <new-game-modal
         :isOpened.sync="newGameActive"
@@ -273,7 +276,11 @@ export default class MarcoPolo extends Vue {
   @Getter("getGamesLoaded", { namespace: "marcoPolo" })
   gamesLoaded!: boolean;
 
+  @Getter("getIsLoading", { namespace: "marcoPolo" })
+  isLoading!: boolean;
+
   @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
+  @Action("setLoading", { namespace: "marcoPolo" }) setLoading: any;
 
   players: MarcoPoloPlayer[] | any[] = [];
 
@@ -303,6 +310,7 @@ export default class MarcoPolo extends Vue {
 
   public saveGame(): void {
     const game = new MarcoPoloGame(this.players, Date.now(), this.location);
+    this.setLoading(true);
     axios
       .post("/.netlify/functions/marco-polo-create", game)
       .then((response: any) => {
@@ -324,6 +332,9 @@ export default class MarcoPolo extends Vue {
           type: "danger",
           dismissAfter: 1000
         });
+      })
+      .finally(() => {
+        this.setLoading(false);
       });
   }
 

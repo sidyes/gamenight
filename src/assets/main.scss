@@ -26,6 +26,14 @@ $modal-card-title-color: hsl(0, 0%, 100%) !important;
   }
 }
 
+.loading-wrapper {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+
 .router-link-exact-active {
   background-color: transparent !important;
   color: white !important;

@@ -1,5 +1,8 @@
 <template>
   <div class="wingspan">
+    <div class="loading-wrapper" v-if="isLoading">
+      <progress class="progress is-small is-primary" max="100">15%</progress>
+    </div>
     <section class="section">
       <new-game-modal
         :isOpened.sync="newGameActive"
@@ -309,7 +312,11 @@ export default class Wingspan extends Vue {
   @Getter("getResultTableHeadings", { namespace: "wingspan" })
   resultHeadings!: TableHeading[];
 
+  @Getter("getIsLoading", { namespace: "wingspan" })
+  isLoading!: boolean;
+
   @Action("fetchGames", { namespace: "wingspan" }) fetchGames: any;
+  @Action("setLoading", { namespace: "wingspan" }) setLoading: any;
 
   newGameActive = false;
   players: WingspanPlayer[] | any[] = [];
@@ -404,6 +411,7 @@ export default class Wingspan extends Vue {
 
   public saveGame(): void {
     const game = new WingspanGame(this.players, Date.now(), this.location);
+    this.setLoading(true);
     axios
       .post("/.netlify/functions/wingspan-create", game)
       .then((response: any) => {
@@ -425,6 +433,9 @@ export default class Wingspan extends Vue {
           type: "danger",
           dismissAfter: 1000
         });
+      })
+      .finally(() => {
+        this.setLoading(false);
       });
   }
 
