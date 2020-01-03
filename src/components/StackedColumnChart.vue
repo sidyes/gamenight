@@ -4,7 +4,7 @@
       width="100%"
       height="250"
       type="bar"
-      :options="options"
+      :options="generateOptions()"
       :series="series"
     ></apexchart>
     <p
@@ -26,8 +26,8 @@ export default class StackedColumnChart extends Vue {
   @Prop({ default: () => [] }) categories!: string[];
   @Prop({ default: () => "Stacked Bar Chart" }) title!: string;
 
-  public created(): void {
-    this.options = {
+  public generateOptions(): any {
+    return {
       ...this.options,
       xaxis: {
         ...this.options.xaxis,
@@ -44,6 +44,7 @@ export default class StackedColumnChart extends Vue {
     chart: {
       type: "bar",
       height: 350,
+
       stacked: true,
       toolbar: {
         show: false
@@ -51,8 +52,11 @@ export default class StackedColumnChart extends Vue {
     },
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 768,
         options: {
+          chart: {
+            width: 400
+          },
           legend: {
             position: "bottom",
             offsetX: -10,
@@ -70,6 +74,7 @@ export default class StackedColumnChart extends Vue {
       position: "right",
       offsetY: 40
     },
+
     xaxis: {
       type: "category",
       axisBorder: {

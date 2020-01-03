@@ -36,10 +36,17 @@ export default class PieChart extends Vue {
     labels: this.labels,
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 768,
         options: {
+          title: {
+            align: "center"
+          },
+          dataLabels: {
+            offsetX: 100
+          },
           chart: {
-            width: 300
+            width: 350,
+            type: "pie"
           },
           legend: {
             position: "bottom"

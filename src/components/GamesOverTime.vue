@@ -56,7 +56,16 @@ export default class GamesOverTime extends Vue {
         colors: ["#ffffff"]
       }
     },
-
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          chart: {
+            width: 400
+          }
+        }
+      }
+    ],
     xaxis: {
       categories: [
         "Jan",
