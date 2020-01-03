@@ -21,7 +21,7 @@
               <router-link
                 tag="button"
                 class="button is-outlined is-link"
-                to="marco-polo"
+                to="/marco-polo"
                 >Übersicht</router-link
               >
             </div>
