@@ -40,6 +40,9 @@
               <router-link to="/marco-polo" class="navbar-item"
                 >Marco Polo</router-link
               >
+              <router-link to="/wingspan" class="navbar-item"
+                >Flügelschlag</router-link
+              >
             </div>
           </div>
         </div>

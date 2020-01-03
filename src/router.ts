@@ -35,6 +35,11 @@ export default new Router({
       beforeEnter: checkAuth
     },
     {
+      path: "/wingspan",
+      name: "wingspan",
+      component: () => import("./views/Wingspan.vue")
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("./views/Profile.vue"),

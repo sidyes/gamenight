@@ -14,10 +14,10 @@ import CustomTable from "@/components/CustomTable.vue";
 import NewGameModal from "@/components/NewGameModal.vue";
 import GamesOverTime from "@/components/GamesOverTime.vue";
 import GameScores from "@/components/GameScores.vue";
-import WinDistributionPlayer from "@/components/WinDistributionPlayer.vue";
-import WinDistributionStartPosition from "@/components/WinDistributionStartPosition.vue";
+import PieChart from "@/components/PieChart.vue";
 import BannerNotification from "@/components/BannerNotification.vue";
 import AverageScoresWidget from "@/components/AverageScoresWidget.vue";
+import StackedColumnChart from "@/components/StackedColumnChart.vue";
 
 import "vuex-toast/dist/vuex-toast.css";
 import "@/assets/main.scss";
@@ -37,10 +37,10 @@ Vue.component("custom-table", CustomTable);
 Vue.component("new-game-modal", NewGameModal);
 Vue.component("games-over-time", GamesOverTime);
 Vue.component("game-scores", GameScores);
-Vue.component("win-distribution-player", WinDistributionPlayer);
-Vue.component("win-distribution-start-position", WinDistributionStartPosition);
+Vue.component("pie-chart", PieChart);
 Vue.component("banner-notification", BannerNotification);
 Vue.component("average-scores-widget", AverageScoresWidget);
+Vue.component("stacked-column-chart", StackedColumnChart);
 
 Vue.filter("placement", function(placement: number) {
   if (!placement) {

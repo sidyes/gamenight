@@ -1,38 +1,31 @@
-import { CharacterTableEntry } from "@/models/character-table-entry.model";
-import { ResultTableEntry } from "@/models/result-table-entry.model";
-import { AllTimeTableEntry } from "@/models/all-time-table-entry.model";
-import { WinDistribution } from "@/models/win-distribution.model";
-import { GameScoreItem } from "@/models/game-score-item.model";
-import { TableHeading } from "@/models/table-heading.model";
-import { GameSummaryItem } from "@/models/game-summary-item.model";
-
-import { MutationTree, ActionTree, GetterTree } from "vuex";
-import {} from "axios";
-import { MarcoPoloGame } from "@/models/marco-polo.model";
-import { Series } from "@/models/series.model";
-import { AverageScores } from "@/models/average-scores.model";
+import { StackedColumChartData } from "./../../models/stacked-column-chart-data.model";
+import { ResultTableEntry } from "./../../models/result-table-entry.model";
+import { WingspanGame, WingspanPlayer } from "@/models/wingspan.model";
+import { GetterTree, MutationTree, ActionTree } from "vuex";
+import {
+  GameSummaryItem,
+  TableHeading,
+  AllTimeTableEntry,
+  GameScoreItem,
+  WinDistribution,
+  AverageScores,
+  Series
+} from "@/models";
 
 const axios = require("axios");
 
-interface MarcoPoloState {
-  resultTableHeadings: TableHeading[];
+interface WingspanState {
+  games: WingspanGame[];
+  gamesLoaded: boolean;
   allTimeTableHeadings: TableHeading[];
-  characterTableHeadings: TableHeading[];
   summaryHeadings: string[];
   gameScoresHeadings: string[];
-  games: MarcoPoloGame[];
-  characters: string[];
-  gamesLoaded: boolean;
+  resultTableHeadings: TableHeading[];
 }
 
-const state: MarcoPoloState = {
-  resultTableHeadings: [
-    new TableHeading("Datum", "date"),
-    new TableHeading("Ort", "location"),
-    new TableHeading("Spieler (Startposition)", "players"),
-    new TableHeading("Ø Punkte", "avg"),
-    new TableHeading("Gewinner (Punkte)", "winner")
-  ],
+const state: WingspanState = {
+  games: [],
+  gamesLoaded: false,
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
     new TableHeading("Spiele", "games"),
@@ -40,12 +33,6 @@ const state: MarcoPoloState = {
     new TableHeading("🥈", "secondPlaces"),
     new TableHeading("🥉", "thirdPlaces"),
     new TableHeading("Punkte", "points")
-  ],
-  characterTableHeadings: [
-    new TableHeading("Charakter", "character"),
-    new TableHeading("Spiele", "games"),
-    new TableHeading("Siege", "wins"),
-    new TableHeading("Siegquote (%)", "winrate")
   ],
   summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
@@ -55,26 +42,17 @@ const state: MarcoPoloState = {
     "Lowest Win Score",
     "Lowest Score"
   ],
-  games: [],
-  characters: [
-    "Altan Ord",
-    "André de Longjumeau",
-    "Berke Khan",
-    "Fratre Nicolao",
-    "Gunj Kököchin",
-    "Johannes Caprini",
-    "Khan Arghun",
-    "Kubilai Khan",
-    "Matteo Polo",
-    "Mercator ex Tabriz",
-    "Niccolo und Marco Polo",
-    "Raschi ad-Din Sinan",
-    "Wilhelm von Rubruk"
-  ],
-  gamesLoaded: false
+  resultTableHeadings: [
+    new TableHeading("Datum", "date"),
+    new TableHeading("Ort", "location"),
+    new TableHeading("Spieler", "players"),
+    new TableHeading("Ø Punkte", "avg"),
+    new TableHeading("Gewinner (Punkte)", "winner")
+  ]
 };
 
-const getters: GetterTree<MarcoPoloState, any> = {
+const getters: GetterTree<WingspanState, any> = {
+  getGamesLoaded: state => state.gamesLoaded,
   getAllTimeTable: state => {
     const allTimeEntries: AllTimeTableEntry[] = [];
 
@@ -125,79 +103,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return allTimeEntries;
   },
   getAllTimeTableHeadings: state => state.allTimeTableHeadings,
-  getResultTable: state =>
-    state.games
-      .map(game => {
-        const date = new Date(game.time).toDateString();
-        const copiedPlayers = [...game.players];
-        copiedPlayers.sort((a, b) => {
-          if (a.startPosition < b.startPosition) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
-        const players = copiedPlayers
-          .map(user =>
-            user.user ? `${user.user.username} (${user.startPosition})` : ""
-          )
-          .join(", ");
-        const location = game.location;
-        const playerWon = game.players.find(pl => pl.placement === 1);
-        let winner = playerWon
-          ? `${playerWon.user.username} (${playerWon.points})`
-          : "-";
-
-        const avg = (
-          game.players.map(pl => pl.points).reduce((a, b) => +a + +b) /
-          game.players.length
-        ).toFixed(0);
-
-        return new ResultTableEntry(
-          game.time,
-          date,
-          players,
-          location,
-          winner,
-          avg
-        );
-      })
-      .sort((a, b) => {
-        return a.id > b.id ? -1 : 1;
-      }),
-  getResultTableHeadings: state => state.resultTableHeadings,
-  getCharacterTable: (state, getters, _rootState, _rootGetters) => {
-    const characters = getters.getCharacters;
-
-    const characterTableEntries: CharacterTableEntry[] = [];
-    characters.forEach((char: string) =>
-      characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0))
-    );
-
-    state.games.map(game => {
-      game.players.forEach(player => {
-        const elem = characterTableEntries.find(
-          entry => entry.character === player.character
-        );
-
-        if (elem) {
-          if (player.placement === 1) {
-            ++elem.games;
-            ++elem.wins;
-            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
-          } else {
-            ++elem.games;
-            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
-          }
-        }
-      });
-    });
-
-    characterTableEntries.sort(compareCharacterTableEntries);
-
-    return characterTableEntries;
-  },
-  getCharacterTableHeadings: state => state.characterTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
     const games = new GameSummaryItem(
@@ -228,7 +133,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
           const player = game.players.find(
             pl => user && pl.user.email === user.email
           );
-          return player ? player.points : 0;
+          return player ? calcTotalPoints(player) : 0;
         })
         .reduce((a, b) => {
           return +a + +b;
@@ -242,7 +147,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return [games, wins, winPercentage, avg];
   },
-  getCharacters: state => state.characters,
   getGameScores: (state): GameScoreItem[] => {
     const topScore = new GameScoreItem(state.gameScoresHeadings[0], 0, "");
     const highestLosingScore = new GameScoreItem(
@@ -264,8 +168,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       let avgGame = 0;
 
       game.players.forEach(player => {
-        const points = +player.points;
-
+        const points = calcTotalPoints(player);
         // top score
         if (points > topScore.count) {
           topScore.count = points;
@@ -314,31 +217,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
       lowestScore
     ];
   },
-  getGamesLastYear: state => {
-    const today = new Date();
-    const monthBuckets = Array.apply(null, Array(12)).map(() => 0);
-
-    for (let i = 11; i >= 0; i -= 1) {
-      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-
-      state.games.forEach(game => {
-        const gameTime = new Date(game.time);
-        if (
-          gameTime.getFullYear() === d.getFullYear() &&
-          gameTime.getMonth() === d.getMonth()
-        ) {
-          monthBuckets[11 - i] += 1;
-        }
-      });
-    }
-
-    return [
-      new Series(
-        "Gespielt",
-        monthBuckets.map(x => x.toString())
-      )
-    ];
-  },
   getWinDistributionPlayer: state => {
     let players: string[] = [];
     let wins: number[] = [];
@@ -367,26 +245,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return new WinDistribution(players, wins);
   },
-  getWinDistributionStartPosition: state => {
-    let startPositions: string[] = ["1", "2", "3", "4"];
-    let wins: number[] = [0, 0, 0, 0];
-
-    state.games.forEach(game => {
-      game.players.forEach(player => {
-        if (player.placement === 1) {
-          wins[player.startPosition - 1]++;
-        }
-      });
-    });
-
-    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1) || 0);
-
-    if (state.games.length === 0) {
-      wins = [1, 1, 1, 1];
-    }
-
-    return new WinDistribution(startPositions, wins);
-  },
   getAverageScores: state => {
     const average: AverageScores = new AverageScores([], 0);
 
@@ -397,18 +255,20 @@ const getters: GetterTree<MarcoPoloState, any> = {
           el => el.username === player.user.username
         );
 
+        const points = calcTotalPoints(player);
+
         if (!user) {
           average.players.push({
             username: player.user.username,
-            average: player.points,
+            average: points,
             games: 1
           });
         } else {
-          user.average = +user.average + +player.points;
+          user.average = +user.average + points;
           user.games++;
         }
 
-        gameAverage = +gameAverage + +player.points;
+        gameAverage = +gameAverage + points;
       });
 
       gameAverage = gameAverage / game.players.length;
@@ -424,42 +284,125 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return average;
   },
-  getGamesLoaded: state => state.gamesLoaded,
-  getGame: state => (time: number): MarcoPoloGame | undefined => {
-    let game = undefined;
-    state.games.forEach((g: MarcoPoloGame) => {
-      if (g.time === time) {
-        game = g;
-      }
+  getAveragePointsDistribution: (state): StackedColumChartData => {
+    let players: string[] = [];
+    let games: number[] = [];
+    const birds = new Series("Vögel", []);
+    const bonusCards = new Series("Bonuskarten", []);
+    const endOfRoundGoals = new Series("Rundenziele", []);
+    const eggs = new Series("Eier", []);
+    const foodOnCards = new Series("Gelagertes Futter", []);
+    const tuckedCards = new Series("Karten unter Vögeln", []);
+
+    state.games.forEach(game => {
+      game.players.forEach(player => {
+        let idx = players.indexOf(player.user.username);
+
+        if (idx === -1) {
+          players.push(player.user.username);
+          games.push(1);
+          birds.data.push(player.birds.toString());
+          bonusCards.data.push(player.birds.toString());
+          endOfRoundGoals.data.push(player.birds.toString());
+          eggs.data.push(player.birds.toString());
+          foodOnCards.data.push(player.birds.toString());
+          tuckedCards.data.push(player.birds.toString());
+        } else {
+          birds.data[idx] = (+birds.data[idx] + +player.birds).toString();
+          bonusCards.data[idx] = (
+            +bonusCards.data[idx] + +player.bonusCards
+          ).toString();
+          endOfRoundGoals.data[idx] = (
+            +endOfRoundGoals.data[idx] + +player.endOfRoundGoals
+          ).toString();
+          eggs.data[idx] = (+eggs.data[idx] + +player.eggs).toString();
+          foodOnCards.data[idx] = (
+            +foodOnCards.data[idx] + +player.foodOnCards
+          ).toString();
+          tuckedCards.data[idx] = (
+            +tuckedCards.data[idx] + +player.tuckedCards
+          ).toString();
+          games[idx] = +games[idx] + 1;
+        }
+      });
     });
 
-    return game;
-  }
-};
+    birds.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
+    bonusCards.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
+    endOfRoundGoals.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
+    eggs.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
+    foodOnCards.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
+    tuckedCards.data.map((total, idx) => (+total / +games[idx]).toFixed(2));
 
-//Mutations Must Be Synchronous
-const mutations: MutationTree<MarcoPoloState> = {
-  setGames: (state, games: MarcoPoloGame[]) => {
-    games.forEach(game =>
-      game.players.sort((a, b) => (a.placement < b.placement ? -1 : 1))
-    );
-    state.games = games;
-    state.gamesLoaded = true;
+    return {
+      categories: players,
+      series: [
+        birds,
+        bonusCards,
+        endOfRoundGoals,
+        eggs,
+        foodOnCards,
+        tuckedCards
+      ]
+    };
   },
-  reset: state => {
-    state.games = [];
-    state.gamesLoaded = false;
-  }
-};
+  getGamesLastYear: state => {
+    const today = new Date();
+    const monthBuckets = Array.apply(null, Array(12)).map(() => 0);
 
-const actions: ActionTree<MarcoPoloState, any> = {
-  fetchGames: ({ commit }, payload) => {
-    axios
-      .get("/.netlify/functions/marco-polo-read", { params: payload })
-      .then((response: any) => {
-        commit("setGames", response.data.items);
+    for (let i = 11; i >= 0; i -= 1) {
+      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+
+      state.games.forEach(game => {
+        const gameTime = new Date(game.time);
+        if (
+          gameTime.getFullYear() === d.getFullYear() &&
+          gameTime.getMonth() === d.getMonth()
+        ) {
+          monthBuckets[11 - i] += 1;
+        }
       });
-  }
+    }
+
+    return [
+      new Series(
+        "Gespielt",
+        monthBuckets.map(x => x.toString())
+      )
+    ];
+  },
+  getResultTable: state =>
+    state.games
+      .map(game => {
+        const date = new Date(game.time).toDateString();
+
+        const players = game.players
+          .map(user => (user.user ? user.user.username : ""))
+          .join(", ");
+        const location = game.location;
+        const playerWon = game.players.find(pl => pl.placement === 1);
+        let winner = playerWon
+          ? `${playerWon.user.username} (${calcTotalPoints(playerWon)})`
+          : "-";
+
+        const avg = (
+          game.players.map(pl => calcTotalPoints(pl)).reduce((a, b) => a + b) /
+          game.players.length
+        ).toFixed(0);
+
+        return new ResultTableEntry(
+          game.time,
+          date,
+          players,
+          location,
+          winner,
+          avg
+        );
+      })
+      .sort((a, b) => {
+        return a.id > b.id ? -1 : 1;
+      }),
+  getResultTableHeadings: state => state.resultTableHeadings
 };
 
 function compareAllTimeTableEntries(
@@ -497,32 +440,44 @@ function compareAllTimeTableEntries(
   return 0;
 }
 
-function compareCharacterTableEntries(
-  a: CharacterTableEntry,
-  b: CharacterTableEntry
-): number {
-  if (a.winrate > b.winrate) {
-    return -1;
-  }
+function calcTotalPoints(player: WingspanPlayer): number {
+  let sum = 0;
 
-  if (a.winrate < b.winrate) {
-    return 1;
-  }
+  sum += +player.birds || 0;
+  sum += +player.bonusCards || 0;
+  sum += +player.endOfRoundGoals || 0;
+  sum += +player.eggs || 0;
+  sum += +player.foodOnCards || 0;
+  sum += +player.tuckedCards || 0;
 
-  if (a.winrate === b.winrate) {
-    if (a.games > b.games) {
-      return -1;
-    }
-
-    if (a.games < b.games) {
-      return 1;
-    }
-  }
-
-  return 0;
+  return sum;
 }
 
-export const marcoPolo = {
+const mutations: MutationTree<WingspanState> = {
+  setGames: (state, games: WingspanGame[]) => {
+    games.forEach(game =>
+      game.players.sort((a, b) => (a.placement < b.placement ? -1 : 1))
+    );
+    state.games = games;
+    state.gamesLoaded = true;
+  },
+  reset: state => {
+    state.games = [];
+    state.gamesLoaded = false;
+  }
+};
+
+const actions: ActionTree<WingspanState, any> = {
+  fetchGames: ({ commit }, payload) => {
+    axios
+      .get("/.netlify/functions/wingspan-read", { params: payload })
+      .then((response: any) => {
+        commit("setGames", response.data.items);
+      });
+  }
+};
+
+export const wingspan = {
   namespaced: true,
   state,
   getters,

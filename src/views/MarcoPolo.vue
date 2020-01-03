@@ -3,7 +3,7 @@
     <section class="section">
       <new-game-modal
         :isOpened.sync="newGameActive"
-        :title="'New Game'"
+        :title="'Neues Spiel'"
         :disableSaveBtn="!isFormComplete()"
         :location="location"
         @players-changed="onNrOfPlayersChange"
@@ -144,19 +144,21 @@
         <div class="columns equal-heights">
           <div class="column is-third">
             <div class="box">
-              <win-distribution-player
-                :wins="winDistributionPlayer.wins"
-                :players="winDistributionPlayer.labels"
-              ></win-distribution-player>
+              <pie-chart
+                :series="winDistributionPlayer.wins"
+                :labels="winDistributionPlayer.labels"
+                :title="'Gewinnverteilung - Spieler'"
+              ></pie-chart>
             </div>
           </div>
 
           <div class="column is-third">
             <div class="box">
-              <win-distribution-start-position
-                :wins="winDistributionStartPosition.wins"
-                :positions="winDistributionStartPosition.labels"
-              ></win-distribution-start-position>
+              <pie-chart
+                :series="winDistributionStartPosition.wins"
+                :labels="winDistributionStartPosition.labels"
+                :title="'Gewinnverteilung - Startposition'"
+              ></pie-chart>
             </div>
           </div>
 
@@ -400,21 +402,3 @@ export default class MarcoPolo extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@media (min-width: 769px) {
-  .columns.equal-heights {
-    flex-wrap: wrap;
-    align-items: stretch;
-
-    .column {
-      display: flex;
-      position: relative;
-
-      .box {
-        width: 100%;
-      }
-    }
-  }
-}
-</style>

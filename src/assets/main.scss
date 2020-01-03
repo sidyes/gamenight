@@ -1,8 +1,9 @@
 $primary: #242c3c;
-$modal-content-width: 700px;
+$modal-content-width: 900px;
 $table-color: hsl(0, 0%, 100%);
 $table-heading-color: hsl(0, 0%, 100%);
 $table-head-cell-color: hsl(0, 0%, 100%);
+$table-foot-cell-color: hsl(0, 0%, 100%);
 $table-row-hover-background-color: #707889;
 $table-background-color: #343f57;
 $navbar-background-color: #343f57;
@@ -80,6 +81,22 @@ body {
 
 $sizes: (0, 10, 15, 20, 25, 30, 50);
 $positions: ("top", "left", "bottom", "right");
+
+@media (min-width: 769px) {
+  .columns.equal-heights {
+    flex-wrap: wrap;
+    align-items: stretch;
+
+    .column {
+      display: flex;
+      position: relative;
+
+      .box {
+        width: 100%;
+      }
+    }
+  }
+}
 
 .apexcharts-title-text {
   font-weight: bold !important;

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { user } from "./modules/user";
 import { marcoPolo } from "./modules/marco-polo";
+import { wingspan } from "./modules/wingspan";
 
 const toast = require("vuex-toast");
 
@@ -14,12 +15,14 @@ export default new Vuex.Store({
       dismissInterval: 8000
     }),
     user,
-    marcoPolo
+    marcoPolo,
+    wingspan
   },
   actions: {
     clearStore({ commit }) {
       commit("user/reset");
       commit("marcoPolo/reset");
+      commit("wingspan/reset");
     }
   }
 });

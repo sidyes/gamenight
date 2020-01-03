@@ -82,15 +82,20 @@
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
-              <img
-                class="is-rounded"
-                src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
-                alt="placeholder"
-              />
+              <router-link to="wingspan">
+                <img
+                  class="is-rounded"
+                  src="@/assets/img/wingspan/wingspan.jpg"
+                  alt="Flügelschlag"
+                />
+              </router-link>
             </figure>
-            <button class="button is-primary mt-25" disabled>
-              Coming soon...
-            </button>
+            <router-link
+              tag="button"
+              class="button is-primary mt-25"
+              to="wingspan"
+              >Flügelschlag</router-link
+            >
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">

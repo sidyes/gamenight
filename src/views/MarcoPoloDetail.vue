@@ -18,12 +18,12 @@
               <h2 class="subtitle">🏠 {{ game.location }}</h2>
             </div>
             <div class="column has-text-right">
-              <button
+              <router-link
+                tag="button"
                 class="button is-outlined is-link"
-                @click="returnToOverview()"
+                to="marco-polo"
+                >Übersicht</router-link
               >
-                Übersicht
-              </button>
             </div>
           </div>
         </div>
@@ -133,12 +133,6 @@ export default class MarcoPoloDetail extends Vue {
 
   public characterToImage(char: string): string {
     return _.snakeCase(char);
-  }
-
-  public returnToOverview(): void {
-    this.$router.push({
-      name: "marco-polo"
-    });
   }
 }
 </script>
