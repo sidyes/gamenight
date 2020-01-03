@@ -101,7 +101,7 @@
             <figure class="image is-200x200 has-image-centered">
               <img
                 class="is-rounded"
-                src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+                src="https://bulma.io/images/placeholders/256x256.png"
                 alt="placeholder"
               />
             </figure>
@@ -113,7 +113,7 @@
             <figure class="image is-200x200 has-image-centered">
               <img
                 class="is-rounded"
-                src="https://github.com/jgthms/bulma/blob/master/docs/images/placeholders/256x256.png?raw=true"
+                src="https://bulma.io/images/placeholders/256x256.png"
                 alt="placeholder"
               />
             </figure>
