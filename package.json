@@ -6,7 +6,7 @@
     "serve": "npm-run-all --parallel serve:app serve:server",
     "build": "npm-run-all --parallel build:**",
     "lint": "vue-cli-service lint",
-    "build:app": "vue-cli-service build",
+    "build:app": "cross-env NODE_ENV=production vue-cli-service build",
     "build:functions": "netlify-lambda build src/lambda -c ./webpack.config.js",
     "serve:app": "vue-cli-service serve",
     "serve:server": "netlify-lambda serve src/lambda -c ./webpack.config.js"
@@ -23,6 +23,7 @@
     "bulma": "^0.8.0",
     "bulma-tooltip": "^3.0.2",
     "core-js": "^3.6.1",
+    "cross-env": "^6.0.3",
     "faunadb": "^2.10.2",
     "lodash": "^4.17.15",
     "netlify-identity-widget": "^1.5.6",
