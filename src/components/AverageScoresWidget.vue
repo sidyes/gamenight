@@ -41,7 +41,7 @@ export default class AverageScoresWidget extends Vue {
         enabledOnSeries: [0],
         style: {
           fontSize: "12px",
-          colors: ["#fff"]
+          colors: ["#000"]
         }
       },
       xaxis: {
@@ -65,7 +65,7 @@ export default class AverageScoresWidget extends Vue {
       },
 
       legend: {
-        offsetY: -10
+        offsetY: 5
       },
       theme: {
         mode: "dark",
