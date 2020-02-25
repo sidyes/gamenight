@@ -239,8 +239,6 @@ const getters: GetterTree<WingspanState, any> = {
       });
     });
 
-    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1));
-
     if (wins.length === 0) {
       wins.push(1);
     }

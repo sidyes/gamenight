@@ -150,8 +150,12 @@
               <pie-chart
                 :series="winDistributionPlayer.wins"
                 :labels="winDistributionPlayer.labels"
-                :title="'Gewinnverteilung - Spieler'"
+                :title="'Gewinnverteilung - Spieler*'"
               ></pie-chart>
+              <p>
+                *Da es mehrere Sieger in einem Spiel geben kann, kann diese
+                Statistik von der rein persönlichen abweichen.
+              </p>
             </div>
           </div>
 
@@ -160,8 +164,12 @@
               <pie-chart
                 :series="winDistributionStartPosition.wins"
                 :labels="winDistributionStartPosition.labels"
-                :title="'Gewinnverteilung - Startposition'"
+                :title="'Gewinnverteilung - Startposition*'"
               ></pie-chart>
+              <p>
+                *Da es mehrere Sieger in einem Spiel geben kann, kann diese
+                Statistik von der rein persönlichen abweichen.
+              </p>
             </div>
           </div>
 
@@ -413,3 +421,9 @@ export default class MarcoPolo extends Vue {
   }
 }
 </script>
+<style lang="scss" scoped>
+p {
+  color: lightgray;
+  font-size: 12px;
+}
+</style>

@@ -362,8 +362,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
       });
     });
 
-    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1));
-
     if (wins.length === 0) {
       wins.push(1);
     }
@@ -381,8 +379,6 @@ const getters: GetterTree<MarcoPoloState, any> = {
         }
       });
     });
-
-    wins = wins.map(win => +((win / state.games.length) * 100).toFixed(1) || 0);
 
     if (state.games.length === 0) {
       wins = [1, 1, 1, 1];
