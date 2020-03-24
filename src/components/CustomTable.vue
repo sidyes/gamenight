@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-wrapper">
     <table class="table is-hoverable is-fullwidth">
       <thead>
         <tr>
@@ -49,6 +49,14 @@ export default class Table extends Vue {
 </script>
 
 <style scoped>
+.table-wrapper {
+  max-height: 450px;
+  overflow-y: auto;
+}
+thead th {
+ position: sticky; top: 0;
+ background-color: #343f57;
+}
 tbody tr {
   cursor: pointer;
 }

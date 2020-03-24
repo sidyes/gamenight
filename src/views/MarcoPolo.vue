@@ -192,6 +192,17 @@
 
           <div class="column is-half">
             <div class="box">
+              <custom-table
+                :data="myTopCharacterTable"
+                :headings="myTopCharacterTableHeadings"
+              ></custom-table>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="box">
               <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
           </div>
@@ -254,6 +265,12 @@ export default class MarcoPolo extends Vue {
 
   @Getter("getCharacterTableHeadings", { namespace: "marcoPolo" })
   characterTableHeadings!: TableHeading[];
+
+  @Getter("getMyTopCharacterTable", { namespace: "marcoPolo" })
+  myTopCharacterTable!: ResultTableEntry[];
+
+  @Getter("getMyTopCharacterTableHeadings", { namespace: "marcoPolo" })
+  myTopCharacterTableHeadings!: TableHeading[];
 
   @Getter("getAllTimeTable", { namespace: "marcoPolo" })
   allTimeTable!: AllTimeTableEntry[];
