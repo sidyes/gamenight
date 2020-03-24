@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 /* export our lambda function as named "handler" export */
-exports.handler = (event, context) => {
+exports.handler = (event, context, callback) => {
   console.log("Function `wingspan-read` invoked");
 
   const params = event.queryStringParameters;
@@ -30,16 +30,16 @@ exports.handler = (event, context) => {
         items: response.data.map(entry => entry.data)
       };
 
-      return {
+      callback(null, {
         statusCode: 200,
         body: JSON.stringify(items)
-      };
+      });
     })
     .catch(error => {
       /* Error! return the error with statusCode 400 */
-      return {
+      callback(null, {
         statusCode: 404,
         body: JSON.stringify(error)
-      };
+      });
     });
 };

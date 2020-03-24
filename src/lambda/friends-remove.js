@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 /* export our lambda function as named "handler" export */
-exports.handler = (event, context) => {
+exports.handler = (event, context, callback) => {
   /* parse the string body into a useable JS object */
   const data = JSON.parse(event.body);
   console.log("Function `friends-remove` invoked", data);
@@ -43,45 +43,45 @@ exports.handler = (event, context) => {
                   data: { friends: updatedFriends }
                 })
               )
-              .then(response => {
-                return {
+              .then(() => {
+                callback(null, {
                   statusCode: 200,
                   body: JSON.stringify({ friend })
-                };
+                });
               })
               .catch(error => {
                 console.log("error", error);
                 /* Error! return the error with statusCode 400 */
-                return {
+                callback(null, {
                   statusCode: 400,
                   body: JSON.stringify(error)
-                };
+                });
               });
           })
           .catch(error => {
             console.log("error", error);
             /* Error! return the error with statusCode 400 */
-            return {
+            callback(null, {
               statusCode: 400,
               body: JSON.stringify(error)
-            };
+            });
           });
       } else {
         const message =
           "Du hast keine Freunde! Wie willst du dann welche löschen?!";
 
-        return {
+        callback(null, {
           statusCode: 400,
           body: JSON.stringify({ message })
-        };
+        });
       }
     })
     .catch(error => {
       console.log("error", error);
       /* Error! return the error with statusCode 400 */
-      return {
+      callback(null, {
         statusCode: 400,
         body: JSON.stringify(error)
-      };
+      });
     });
 };

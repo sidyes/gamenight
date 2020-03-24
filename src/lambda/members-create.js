@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 /* export our lambda function as named "handler" export */
-exports.handler = (event, context) => {
+exports.handler = (event, context, callback) => {
   /* parse the string body into a useable JS object */
   const data = JSON.parse(event.body);
   console.log("Function `members-create` invoked", data);
@@ -18,23 +18,23 @@ exports.handler = (event, context) => {
     .then(result => {
       if (result) {
         console.log("Member already exists", data);
-        return { statusCode: 200, body: JSON.stringify(data) };
+        callback(null, { statusCode: 200, body: JSON.stringify(data) });
       } else {
         client
           .query(q.Create(q.Collection("members"), { data }))
           .then(response => {
             /* Success! return the response with statusCode 200 */
-            return {
+            callback(null, {
               statusCode: 200,
               body: JSON.stringify(response)
-            };
+            });
           })
           .catch(error => {
             /* Error! return the error with statusCode 400 */
-            return {
+            callback(null, {
               statusCode: 400,
               body: JSON.stringify(error)
-            };
+            });
           });
       }
     });

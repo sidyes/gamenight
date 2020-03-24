@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 /* export our lambda function as named "handler" export */
-exports.handler = (event, context) => {
+exports.handler = (event, context, callback) => {
   /* parse the string body into a useable JS object */
   const data = JSON.parse(event.body);
   console.log("Function `friends-add` invoked", data);
@@ -15,10 +15,10 @@ exports.handler = (event, context) => {
   if (data.friend === data.user.email) {
     const message = "You cannot add yourself as a friend!";
 
-    return {
+    callback(null, {
       statusCode: 400,
       body: JSON.stringify({ message })
-    };
+    });
   }
 
   return client
@@ -55,10 +55,10 @@ exports.handler = (event, context) => {
                         if (fr.email === friend.email) {
                           const message = `${friend.username} is already your friend!`;
 
-                          return {
+                          callback(null, {
                             statusCode: 400,
                             body: JSON.stringify({ message })
-                          };
+                          });
                         }
                       });
                       friends.push(friend);
@@ -69,28 +69,28 @@ exports.handler = (event, context) => {
                             data: { friends: friends }
                           })
                         )
-                        .then(response => {
-                          return {
+                        .then(() => {
+                          callback(null, {
                             statusCode: 200,
                             body: JSON.stringify({ friend })
-                          };
+                          });
                         })
                         .catch(error => {
                           console.log("error", error);
                           /* Error! return the error with statusCode 400 */
-                          return {
+                          callback(null, {
                             statusCode: 400,
                             body: JSON.stringify(error)
-                          };
+                          });
                         });
                     })
                     .catch(error => {
                       console.log("error", error);
                       /* Error! return the error with statusCode 400 */
-                      return {
+                      callback(null, {
                         statusCode: 400,
                         body: JSON.stringify(error)
-                      };
+                      });
                     });
                 } else {
                   return client
@@ -99,55 +99,56 @@ exports.handler = (event, context) => {
                         data: { user: data.user, friends: [data.friend] }
                       })
                     )
-                    .then(response => {
-                      return {
+                    .then(() => {
+                      callback(null, {
                         statusCode: 200,
                         body: JSON.stringify({ friend })
-                      };
+                      });
                     })
                     .catch(error => {
                       console.log("error", error);
                       /* Error! return the error with statusCode 400 */
-                      return {
+                      callback(null, {
                         statusCode: 400,
                         body: JSON.stringify(error)
-                      };
+                      });
                     });
                 }
               })
               .catch(error => {
                 console.log("error", error);
                 /* Error! return the error with statusCode 400 */
-                return {
+                callback(null, {
                   statusCode: 400,
                   body: JSON.stringify(error)
-                };
+                });
               });
           })
           .catch(error => {
             console.log("error", error);
             /* Error! return the error with statusCode 400 */
-            return {
+            callback(null, {
               statusCode: 400,
               body: JSON.stringify(error)
-            };
+            });
           });
       } else {
         const err = {
           message: "User does not exist. Please provide a valid mail."
         };
-        return {
+
+        callback(null, {
           statusCode: 404,
           body: JSON.stringify(err)
-        };
+        });
       }
     })
     .catch(error => {
       console.log("error", error);
       /* Error! return the error with statusCode 400 */
-      return {
+      callback(null, {
         statusCode: 400,
         body: JSON.stringify(error)
-      };
+      });
     });
 };

@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 /* export our lambda function as named "handler" export */
-exports.handler = (event, context) => {
+exports.handler = (event, context, callback) => {
   console.log("Function `friends-read` invoked");
 
   const params = event.queryStringParameters;
@@ -30,35 +30,35 @@ exports.handler = (event, context) => {
             )
           )
           .then(response => {
-            return {
+            callback(null, {
               statusCode: 200,
               body: JSON.stringify({ friends: response.data[0].data.friends })
-            };
+            });
           })
           .catch(error => {
             /* Error! return the error with statusCode 400 */
-            return {
+            callback(null, {
               statusCode: 404,
               body: JSON.stringify(error)
-            };
+            });
           });
       } else {
         const friends = {
           friends: []
         };
 
-        return {
+        callback(null, {
           statusCode: 200,
           body: JSON.stringify(friends)
-        };
+        });
       }
     })
     .catch(error => {
       console.log(error);
       /* Error! return the error with statusCode 400 */
-      return {
+      callback(null, {
         statusCode: 404,
         body: JSON.stringify(error)
-      };
+      });
     });
 };

@@ -27,3 +27,6 @@ secrets.txt
 # Local Netlify folder
 .netlify
 debug.log
+
+# Ignore compile lambdas
+/lambda
