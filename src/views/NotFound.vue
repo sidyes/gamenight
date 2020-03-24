@@ -11,7 +11,7 @@
       </div>
     </section>
     <div class="section has-text-light">
-      <div class="container ">
+      <div class="container">
         <div class="columns is-centered">
           <div class="column is-narrow">
             <figure>

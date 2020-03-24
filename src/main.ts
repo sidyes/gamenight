@@ -42,7 +42,7 @@ Vue.component("banner-notification", BannerNotification);
 Vue.component("average-scores-widget", AverageScoresWidget);
 Vue.component("stacked-column-chart", StackedColumnChart);
 
-Vue.filter("placement", function(placement: number) {
+Vue.filter("placement", function (placement: number) {
   if (!placement) {
     return "-";
   }
@@ -69,5 +69,5 @@ Vue.filter("placement", function(placement: number) {
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

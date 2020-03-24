@@ -23,48 +23,48 @@ export default class GamesOverTime extends Vue {
       ...this.options,
       xaxis: {
         ...this.options.xaxis,
-        categories: this.generateLastYear()
-      }
+        categories: this.generateLastYear(),
+      },
     };
   }
 
   options = {
     title: {
       text: "Spiele in den letzten 12 Monaten",
-      align: "center"
+      align: "center",
     },
     chart: {
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     plotOptions: {
       bar: {
         dataLabels: {
-          position: "top"
-        }
-      }
+          position: "top",
+        },
+      },
     },
     dataLabels: {
       enabled: true,
-      formatter: function(val: number) {
+      formatter: function (val: number) {
         return val > 0 ? "#" + val : "";
       },
       offsetY: 10,
       style: {
         fontSize: "12px",
-        colors: ["#ffffff"]
-      }
+        colors: ["#ffffff"],
+      },
     },
     responsive: [
       {
         breakpoint: 768,
         options: {
           chart: {
-            width: 400
-          }
-        }
-      }
+            width: 400,
+          },
+        },
+      },
     ],
     xaxis: {
       categories: [
@@ -79,13 +79,13 @@ export default class GamesOverTime extends Vue {
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
+        "Dec",
       ],
       axisBorder: {
-        show: false
+        show: false,
       },
       axisTicks: {
-        show: false
+        show: false,
       },
       crosshairs: {
         fill: {
@@ -95,10 +95,10 @@ export default class GamesOverTime extends Vue {
             colorTo: "#BED1E6",
             stops: [0, 100],
             opacityFrom: 0.4,
-            opacityTo: 0.5
-          }
-        }
-      }
+            opacityTo: 0.5,
+          },
+        },
+      },
     },
     fill: {
       gradient: {
@@ -109,24 +109,24 @@ export default class GamesOverTime extends Vue {
         inverseColors: true,
         opacityFrom: 1,
         opacityTo: 1,
-        stops: [50, 0, 100, 100]
-      }
+        stops: [50, 0, 100, 100],
+      },
     },
     yaxis: {
       axisBorder: {
-        show: false
+        show: false,
       },
       axisTicks: {
-        show: false
+        show: false,
       },
       labels: {
-        show: false
-      }
+        show: false,
+      },
     },
     theme: {
       mode: "dark",
-      palette: "palette10"
-    }
+      palette: "palette10",
+    },
   };
 
   monthNames = [
@@ -141,7 +141,7 @@ export default class GamesOverTime extends Vue {
     "September",
     "Oktober",
     "November",
-    "Dezember"
+    "Dezember",
   ];
 
   public generateLastYear(): string[] {

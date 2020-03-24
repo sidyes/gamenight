@@ -3,7 +3,7 @@ import faunadb from "faunadb"; /* Import faunaDB sdk */
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
 const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET
+  secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
 /* export our lambda function as named "handler" export */
@@ -14,7 +14,7 @@ exports.handler = (event, context, callback) => {
 
   return client
     .query(q.Exists(q.Match(q.Index("my_friends"), data.user.email)))
-    .then(result => {
+    .then((result) => {
       // got already a friend list
       if (result) {
         return client
@@ -24,10 +24,10 @@ exports.handler = (event, context, callback) => {
               q.Lambda("X", q.Get(q.Var("X")))
             )
           )
-          .then(response => {
+          .then((response) => {
             let friend;
             const friends = response.data[0].data.friends;
-            const updatedFriends = friends.filter(fr => {
+            const updatedFriends = friends.filter((fr) => {
               if (fr.email !== data.friend) {
                 return true;
               } else {
@@ -40,30 +40,30 @@ exports.handler = (event, context, callback) => {
             return client
               .query(
                 q.Update(response.data[0].ref, {
-                  data: { friends: updatedFriends }
+                  data: { friends: updatedFriends },
                 })
               )
               .then(() => {
                 callback(null, {
                   statusCode: 200,
-                  body: JSON.stringify({ friend })
+                  body: JSON.stringify({ friend }),
                 });
               })
-              .catch(error => {
+              .catch((error) => {
                 console.log("error", error);
                 /* Error! return the error with statusCode 400 */
                 callback(null, {
                   statusCode: 400,
-                  body: JSON.stringify(error)
+                  body: JSON.stringify(error),
                 });
               });
           })
-          .catch(error => {
+          .catch((error) => {
             console.log("error", error);
             /* Error! return the error with statusCode 400 */
             callback(null, {
               statusCode: 400,
-              body: JSON.stringify(error)
+              body: JSON.stringify(error),
             });
           });
       } else {
@@ -72,16 +72,16 @@ exports.handler = (event, context, callback) => {
 
         callback(null, {
           statusCode: 400,
-          body: JSON.stringify({ message })
+          body: JSON.stringify({ message }),
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("error", error);
       /* Error! return the error with statusCode 400 */
       callback(null, {
         statusCode: 400,
-        body: JSON.stringify(error)
+        body: JSON.stringify(error),
       });
     });
 };

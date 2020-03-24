@@ -32,7 +32,7 @@ const state: MarcoPoloState = {
     new TableHeading("Ort", "location"),
     new TableHeading("Spieler (Startposition)", "players"),
     new TableHeading("Ø Punkte", "avg"),
-    new TableHeading("Gewinner (Punkte)", "winner")
+    new TableHeading("Gewinner (Punkte)", "winner"),
   ],
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
@@ -40,13 +40,13 @@ const state: MarcoPoloState = {
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
     new TableHeading("🥉", "thirdPlaces"),
-    new TableHeading("Punkte", "points")
+    new TableHeading("Punkte", "points"),
   ],
   characterTableHeadings: [
     new TableHeading("Charakter", "character"),
     new TableHeading("Spiele", "games"),
     new TableHeading("Siege", "wins"),
-    new TableHeading("Siegquote (%)", "winrate")
+    new TableHeading("Siegquote (%)", "winrate"),
   ],
   summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
@@ -54,7 +54,7 @@ const state: MarcoPoloState = {
     "Highest Losing Score",
     "Avg Score",
     "Lowest Win Score",
-    "Lowest Score"
+    "Lowest Score",
   ],
   games: [],
   characters: [
@@ -70,21 +70,21 @@ const state: MarcoPoloState = {
     "Mercator ex Tabriz",
     "Niccolo und Marco Polo",
     "Raschi ad-Din Sinan",
-    "Wilhelm von Rubruk"
+    "Wilhelm von Rubruk",
   ],
   gamesLoaded: false,
-  isLoading: false
+  isLoading: false,
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
-  getIsLoading: state => state.isLoading,
-  getAllTimeTable: state => {
+  getIsLoading: (state) => state.isLoading,
+  getAllTimeTable: (state) => {
     const allTimeEntries: AllTimeTableEntry[] = [];
 
-    state.games.map(game => {
-      game.players.forEach(player => {
+    state.games.map((game) => {
+      game.players.forEach((player) => {
         let entry = allTimeEntries.find(
-          elem => elem.username === player.user.username
+          (elem) => elem.username === player.user.username
         );
 
         if (!entry) {
@@ -127,10 +127,10 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return allTimeEntries;
   },
-  getAllTimeTableHeadings: state => state.allTimeTableHeadings,
-  getResultTable: state =>
+  getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
+  getResultTable: (state) =>
     state.games
-      .map(game => {
+      .map((game) => {
         const date = new Date(game.time).toDateString();
         const copiedPlayers = [...game.players];
         copiedPlayers.sort((a, b) => {
@@ -141,18 +141,18 @@ const getters: GetterTree<MarcoPoloState, any> = {
           }
         });
         const players = copiedPlayers
-          .map(user =>
+          .map((user) =>
             user.user ? `${user.user.username} (${user.startPosition})` : ""
           )
           .join(", ");
         const location = game.location;
-        const playerWon = game.players.find(pl => pl.placement === 1);
+        const playerWon = game.players.find((pl) => pl.placement === 1);
         let winner = playerWon
           ? `${playerWon.user.username} (${playerWon.points})`
           : "-";
 
         const avg = (
-          game.players.map(pl => pl.points).reduce((a, b) => +a + +b) /
+          game.players.map((pl) => pl.points).reduce((a, b) => +a + +b) /
           game.players.length
         ).toFixed(0);
 
@@ -168,7 +168,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       .sort((a, b) => {
         return a.id > b.id ? -1 : 1;
       }),
-  getResultTableHeadings: state => state.resultTableHeadings,
+  getResultTableHeadings: (state) => state.resultTableHeadings,
   getCharacterTable: (state, getters, _rootState, _rootGetters) => {
     const characters = getters.getCharacters;
 
@@ -177,10 +177,10 @@ const getters: GetterTree<MarcoPoloState, any> = {
       characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0))
     );
 
-    state.games.map(game => {
-      game.players.forEach(player => {
+    state.games.map((game) => {
+      game.players.forEach((player) => {
         const elem = characterTableEntries.find(
-          entry => entry.character === player.character
+          (entry) => entry.character === player.character
         );
 
         if (elem) {
@@ -200,7 +200,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return characterTableEntries;
   },
-  getCharacterTableHeadings: state => state.characterTableHeadings,
+  getCharacterTableHeadings: (state) => state.characterTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
     const games = new GameSummaryItem(
@@ -211,12 +211,12 @@ const getters: GetterTree<MarcoPoloState, any> = {
     const wins = new GameSummaryItem(
       state.summaryHeadings[1],
       state.games
-        .map(game => {
-          const winner = game.players.find(pl => pl.placement === 1);
+        .map((game) => {
+          const winner = game.players.find((pl) => pl.placement === 1);
 
           return winner ? winner.user.username : "";
         })
-        .filter(winner => user && winner === user.username)
+        .filter((winner) => user && winner === user.username)
         .length.toString()
     );
 
@@ -227,9 +227,9 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     const avgPoints = (
       (state.games
-        .map(game => {
+        .map((game) => {
           const player = game.players.find(
-            pl => user && pl.user.email === user.email
+            (pl) => user && pl.user.email === user.email
           );
           return player ? player.points : 0;
         })
@@ -245,7 +245,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return [games, wins, winPercentage, avg];
   },
-  getCharacters: state => state.characters,
+  getCharacters: (state) => state.characters,
   getGameScores: (state): GameScoreItem[] => {
     const topScore = new GameScoreItem(state.gameScoresHeadings[0], 0, "");
     const highestLosingScore = new GameScoreItem(
@@ -263,10 +263,10 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     let avg = 0;
 
-    state.games.forEach(game => {
+    state.games.forEach((game) => {
       let avgGame = 0;
 
-      game.players.forEach(player => {
+      game.players.forEach((player) => {
         const points = +player.points;
 
         // top score
@@ -314,17 +314,17 @@ const getters: GetterTree<MarcoPoloState, any> = {
       highestLosingScore,
       avgScore,
       lowestWinScore,
-      lowestScore
+      lowestScore,
     ];
   },
-  getGamesLastYear: state => {
+  getGamesLastYear: (state) => {
     const today = new Date();
     const monthBuckets = Array.apply(null, Array(12)).map(() => 0);
 
     for (let i = 11; i >= 0; i -= 1) {
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
 
-      state.games.forEach(game => {
+      state.games.forEach((game) => {
         const gameTime = new Date(game.time);
         if (
           gameTime.getFullYear() === d.getFullYear() &&
@@ -338,16 +338,16 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return [
       new Series(
         "Gespielt",
-        monthBuckets.map(x => x.toString())
-      )
+        monthBuckets.map((x) => x.toString())
+      ),
     ];
   },
-  getWinDistributionPlayer: state => {
+  getWinDistributionPlayer: (state) => {
     let players: string[] = [];
     let wins: number[] = [];
 
-    state.games.forEach(game => {
-      game.players.forEach(player => {
+    state.games.forEach((game) => {
+      game.players.forEach((player) => {
         let idx = players.indexOf(player.user.username);
 
         if (idx === -1) {
@@ -368,12 +368,12 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return new WinDistribution(players, wins);
   },
-  getWinDistributionStartPosition: state => {
+  getWinDistributionStartPosition: (state) => {
     let startPositions: string[] = ["1", "2", "3", "4"];
     let wins: number[] = [0, 0, 0, 0];
 
-    state.games.forEach(game => {
-      game.players.forEach(player => {
+    state.games.forEach((game) => {
+      game.players.forEach((player) => {
         if (player.placement === 1) {
           wins[player.startPosition - 1]++;
         }
@@ -386,21 +386,21 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return new WinDistribution(startPositions, wins);
   },
-  getAverageScores: state => {
+  getAverageScores: (state) => {
     const average: AverageScores = new AverageScores([], 0);
 
-    state.games.forEach(game => {
+    state.games.forEach((game) => {
       let gameAverage = 0;
-      game.players.forEach(player => {
+      game.players.forEach((player) => {
         const user = average.players.find(
-          el => el.username === player.user.username
+          (el) => el.username === player.user.username
         );
 
         if (!user) {
           average.players.push({
             username: player.user.username,
             average: player.points,
-            games: 1
+            games: 1,
           });
         } else {
           user.average = +user.average + +player.points;
@@ -417,14 +417,14 @@ const getters: GetterTree<MarcoPoloState, any> = {
     average.totalAverage = +(
       +average.totalAverage / state.games.length
     ).toFixed(2);
-    average.players.forEach(pl => {
+    average.players.forEach((pl) => {
       pl.average = +(pl.average / pl.games).toFixed(2);
     });
 
     return average;
   },
-  getGamesLoaded: state => state.gamesLoaded,
-  getGame: state => (time: number): MarcoPoloGame | undefined => {
+  getGamesLoaded: (state) => state.gamesLoaded,
+  getGame: (state) => (time: number): MarcoPoloGame | undefined => {
     let game = undefined;
     state.games.forEach((g: MarcoPoloGame) => {
       if (g.time === time) {
@@ -433,13 +433,13 @@ const getters: GetterTree<MarcoPoloState, any> = {
     });
 
     return game;
-  }
+  },
 };
 
 //Mutations Must Be Synchronous
 const mutations: MutationTree<MarcoPoloState> = {
   setGames: (state, games: MarcoPoloGame[]) => {
-    games.forEach(game =>
+    games.forEach((game) =>
       game.players.sort((a, b) => (a.placement < b.placement ? -1 : 1))
     );
     state.games = games;
@@ -448,10 +448,10 @@ const mutations: MutationTree<MarcoPoloState> = {
   setLoadingStatus: (state, isLoading) => {
     state.isLoading = isLoading;
   },
-  reset: state => {
+  reset: (state) => {
     state.games = [];
     state.gamesLoaded = false;
-  }
+  },
 };
 
 const actions: ActionTree<MarcoPoloState, any> = {
@@ -468,7 +468,7 @@ const actions: ActionTree<MarcoPoloState, any> = {
   },
   setLoading: ({ commit }, payload) => {
     commit("setLoadingStatus", payload);
-  }
+  },
 };
 
 function compareAllTimeTableEntries(
@@ -536,5 +536,5 @@ export const marcoPolo = {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

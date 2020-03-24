@@ -31,15 +31,15 @@ export default class StackedColumnChart extends Vue {
       ...this.options,
       xaxis: {
         ...this.options.xaxis,
-        categories: this.categories
-      }
+        categories: this.categories,
+      },
     };
   }
 
   options = {
     title: {
       text: this.title,
-      align: "center"
+      align: "center",
     },
     chart: {
       type: "bar",
@@ -47,41 +47,41 @@ export default class StackedColumnChart extends Vue {
 
       stacked: true,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     responsive: [
       {
         breakpoint: 768,
         options: {
           chart: {
-            width: 400
+            width: 400,
           },
           legend: {
             position: "bottom",
             offsetX: -10,
-            offsetY: 0
-          }
-        }
-      }
+            offsetY: 0,
+          },
+        },
+      },
     ],
     plotOptions: {
       bar: {
-        horizontal: false
-      }
+        horizontal: false,
+      },
     },
     legend: {
       position: "right",
-      offsetY: 40
+      offsetY: 40,
     },
 
     xaxis: {
       type: "category",
       axisBorder: {
-        show: false
+        show: false,
       },
       axisTicks: {
-        show: false
+        show: false,
       },
       crosshairs: {
         fill: {
@@ -91,11 +91,11 @@ export default class StackedColumnChart extends Vue {
             colorTo: "#BED1E6",
             stops: [0, 100],
             opacityFrom: 0.4,
-            opacityTo: 0.5
-          }
-        }
+            opacityTo: 0.5,
+          },
+        },
       },
-      categories: this.categories
+      categories: this.categories,
     },
     fill: {
       gradient: {
@@ -106,13 +106,13 @@ export default class StackedColumnChart extends Vue {
         inverseColors: true,
         opacityFrom: 1,
         opacityTo: 1,
-        stops: [50, 0, 100, 100]
-      }
+        stops: [50, 0, 100, 100],
+      },
     },
     theme: {
       mode: "dark",
-      palette: "palette10"
-    }
+      palette: "palette10",
+    },
   };
 }
 </script>

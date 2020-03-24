@@ -3,7 +3,7 @@ import faunadb from "faunadb"; /* Import faunaDB sdk */
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
 const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET
+  secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
 /* export our lambda function as named "handler" export */
@@ -17,13 +17,13 @@ exports.handler = (event, context, callback) => {
 
     callback(null, {
       statusCode: 400,
-      body: JSON.stringify({ message })
+      body: JSON.stringify({ message }),
     });
   }
 
   return client
     .query(q.Exists(q.Match(q.Index("members_email"), data.friend)))
-    .then(result => {
+    .then((result) => {
       if (result) {
         // friend account exists
         return client
@@ -33,11 +33,11 @@ exports.handler = (event, context, callback) => {
               q.Lambda("X", q.Get(q.Var("X")))
             )
           )
-          .then(response => {
+          .then((response) => {
             const friend = response.data[0].data;
             return client
               .query(q.Exists(q.Match(q.Index("my_friends"), data.user.email)))
-              .then(result => {
+              .then((result) => {
                 // got already a friend list
                 if (result) {
                   return client
@@ -49,15 +49,15 @@ exports.handler = (event, context, callback) => {
                         q.Lambda("X", q.Get(q.Var("X")))
                       )
                     )
-                    .then(response => {
+                    .then((response) => {
                       const friends = response.data[0].data.friends;
-                      friends.forEach(fr => {
+                      friends.forEach((fr) => {
                         if (fr.email === friend.email) {
                           const message = `${friend.username} is already your friend!`;
 
                           callback(null, {
                             statusCode: 400,
-                            body: JSON.stringify({ message })
+                            body: JSON.stringify({ message }),
                           });
                         }
                       });
@@ -66,89 +66,89 @@ exports.handler = (event, context, callback) => {
                       return client
                         .query(
                           q.Update(response.data[0].ref, {
-                            data: { friends: friends }
+                            data: { friends: friends },
                           })
                         )
                         .then(() => {
                           callback(null, {
                             statusCode: 200,
-                            body: JSON.stringify({ friend })
+                            body: JSON.stringify({ friend }),
                           });
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           console.log("error", error);
                           /* Error! return the error with statusCode 400 */
                           callback(null, {
                             statusCode: 400,
-                            body: JSON.stringify(error)
+                            body: JSON.stringify(error),
                           });
                         });
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       console.log("error", error);
                       /* Error! return the error with statusCode 400 */
                       callback(null, {
                         statusCode: 400,
-                        body: JSON.stringify(error)
+                        body: JSON.stringify(error),
                       });
                     });
                 } else {
                   return client
                     .query(
                       q.Create(q.Collection("friends"), {
-                        data: { user: data.user, friends: [data.friend] }
+                        data: { user: data.user, friends: [data.friend] },
                       })
                     )
                     .then(() => {
                       callback(null, {
                         statusCode: 200,
-                        body: JSON.stringify({ friend })
+                        body: JSON.stringify({ friend }),
                       });
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       console.log("error", error);
                       /* Error! return the error with statusCode 400 */
                       callback(null, {
                         statusCode: 400,
-                        body: JSON.stringify(error)
+                        body: JSON.stringify(error),
                       });
                     });
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 console.log("error", error);
                 /* Error! return the error with statusCode 400 */
                 callback(null, {
                   statusCode: 400,
-                  body: JSON.stringify(error)
+                  body: JSON.stringify(error),
                 });
               });
           })
-          .catch(error => {
+          .catch((error) => {
             console.log("error", error);
             /* Error! return the error with statusCode 400 */
             callback(null, {
               statusCode: 400,
-              body: JSON.stringify(error)
+              body: JSON.stringify(error),
             });
           });
       } else {
         const err = {
-          message: "User does not exist. Please provide a valid mail."
+          message: "User does not exist. Please provide a valid mail.",
         };
 
         callback(null, {
           statusCode: 404,
-          body: JSON.stringify(err)
+          body: JSON.stringify(err),
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("error", error);
       /* Error! return the error with statusCode 400 */
       callback(null, {
         statusCode: 400,
-        body: JSON.stringify(error)
+        body: JSON.stringify(error),
       });
     });
 };

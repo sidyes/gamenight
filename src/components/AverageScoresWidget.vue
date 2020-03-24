@@ -21,63 +21,63 @@ export default class AverageScoresWidget extends Vue {
     return {
       title: {
         text: "Durchschnittliche Punktzahl",
-        align: "center"
+        align: "center",
       },
       chart: {
         type: "line",
         toolbar: {
-          show: false
-        }
+          show: false,
+        },
       },
       plotOptions: {
         bar: {
           dataLabels: {
-            position: "top"
-          }
-        }
+            position: "top",
+          },
+        },
       },
       dataLabels: {
         enabled: true,
         enabledOnSeries: [0],
         style: {
           fontSize: "12px",
-          colors: ["#000"]
-        }
+          colors: ["#000"],
+        },
       },
       xaxis: {
-        categories: this.data.players.map(el => el.username),
+        categories: this.data.players.map((el) => el.username),
         axisTicks: {
-          show: false
+          show: false,
         },
         tooltip: {
-          enabled: false
+          enabled: false,
         },
         crosshairs: {
-          show: false
-        }
+          show: false,
+        },
       },
       yaxis: {
         labels: {
-          formatter: function(value: number) {
+          formatter: function (value: number) {
             return value.toFixed(0);
-          }
-        }
+          },
+        },
       },
 
       legend: {
-        offsetY: 5
+        offsetY: 5,
       },
       theme: {
         mode: "dark",
-        palette: "palette8"
+        palette: "palette8",
       },
       tooltip: {
         y: {
           formatter: (val: string, _opts: any) => {
             return val;
-          }
-        }
-      }
+          },
+        },
+      },
     };
   }
 
@@ -86,13 +86,13 @@ export default class AverageScoresWidget extends Vue {
       {
         name: "Durchschnitt Spieler",
         type: "column",
-        data: this.data.players.map(el => el.average)
+        data: this.data.players.map((el) => el.average),
       },
       {
         name: "Durchschnitt Gesamt",
         type: "line",
-        data: this.data.players.map(_ => this.data.totalAverage)
-      }
+        data: this.data.players.map((_) => this.data.totalAverage),
+      },
     ];
   }
 }

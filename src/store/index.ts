@@ -12,17 +12,17 @@ export default new Vuex.Store({
   strict: true,
   modules: {
     toast: toast.createModule({
-      dismissInterval: 8000
+      dismissInterval: 8000,
     }),
     user,
     marcoPolo,
-    wingspan
+    wingspan,
   },
   actions: {
     clearStore({ commit }) {
       commit("user/reset");
       commit("marcoPolo/reset");
       commit("wingspan/reset");
-    }
-  }
+    },
+  },
 });

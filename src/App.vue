@@ -29,7 +29,7 @@ const Toast = toastLib.Toast;
 
 @Component({
   components: { Header, Footer, Toast },
-  name: "App"
+  name: "App",
 })
 export default class App extends Vue {
   @Action("fetchFriends", { namespace: "user" }) fetchFriends: any;
@@ -51,15 +51,15 @@ export default class App extends Vue {
         access_token: user.token.access_token,
         expires_at: user.token.expires_at,
         refresh_token: user.token.refresh_token,
-        token_type: user.token.token_type
+        token_type: user.token.token_type,
       };
       this.updateUser({
-        currentUser: this.currentUser
+        currentUser: this.currentUser,
       });
 
       const member = {
         username: this.currentUser.username,
-        email: this.currentUser.email
+        email: this.currentUser.email,
       };
 
       axios
@@ -90,7 +90,7 @@ export default class App extends Vue {
   public logout(): void {
     this.currentUser = null;
     this.updateUser({
-      currentUser: this.currentUser
+      currentUser: this.currentUser,
     });
     netlifyIdentity.logout();
     this.$router.push({ name: "home" });

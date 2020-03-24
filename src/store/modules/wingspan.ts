@@ -9,7 +9,7 @@ import {
   GameScoreItem,
   WinDistribution,
   AverageScores,
-  Series
+  Series,
 } from "@/models";
 
 const axios = require("axios");
@@ -33,7 +33,7 @@ const state: WingspanState = {
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
     new TableHeading("🥉", "thirdPlaces"),
-    new TableHeading("Punkte", "points")
+    new TableHeading("Punkte", "points"),
   ],
   summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
@@ -41,28 +41,28 @@ const state: WingspanState = {
     "Highest Losing Score",
     "Avg Score",
     "Lowest Win Score",
-    "Lowest Score"
+    "Lowest Score",
   ],
   resultTableHeadings: [
     new TableHeading("Datum", "date"),
     new TableHeading("Ort", "location"),
     new TableHeading("Spieler", "players"),
     new TableHeading("Ø Punkte", "avg"),
-    new TableHeading("Gewinner (Punkte)", "winner")
+    new TableHeading("Gewinner (Punkte)", "winner"),
   ],
-  isLoading: false
+  isLoading: false,
 };
 
 const getters: GetterTree<WingspanState, any> = {
-  getIsLoading: state => state.isLoading,
-  getGamesLoaded: state => state.gamesLoaded,
-  getAllTimeTable: state => {
+  getIsLoading: (state) => state.isLoading,
+  getGamesLoaded: (state) => state.gamesLoaded,
+  getAllTimeTable: (state) => {
     const allTimeEntries: AllTimeTableEntry[] = [];
 
-    state.games.map(game => {
-      game.players.forEach(player => {
+    state.games.map((game) => {
+      game.players.forEach((player) => {
         let entry = allTimeEntries.find(
-          elem => elem.username === player.user.username
+          (elem) => elem.username === player.user.username
         );
 
         if (!entry) {
@@ -105,7 +105,7 @@ const getters: GetterTree<WingspanState, any> = {
 
     return allTimeEntries;
   },
-  getAllTimeTableHeadings: state => state.allTimeTableHeadings,
+  getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
     const games = new GameSummaryItem(
@@ -116,11 +116,11 @@ const getters: GetterTree<WingspanState, any> = {
     const wins = new GameSummaryItem(
       state.summaryHeadings[1],
       state.games
-        .map(game => {
-          const winner = game.players.find(pl => pl.placement === 1);
+        .map((game) => {
+          const winner = game.players.find((pl) => pl.placement === 1);
           return winner ? winner.user.username : "";
         })
-        .filter(winner => user && winner === user.username)
+        .filter((winner) => user && winner === user.username)
         .length.toString()
     );
 
@@ -131,9 +131,9 @@ const getters: GetterTree<WingspanState, any> = {
 
     const avgPoints = (
       (state.games
-        .map(game => {
+        .map((game) => {
           const player = game.players.find(
-            pl => user && pl.user.email === user.email
+            (pl) => user && pl.user.email === user.email
           );
           return player ? player.points : 0;
         })
@@ -166,10 +166,10 @@ const getters: GetterTree<WingspanState, any> = {
 
     let avg = 0;
 
-    state.games.forEach(game => {
+    state.games.forEach((game) => {
       let avgGame = 0;
 
-      game.players.forEach(player => {
+      game.players.forEach((player) => {
         const points = player.points;
         // top score
         if (points > topScore.count) {
@@ -216,15 +216,15 @@ const getters: GetterTree<WingspanState, any> = {
       highestLosingScore,
       avgScore,
       lowestWinScore,
-      lowestScore
+      lowestScore,
     ];
   },
-  getWinDistributionPlayer: state => {
+  getWinDistributionPlayer: (state) => {
     let players: string[] = [];
     let wins: number[] = [];
 
-    state.games.forEach(game => {
-      game.players.forEach(player => {
+    state.games.forEach((game) => {
+      game.players.forEach((player) => {
         let idx = players.indexOf(player.user.username);
 
         if (idx === -1) {
@@ -245,14 +245,14 @@ const getters: GetterTree<WingspanState, any> = {
 
     return new WinDistribution(players, wins);
   },
-  getAverageScores: state => {
+  getAverageScores: (state) => {
     const average: AverageScores = new AverageScores([], 0);
 
-    state.games.forEach(game => {
+    state.games.forEach((game) => {
       let gameAverage = 0;
-      game.players.forEach(player => {
+      game.players.forEach((player) => {
         const user = average.players.find(
-          el => el.username === player.user.username
+          (el) => el.username === player.user.username
         );
 
         const points = player.points;
@@ -261,7 +261,7 @@ const getters: GetterTree<WingspanState, any> = {
           average.players.push({
             username: player.user.username,
             average: points,
-            games: 1
+            games: 1,
           });
         } else {
           user.average = +user.average + points;
@@ -278,7 +278,7 @@ const getters: GetterTree<WingspanState, any> = {
     average.totalAverage = +(
       +average.totalAverage / state.games.length
     ).toFixed(2);
-    average.players.forEach(pl => {
+    average.players.forEach((pl) => {
       pl.average = +(pl.average / pl.games).toFixed(2);
     });
 
@@ -294,8 +294,8 @@ const getters: GetterTree<WingspanState, any> = {
     const foodOnCards = new Series("Gelagertes Futter", []);
     const tuckedCards = new Series("Karten unter Vögeln", []);
 
-    state.games.forEach(game => {
-      game.players.forEach(player => {
+    state.games.forEach((game) => {
+      game.players.forEach((player) => {
         let idx = players.indexOf(player.user.username);
 
         if (idx === -1) {
@@ -354,18 +354,18 @@ const getters: GetterTree<WingspanState, any> = {
         endOfRoundGoals,
         eggs,
         foodOnCards,
-        tuckedCards
-      ]
+        tuckedCards,
+      ],
     };
   },
-  getGamesLastYear: state => {
+  getGamesLastYear: (state) => {
     const today = new Date();
     const monthBuckets = Array.apply(null, Array(12)).map(() => 0);
 
     for (let i = 11; i >= 0; i -= 1) {
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
 
-      state.games.forEach(game => {
+      state.games.forEach((game) => {
         const gameTime = new Date(game.time);
         if (
           gameTime.getFullYear() === d.getFullYear() &&
@@ -379,26 +379,26 @@ const getters: GetterTree<WingspanState, any> = {
     return [
       new Series(
         "Gespielt",
-        monthBuckets.map(x => x.toString())
-      )
+        monthBuckets.map((x) => x.toString())
+      ),
     ];
   },
-  getResultTable: state =>
+  getResultTable: (state) =>
     state.games
-      .map(game => {
+      .map((game) => {
         const date = new Date(game.time).toDateString();
 
         const players = game.players
-          .map(user => (user.user ? user.user.username : ""))
+          .map((user) => (user.user ? user.user.username : ""))
           .join(", ");
         const location = game.location;
-        const playerWon = game.players.find(pl => pl.placement === 1);
+        const playerWon = game.players.find((pl) => pl.placement === 1);
         let winner = playerWon
           ? `${playerWon.user.username} (${playerWon.points})`
           : "-";
 
         const avg = (
-          game.players.map(pl => pl.points).reduce((a, b) => a + b) /
+          game.players.map((pl) => pl.points).reduce((a, b) => a + b) /
           game.players.length
         ).toFixed(0);
 
@@ -414,7 +414,7 @@ const getters: GetterTree<WingspanState, any> = {
       .sort((a, b) => {
         return a.id > b.id ? -1 : 1;
       }),
-  getResultTableHeadings: state => state.resultTableHeadings
+  getResultTableHeadings: (state) => state.resultTableHeadings,
 };
 
 function compareAllTimeTableEntries(
@@ -454,7 +454,7 @@ function compareAllTimeTableEntries(
 
 const mutations: MutationTree<WingspanState> = {
   setGames: (state, games: WingspanGame[]) => {
-    games.forEach(game =>
+    games.forEach((game) =>
       game.players.sort((a, b) => (a.placement < b.placement ? -1 : 1))
     );
     state.games = games;
@@ -463,10 +463,10 @@ const mutations: MutationTree<WingspanState> = {
   setLoadingStatus: (state, isLoading) => {
     state.isLoading = isLoading;
   },
-  reset: state => {
+  reset: (state) => {
     state.games = [];
     state.gamesLoaded = false;
-  }
+  },
 };
 
 const actions: ActionTree<WingspanState, any> = {
@@ -483,7 +483,7 @@ const actions: ActionTree<WingspanState, any> = {
   },
   setLoading: ({ commit }, payload) => {
     commit("setLoadingStatus", payload);
-  }
+  },
 };
 
 export const wingspan = {
@@ -491,5 +491,5 @@ export const wingspan = {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

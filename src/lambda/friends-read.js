@@ -3,7 +3,7 @@ import faunadb from "faunadb"; /* Import faunaDB sdk */
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
 const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET
+  secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
 /* export our lambda function as named "handler" export */
@@ -14,13 +14,13 @@ exports.handler = (event, context, callback) => {
 
   const user = {
     username: params.username,
-    email: params.email
+    email: params.email,
   };
 
   /* construct the fauna query */
   return client
     .query(q.Exists(q.Match(q.Index("my_friends"), user.email)))
-    .then(result => {
+    .then((result) => {
       if (result) {
         return client
           .query(
@@ -29,36 +29,36 @@ exports.handler = (event, context, callback) => {
               q.Lambda("X", q.Get(q.Var("X")))
             )
           )
-          .then(response => {
+          .then((response) => {
             callback(null, {
               statusCode: 200,
-              body: JSON.stringify({ friends: response.data[0].data.friends })
+              body: JSON.stringify({ friends: response.data[0].data.friends }),
             });
           })
-          .catch(error => {
+          .catch((error) => {
             /* Error! return the error with statusCode 400 */
             callback(null, {
               statusCode: 404,
-              body: JSON.stringify(error)
+              body: JSON.stringify(error),
             });
           });
       } else {
         const friends = {
-          friends: []
+          friends: [],
         };
 
         callback(null, {
           statusCode: 200,
-          body: JSON.stringify(friends)
+          body: JSON.stringify(friends),
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       /* Error! return the error with statusCode 400 */
       callback(null, {
         statusCode: 404,
-        body: JSON.stringify(error)
+        body: JSON.stringify(error),
       });
     });
 };

@@ -120,7 +120,7 @@ const axios = require("axios");
 const toast = require("vuex-toast");
 
 @Component({
-  components: {}
+  components: {},
 })
 export default class Profile extends Vue {
   @Getter("getUser", { namespace: "user" }) user: any;
@@ -150,7 +150,7 @@ export default class Profile extends Vue {
     this.addFriendLoading = true;
     const body = {
       user: this.user,
-      friend: this.mail
+      friend: this.mail,
     };
     axios
       .post("/.netlify/functions/friends-add", body)
@@ -162,7 +162,7 @@ export default class Profile extends Vue {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Freund hinzugefügt! 🥳",
           type: "success",
-          dismissAfter: 2000
+          dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
@@ -170,7 +170,7 @@ export default class Profile extends Vue {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
-          dismissAfter: 2000
+          dismissAfter: 2000,
         });
       })
       .finally(() => (this.addFriendLoading = false));
@@ -180,21 +180,21 @@ export default class Profile extends Vue {
     axios
       .post("/.netlify/functions/friends-remove", {
         user: this.user,
-        friend: email
+        friend: email,
       })
       .then((response: any) => {
         this.removeBuddy(response.data.friend);
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Freund entfernt! 🥳",
           type: "success",
-          dismissAfter: 2000
+          dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
-          dismissAfter: 2000
+          dismissAfter: 2000,
         });
       });
   }

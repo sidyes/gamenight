@@ -13,18 +13,18 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Home
+      component: Home,
     },
     {
       path: "/marco-polo",
       name: "marco-polo",
-      component: () => import("./views/MarcoPolo.vue")
+      component: () => import("./views/MarcoPolo.vue"),
     },
     {
       path: "/marco-polo/:time",
       name: "marco-polo-detail",
       component: () => import("./views/MarcoPoloDetail.vue"),
-      props: route => {
+      props: (route) => {
         const time = Number.parseInt(route.params.time);
         if (Number.isNaN(time)) {
           return { time: 0 };
@@ -32,34 +32,34 @@ export default new Router({
 
         return { time };
       },
-      beforeEnter: checkAuth
+      beforeEnter: checkAuth,
     },
     {
       path: "/wingspan",
       name: "wingspan",
-      component: () => import("./views/Wingspan.vue")
+      component: () => import("./views/Wingspan.vue"),
     },
     {
       path: "/profile",
       name: "profile",
       component: () => import("./views/Profile.vue"),
-      beforeEnter: checkAuth
+      beforeEnter: checkAuth,
     },
     {
       path: "/data-privacy",
       name: "data-privacy",
-      component: () => import("./views/DataPrivacy.vue")
+      component: () => import("./views/DataPrivacy.vue"),
     },
     {
       path: "/imprint",
       name: "imprint",
-      component: () => import("./views/Imprint.vue")
+      component: () => import("./views/Imprint.vue"),
     },
     {
       path: "*",
-      component: () => import("./views/NotFound.vue")
-    }
-  ]
+      component: () => import("./views/NotFound.vue"),
+    },
+  ],
 });
 
 export function checkAuth(to: any, from: any, next: any) {

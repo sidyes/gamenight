@@ -94,9 +94,7 @@
         <banner-notification
           v-if="!isLoggedIn"
           :color="'is-danger'"
-          :message="
-            'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'
-          "
+          :message="'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'"
         ></banner-notification>
         <div class="columns">
           <div class="column is-full">
@@ -192,7 +190,7 @@
             </div>
           </div>
 
-          <div class="column is-half ">
+          <div class="column is-half">
             <div class="box">
               <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
@@ -228,14 +226,14 @@ import {
   TableHeading,
   WinDistribution,
   ResultTableEntry,
-  AverageScores
+  AverageScores,
 } from "@/models";
 
 const axios = require("axios");
 const toast = require("vuex-toast");
 
 @Component({
-  components: {}
+  components: {},
 })
 export default class MarcoPolo extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
@@ -306,7 +304,7 @@ export default class MarcoPolo extends Vue {
   public onRowClicked(row: number): void {
     this.$router.push({
       name: "marco-polo-detail",
-      params: { time: this.resultTable[row].id.toString() }
+      params: { time: this.resultTable[row].id.toString() },
     });
   }
 
@@ -331,14 +329,14 @@ export default class MarcoPolo extends Vue {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
           type: "success",
-          dismissAfter: 2000
+          dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
-          dismissAfter: 1000
+          dismissAfter: 1000,
         });
       })
       .finally(() => {
@@ -353,7 +351,7 @@ export default class MarcoPolo extends Vue {
 
     let valid = true;
 
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       if (
         !pl.user ||
         !pl.character ||
@@ -370,7 +368,7 @@ export default class MarcoPolo extends Vue {
   }
 
   public handleStartPositions(player: MarcoPoloPlayer): void {
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       if (
         pl !== player &&
         pl.startPosition &&
@@ -389,7 +387,7 @@ export default class MarcoPolo extends Vue {
         character: undefined,
         points: undefined,
         placement: undefined,
-        startPosition: undefined
+        startPosition: undefined,
       };
 
       this.players.push(player as any);
@@ -401,7 +399,7 @@ export default class MarcoPolo extends Vue {
   }
 
   public onPointsChange(event: any): void {
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       pl.placement = this.getPlacement(pl);
     });
   }
@@ -411,7 +409,7 @@ export default class MarcoPolo extends Vue {
       return undefined;
     }
     let placement = 1;
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       if (pl !== player && +player.points < (pl.points ? +pl.points : 0)) {
         placement++;
       }

@@ -27,11 +27,11 @@ export default class PieChart extends Vue {
 
   options = {
     title: {
-      text: this.title
+      text: this.title,
     },
     chart: {
       width: 380,
-      type: "pie"
+      type: "pie",
     },
     labels: this.labels,
     responsive: [
@@ -39,25 +39,25 @@ export default class PieChart extends Vue {
         breakpoint: 768,
         options: {
           title: {
-            align: "center"
+            align: "center",
           },
           dataLabels: {
-            offsetX: 100
+            offsetX: 100,
           },
           chart: {
             width: 350,
-            type: "pie"
+            type: "pie",
           },
           legend: {
-            position: "bottom"
-          }
-        }
-      }
+            position: "bottom",
+          },
+        },
+      },
     ],
     theme: {
       mode: "dark",
-      palette: "palette10"
-    }
+      palette: "palette10",
+    },
   };
 
   public generateOptions(): any {
@@ -66,11 +66,11 @@ export default class PieChart extends Vue {
       labels: this.labels,
       legend: {
         show: this.labels.length,
-        position: "right"
+        position: "right",
       },
       tooltip: {
-        enabled: this.labels.length
-      }
+        enabled: this.labels.length,
+      },
     };
   }
 }

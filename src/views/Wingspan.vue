@@ -149,9 +149,7 @@
         <banner-notification
           v-if="!isLoggedIn"
           :color="'is-danger'"
-          :message="
-            'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'
-          "
+          :message="'Bitte logge dich ein um deine Statistiken zu sehen oder ein Spiel zu speichern.'"
         ></banner-notification>
 
         <div class="columns">
@@ -235,7 +233,7 @@
             </div>
           </div>
 
-          <div class="column is-half ">
+          <div class="column is-half">
             <div class="box">
               <games-over-time :series="gamesOverTime"></games-over-time>
             </div>
@@ -273,7 +271,7 @@ import {
   AverageScores,
   ResultTableEntry,
   Series,
-  StackedColumChartData
+  StackedColumChartData,
 } from "@/models";
 
 const axios = require("axios");
@@ -357,7 +355,7 @@ export default class Wingspan extends Vue {
         endOfRoundGoals: undefined,
         eggs: undefined,
         foodOnCards: undefined,
-        tuckedCards: undefined
+        tuckedCards: undefined,
       };
 
       this.players.push(player as any);
@@ -375,7 +373,7 @@ export default class Wingspan extends Vue {
 
     let valid = true;
 
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       if (
         !pl.user ||
         !pl.placement ||
@@ -408,7 +406,7 @@ export default class Wingspan extends Vue {
   }
 
   public onPointsChange(event: any): void {
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       pl.placement = this.getPlacement(pl);
     });
   }
@@ -428,14 +426,14 @@ export default class Wingspan extends Vue {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
           type: "success",
-          dismissAfter: 2000
+          dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
-          dismissAfter: 1000
+          dismissAfter: 1000,
         });
       })
       .finally(() => {
@@ -451,7 +449,7 @@ export default class Wingspan extends Vue {
     }
 
     let placement = 1;
-    this.players.forEach(pl => {
+    this.players.forEach((pl) => {
       if (
         pl !== player &&
         this.calcTotalPoints(player) <

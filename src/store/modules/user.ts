@@ -10,11 +10,11 @@ interface UserState {
 
 const state: UserState = {
   user: window.localStorage.getItem("user"),
-  friends: []
+  friends: [],
 };
 
 const getters: GetterTree<UserState, any> = {
-  getUserStatus: state => !!state.user,
+  getUserStatus: (state) => !!state.user,
   getUser: (state: any, getters): Member | undefined => {
     if (!getters.getUserStatus) {
       return undefined;
@@ -23,7 +23,7 @@ const getters: GetterTree<UserState, any> = {
 
     return new Member(user.username, user.email);
   },
-  getFriends: state => state.friends,
+  getFriends: (state) => state.friends,
   getPlayers: (state, getters) => {
     let players = [...state.friends];
     const me = getters.getUser;
@@ -33,7 +33,7 @@ const getters: GetterTree<UserState, any> = {
     }
 
     return players;
-  }
+  },
 };
 
 //Mutations Must Be Synchronous
@@ -55,11 +55,11 @@ const mutations: MutationTree<UserState> = {
     state.friends = [...state.friends, friend];
   },
   removeFriend: (state, friend: Member) => {
-    state.friends = state.friends.filter(fr => fr.email !== friend.email);
+    state.friends = state.friends.filter((fr) => fr.email !== friend.email);
   },
-  reset: state => {
+  reset: (state) => {
     state.friends = [];
-  }
+  },
 };
 
 const actions: ActionTree<UserState, any> = {
@@ -76,7 +76,7 @@ const actions: ActionTree<UserState, any> = {
   },
   removeFriend: ({ commit }, payload) => {
     commit("removeFriend", payload);
-  }
+  },
 };
 
 export const user = {
@@ -84,5 +84,5 @@ export const user = {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

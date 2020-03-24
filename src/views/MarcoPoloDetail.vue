@@ -34,11 +34,9 @@
         <banner-notification
           v-if="!gameFound"
           :color="'is-danger'"
-          :message="
-            `Es wurde kein Spiel mit der ID ${time} (${new Date(
-              time
-            ).toDateString()}) gefunden.`
-          "
+          :message="`Es wurde kein Spiel mit der ID ${time} (${new Date(
+            time
+          ).toDateString()}) gefunden.`"
         ></banner-notification>
         <div class="columns" v-if="gameFound">
           <div
@@ -51,7 +49,7 @@
               v-bind:class="{
                 gold: player.placement === 1,
                 silver: player.placement === 2,
-                bronze: player.placement === 3
+                bronze: player.placement === 3,
               }"
             >
               <div class="columns">

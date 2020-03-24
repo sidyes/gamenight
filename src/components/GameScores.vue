@@ -20,48 +20,48 @@ export default class GameScores extends Vue {
   chartOptions = {
     title: {
       text: "Scores",
-      align: "center"
+      align: "center",
     },
     chart: {
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     plotOptions: {
       bar: {
         horizontal: true,
         distributed: true,
         dataLabels: {
-          position: "top"
-        }
-      }
+          position: "top",
+        },
+      },
     },
     dataLabels: {
       enabled: true,
       offsetX: -40,
       formatter: (val: string, { dataPointIndex }: any) => {
         return this.data[dataPointIndex].player;
-      }
+      },
     },
     xaxis: {
-      categories: this.data.map(el => el.category),
-      min: 0
+      categories: this.data.map((el) => el.category),
+      min: 0,
     },
     tooltip: {
-      show: false
+      show: false,
     },
     theme: {
       mode: "dark",
-      palette: "palette10"
-    }
+      palette: "palette10",
+    },
   };
 
   public generateSeries(): any {
     return [
       {
         name: "Anzahl",
-        data: this.data.map(el => el.count)
-      }
+        data: this.data.map((el) => el.count),
+      },
     ];
   }
 }
