@@ -54,8 +54,9 @@ export default class Table extends Vue {
   overflow-y: auto;
 }
 thead th {
- position: sticky; top: 0;
- background-color: #343f57;
+  position: sticky;
+  top: 0;
+  background-color: #343f57;
 }
 tbody tr {
   cursor: pointer;
