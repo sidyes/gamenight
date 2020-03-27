@@ -3,6 +3,7 @@ export class CharacterTableEntry {
     public character: string,
     public games: number,
     public wins: number,
-    public winrate: number
+    public winrate: number,
+    public points?: number
   ) {}
 }
