@@ -4,6 +4,6 @@ export class CharacterTableEntry {
     public games: number,
     public wins: number,
     public winrate: number,
-    public points?: number
+    public points: any
   ) {}
 }
