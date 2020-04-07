@@ -364,10 +364,10 @@ export default class TerraMystica extends Vue {
   }
 
   public onRowClicked(row: number): void {
-    // this.$router.push({
-    //   name: "marco-polo-detail",
-    //   params: { time: this.resultTable[row].id.toString() }
-    // });
+    this.$router.push({
+      name: "terra-mystica-detail",
+      params: { time: this.resultTable[row].id.toString() },
+    });
   }
 
   public onNrOfPlayersChange(nr: number): void {

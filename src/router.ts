@@ -45,6 +45,20 @@ export default new Router({
       component: () => import("./views/TerraMystica.vue"),
     },
     {
+      path: "/terra-mystica/:time",
+      name: "terra-mystica-detail",
+      component: () => import("./views/TerraMysticaDetail.vue"),
+      props: (route) => {
+        const time = Number.parseInt(route.params.time);
+        if (Number.isNaN(time)) {
+          return { time: 0 };
+        }
+
+        return { time };
+      },
+      beforeEnter: checkAuth,
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("./views/Profile.vue"),
