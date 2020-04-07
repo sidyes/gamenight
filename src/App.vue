@@ -5,7 +5,6 @@
       :user="user"
       @login="login"
       @logout="logout"
-      @signup="signup"
     />
     <router-view />
     <Footer />
@@ -81,10 +80,6 @@ export default class App extends Vue {
 
   public login(): void {
     netlifyIdentity.open("login");
-  }
-
-  public signup(): void {
-    netlifyIdentity.open("signup");
   }
 
   public logout(): void {

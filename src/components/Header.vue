@@ -54,13 +54,6 @@
           <div class="navbar-item">
             <div class="buttons" v-if="!isLoggedIn">
               <a
-                class="button is-primary"
-                aria-label="Registriere dich bei game-night"
-                @click="signup()"
-              >
-                <strong>Registrieren</strong>
-              </a>
-              <a
                 class="button is-light"
                 @click="login(login)"
                 aria-label="Logge dich bei game-night ein"
@@ -125,11 +118,6 @@ export default class Header extends Vue {
   }
 
   @Emit() logout(): boolean {
-    this.isOpen = false;
-    return true;
-  }
-
-  @Emit() signup(): boolean {
     this.isOpen = false;
     return true;
   }
