@@ -1,3 +1,4 @@
+import { terraMystica } from "./modules/terra-mystica";
 import Vue from "vue";
 import Vuex from "vuex";
 import { user } from "./modules/user";
@@ -17,12 +18,14 @@ export default new Vuex.Store({
     user,
     marcoPolo,
     wingspan,
+    terraMystica,
   },
   actions: {
     clearStore({ commit }) {
       commit("user/reset");
       commit("marcoPolo/reset");
       commit("wingspan/reset");
+      commit("terraMystica/reset");
     },
   },
 });

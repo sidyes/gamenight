@@ -99,15 +99,21 @@
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
-              <img
-                class="is-rounded"
-                src="https://bulma.io/images/placeholders/256x256.png"
-                alt="placeholder"
-              />
+              <router-link to="terra-mystica">
+                <img
+                  class="is-rounded"
+                  src="@/assets/img/terra-mystica/terra-mystica.jpg"
+                  alt="Terra Mystica"
+                />
+              </router-link>
             </figure>
-            <button class="button is-primary mt-25" disabled>
-              Coming soon...
-            </button>
+            <router-link
+              tag="button"
+              class="button is-primary mt-25"
+              to="terra-mystica"
+            >
+              Terra Mystica
+            </router-link>
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">

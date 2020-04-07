@@ -40,6 +40,11 @@ export default new Router({
       component: () => import("./views/Wingspan.vue"),
     },
     {
+      path: "/terra-mystica",
+      name: "terra-mystica",
+      component: () => import("./views/TerraMystica.vue"),
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("./views/Profile.vue"),

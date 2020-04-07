@@ -38,22 +38,41 @@
             <tbody>
               <tr>
                 <td>
-                  Vögel
+                  Volk
+                </td>
+                <td v-for="(player, idx) in players" v-bind:key="idx">
+                  <div class="control">
+                    <div class="select">
+                      <select v-model="player.faction">
+                        <option
+                          v-for="faction in factions"
+                          :value="faction"
+                          v-bind:key="faction"
+                          >{{ faction }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Punkte
                 </td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
                     type="number"
                     min="0"
-                    max="200"
-                    v-model="player.birds"
+                    max="18"
+                    v-model="player.gamePoints"
                     @change="onPointsChange($event)"
                   />
                 </td>
               </tr>
               <tr>
                 <td>
-                  Bonuskarten
+                  Gebietswertung
                 </td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
@@ -61,14 +80,14 @@
                     type="number"
                     min="0"
                     max="200"
-                    v-model="player.bonusCards"
+                    v-model="player.area"
                     @change="onPointsChange($event)"
                   />
                 </td>
               </tr>
               <tr>
                 <td>
-                  Rundenziele
+                  Kultwertung
                 </td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
@@ -76,14 +95,14 @@
                     type="number"
                     min="0"
                     max="200"
-                    v-model="player.endOfRoundGoals"
+                    v-model="player.cult"
                     @change="onPointsChange($event)"
                   />
                 </td>
               </tr>
               <tr>
                 <td>
-                  Eier
+                  Ressourcen
                 </td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
@@ -91,37 +110,7 @@
                     type="number"
                     min="0"
                     max="200"
-                    v-model="player.eggs"
-                    @change="onPointsChange($event)"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Gelagertes Futter
-                </td>
-                <td v-for="(player, idx) in players" v-bind:key="idx">
-                  <input
-                    class="input"
-                    type="number"
-                    min="0"
-                    max="200"
-                    v-model="player.foodOnCards"
-                    @change="onPointsChange($event)"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Karten unter Vögeln
-                </td>
-                <td v-for="(player, idx) in players" v-bind:key="idx">
-                  <input
-                    class="input"
-                    type="number"
-                    min="0"
-                    max="200"
-                    v-model="player.tuckedCards"
+                    v-model="player.resources"
                     @change="onPointsChange($event)"
                   />
                 </td>
@@ -129,7 +118,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <th>Punkte</th>
+                <th>Gesamtpunktzahl</th>
                 <th v-for="(player, idx) in players" v-bind:key="idx">
                   <p>{{ calcTotalPoints(player) }}</p>
                 </th>
@@ -160,8 +149,8 @@
                   <figure class="image is-128x128 has-image-centered">
                     <img
                       class="is-rounded"
-                      src="@/assets/img/wingspan/wingspan.jpg"
-                      alt="Flügelschlag"
+                      src="@/assets/img/terra-mystica/terra-mystica.jpg"
+                      alt="Terra Mystica"
                     />
                   </figure>
                 </div>
@@ -225,6 +214,26 @@
         <div class="columns is-vcentered">
           <div class="column is-half">
             <div class="box">
+              <custom-table
+                :data="factionsTable"
+                :headings="factionsTableHeadings"
+              ></custom-table>
+            </div>
+          </div>
+
+          <div class="column is-half">
+            <div class="box">
+              <custom-table
+                :data="myTopFactionsTable"
+                :headings="myTopFactionsTableHeadings"
+              ></custom-table>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-vcentered">
+          <div class="column is-half">
+            <div class="box">
               <stacked-column-chart
                 :series="averagePointsDistribution.series"
                 :categories="averagePointsDistribution.categories"
@@ -261,15 +270,15 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {
   Member,
-  WingspanPlayer,
-  WingspanGame,
-  GameSummaryItem,
   AllTimeTableEntry,
   TableHeading,
+  ResultTableEntry,
+  TerraMysticaPlayer,
+  TerraMysticaGame,
   GameScoreItem,
+  GameSummaryItem,
   WinDistribution,
   AverageScores,
-  ResultTableEntry,
   Series,
   StackedColumChartData,
 } from "@/models";
@@ -278,51 +287,67 @@ const axios = require("axios");
 const toast = require("vuex-toast");
 
 @Component
-export default class Wingspan extends Vue {
+export default class TerraMystica extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
   @Getter("getPlayers", { namespace: "user" }) members!: Member[];
 
-  @Getter("getGamesLoaded", { namespace: "wingspan" })
+  @Getter("getFactions", { namespace: "terraMystica" })
+  factions!: string[];
+
+  @Getter("getGamesLoaded", { namespace: "terraMystica" })
   gamesLoaded!: boolean;
 
-  @Getter("getAllTimeTable", { namespace: "wingspan" })
-  allTimeTable!: AllTimeTableEntry[];
-  @Getter("getAllTimeTableHeadings", { namespace: "wingspan" })
-  allTimeHeadings!: TableHeading[];
-
-  @Getter("getSummary", { namespace: "wingspan" })
+  @Getter("getSummary", { namespace: "terraMystica" })
   gameSummary!: GameSummaryItem[];
 
-  @Getter("getGameScores", { namespace: "wingspan" })
+  @Getter("getGameScores", { namespace: "terraMystica" })
   gameScores!: GameScoreItem[];
 
-  @Getter("getWinDistributionPlayer", { namespace: "wingspan" })
+  @Getter("getWinDistributionPlayer", { namespace: "terraMystica" })
   winDistributionPlayer!: WinDistribution[];
 
-  @Getter("getAverageScores", { namespace: "wingspan" })
+  @Getter("getAverageScores", { namespace: "terraMystica" })
   averageScores!: AverageScores;
 
-  @Getter("getAveragePointsDistribution", { namespace: "wingspan" })
+  @Getter("getFactionsTable", { namespace: "terraMystica" })
+  factionsTable!: ResultTableEntry[];
+
+  @Getter("getFactionsTableHeadings", { namespace: "terraMystica" })
+  factionsTableHeadings!: TableHeading[];
+
+  @Getter("getMyTopFactionsTable", { namespace: "terraMystica" })
+  myTopFactionsTable!: ResultTableEntry[];
+
+  @Getter("getMyTopFactionsTableHeadings", { namespace: "terraMystica" })
+  myTopFactionsTableHeadings!: TableHeading[];
+
+  @Getter("getAveragePointsDistribution", { namespace: "terraMystica" })
   averagePointsDistribution!: StackedColumChartData;
 
-  @Getter("getGamesLastYear", { namespace: "wingspan" })
+  @Getter("getGamesLastYear", { namespace: "terraMystica" })
   gamesOverTime!: Series[];
 
-  @Getter("getResultTable", { namespace: "wingspan" })
+  @Getter("getAllTimeTable", { namespace: "terraMystica" })
+  allTimeTable!: AllTimeTableEntry[];
+
+  @Getter("getAllTimeTableHeadings", { namespace: "terraMystica" })
+  allTimeHeadings!: TableHeading[];
+
+  @Getter("getResultTable", { namespace: "terraMystica" })
   resultTable!: ResultTableEntry[];
 
-  @Getter("getResultTableHeadings", { namespace: "wingspan" })
+  @Getter("getResultTableHeadings", { namespace: "terraMystica" })
   resultHeadings!: TableHeading[];
 
-  @Getter("getIsLoading", { namespace: "wingspan" })
+  @Getter("getIsLoading", { namespace: "terraMystica" })
   isLoading!: boolean;
 
-  @Action("fetchGames", { namespace: "wingspan" }) fetchGames: any;
-  @Action("setLoading", { namespace: "wingspan" }) setLoading: any;
+  @Action("fetchGames", { namespace: "terraMystica" }) fetchGames: any;
+  @Action("setLoading", { namespace: "terraMystica" }) setLoading: any;
 
   newGameActive = false;
-  players: WingspanPlayer[] | any[] = [];
+  players: TerraMysticaPlayer[] | any[] = [];
   location: string = "";
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
@@ -351,12 +376,11 @@ export default class Wingspan extends Vue {
       const player = {
         user: undefined,
         placement: undefined,
-        birds: undefined,
-        bonusCards: undefined,
-        endOfRoundGoals: undefined,
-        eggs: undefined,
-        foodOnCards: undefined,
-        tuckedCards: undefined,
+        faction: undefined,
+        points: undefined,
+        area: undefined,
+        cult: undefined,
+        resources: undefined,
       };
 
       this.players.push(player as any);
@@ -378,12 +402,11 @@ export default class Wingspan extends Vue {
       if (
         !pl.user ||
         !pl.placement ||
-        !pl.birds ||
-        !pl.bonusCards ||
-        !pl.endOfRoundGoals ||
-        !pl.eggs ||
-        !pl.foodOnCards ||
-        !pl.tuckedCards ||
+        !pl.faction ||
+        !pl.gamePoints ||
+        !pl.area ||
+        !pl.cult ||
+        !pl.resources ||
         !this.location
       ) {
         valid = false;
@@ -393,15 +416,13 @@ export default class Wingspan extends Vue {
     return valid;
   }
 
-  public calcTotalPoints(player: WingspanPlayer): number {
+  public calcTotalPoints(player: TerraMysticaPlayer): number {
     let sum = 0;
 
-    sum += +player.birds || 0;
-    sum += +player.bonusCards || 0;
-    sum += +player.endOfRoundGoals || 0;
-    sum += +player.eggs || 0;
-    sum += +player.foodOnCards || 0;
-    sum += +player.tuckedCards || 0;
+    sum += +player.gamePoints || 0;
+    sum += +player.area || 0;
+    sum += +player.cult || 0;
+    sum += +player.resources || 0;
 
     player.points = sum;
 
@@ -415,10 +436,10 @@ export default class Wingspan extends Vue {
   }
 
   public saveGame(): void {
-    const game = new WingspanGame(this.players, Date.now(), this.location);
+    const game = new TerraMysticaGame(this.players, Date.now(), this.location);
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/wingspan-create", game)
+      .post("/.netlify/functions/terra-mystica-create", game)
       .then((response: any) => {
         this.newGameActive = false;
         this.players = [];
@@ -453,8 +474,11 @@ export default class Wingspan extends Vue {
 
     let placement = 1;
     this.players.forEach((pl) => {
-      const tmpPoints = this.calcTotalPoints(pl);
-      if (pl !== player && points < (tmpPoints ? tmpPoints : 0)) {
+      if (
+        pl !== player &&
+        this.calcTotalPoints(player) <
+          (this.calcTotalPoints(pl) ? this.calcTotalPoints(pl) : 0)
+      ) {
         placement++;
       }
     });
