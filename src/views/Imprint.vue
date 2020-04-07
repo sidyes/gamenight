@@ -15,7 +15,7 @@
           <h2 class="title is-2">Angaben gem&auml;&szlig; &sect; 5 TMG</h2>
           <p>
             Stefan Herpich
-            <br />Hubertusstra&szlig;e 21 <br />90547 Stein
+            <br />Zimmermannsgasse 12 <br />91058 Erlangen
           </p>
 
           <h2 class="title is-2 mt-30">Kontakt</h2>

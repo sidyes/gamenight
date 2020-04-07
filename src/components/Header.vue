@@ -43,6 +43,9 @@
               <router-link to="/wingspan" class="navbar-item"
                 >Flügelschlag</router-link
               >
+              <router-link to="/terra-mystica" class="navbar-item"
+                >Terra Mystica</router-link
+              >
             </div>
           </div>
         </div>

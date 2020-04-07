@@ -11,3 +11,6 @@ export * from "./character-table-entry.model";
 export * from "./average-scores.model";
 export * from "./wingspan.model";
 export * from "./stacked-column-chart-data.model";
+export * from "./terra-mystica.model";
+export * from "./game.model";
+export * from "./player.model";

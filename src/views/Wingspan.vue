@@ -468,4 +468,9 @@ export default class Wingspan extends Vue {
   color: lightgray;
   font-size: 12px;
 }
+
+select,
+input {
+  color: #363636;
+}
 </style>
