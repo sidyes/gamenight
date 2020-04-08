@@ -27,6 +27,9 @@ $modal-card-title-color: hsl(0, 0%, 100%) !important;
 
   .modal-card {
     width: 950px;
+    @media (max-width: 960px) {
+      width: 100%;
+    }
   }
 }
 
