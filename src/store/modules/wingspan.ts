@@ -27,6 +27,7 @@ interface WingspanState {
   gameScoresHeadings: string[];
   resultTableHeadings: TableHeading[];
   isLoading: boolean;
+  season: number;
 }
 
 const state: WingspanState = {
@@ -56,6 +57,7 @@ const state: WingspanState = {
     new TableHeading("Gewinner (Punkte)", "winner"),
   ],
   isLoading: false,
+  season: 0,
 };
 
 const getters: GetterTree<WingspanState, any> = {
@@ -166,6 +168,7 @@ const mutations: MutationTree<WingspanState> = {
     state.games = [];
     state.gamesLoaded = false;
   },
+  getSeason: (state) => state.season,
 };
 
 const actions: ActionTree<WingspanState, any> = {

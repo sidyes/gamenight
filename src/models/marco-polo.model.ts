@@ -1,5 +1,7 @@
+import { Player } from "./player.model";
 import { Member } from "@/models/member.model";
-export class MarcoPoloPlayer {
+import { Game } from "./game.model";
+export class MarcoPoloPlayer implements Player {
   constructor(
     public user: Member,
     public character: string,
@@ -9,10 +11,11 @@ export class MarcoPoloPlayer {
   ) {}
 }
 
-export class MarcoPoloGame {
+export class MarcoPoloGame implements Game {
   constructor(
     public players: MarcoPoloPlayer[],
     public time: number,
-    public location: string
+    public location: string,
+    public season: number
   ) {}
 }

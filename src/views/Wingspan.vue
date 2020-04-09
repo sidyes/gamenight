@@ -286,6 +286,8 @@ export default class Wingspan extends Vue {
   @Getter("getGamesLoaded", { namespace: "wingspan" })
   gamesLoaded!: boolean;
 
+  @Getter("getSeason", { namespace: "marcoPolo" }) currentSeason!: number;
+
   @Getter("getAllTimeTable", { namespace: "wingspan" })
   allTimeTable!: AllTimeTableEntry[];
   @Getter("getAllTimeTableHeadings", { namespace: "wingspan" })
@@ -415,7 +417,12 @@ export default class Wingspan extends Vue {
   }
 
   public saveGame(): void {
-    const game = new WingspanGame(this.players, Date.now(), this.location);
+    const game = new WingspanGame(
+      this.players,
+      Date.now(),
+      this.location,
+      this.currentSeason
+    );
     this.setLoading(true);
     axios
       .post("/.netlify/functions/wingspan-create", game)

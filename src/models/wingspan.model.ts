@@ -1,5 +1,7 @@
+import { Player } from "./player.model";
+import { Game } from "./game.model";
 import { Member } from "@/models/member.model";
-export class WingspanPlayer {
+export class WingspanPlayer implements Player {
   constructor(
     public user: Member,
     public placement: number,
@@ -13,10 +15,11 @@ export class WingspanPlayer {
   ) {}
 }
 
-export class WingspanGame {
+export class WingspanGame implements Game {
   constructor(
     public players: WingspanPlayer[],
     public time: number,
-    public location: string
+    public location: string,
+    public season: number
   ) {}
 }

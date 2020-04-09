@@ -30,6 +30,7 @@ interface MarcoPoloState {
   characters: string[];
   gamesLoaded: boolean;
   isLoading: boolean;
+  season: number;
 }
 
 const state: MarcoPoloState = {
@@ -88,6 +89,7 @@ const state: MarcoPoloState = {
   ],
   gamesLoaded: false,
   isLoading: false,
+  season: 0,
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
@@ -274,6 +276,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return game;
   },
+  getSeason: (state) => state.season,
 };
 
 //Mutations Must Be Synchronous

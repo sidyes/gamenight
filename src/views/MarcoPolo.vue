@@ -251,6 +251,8 @@ export default class MarcoPolo extends Vue {
   @Getter("getPlayers", { namespace: "user" }) members!: Member[];
   @Getter("getUser", { namespace: "user" }) user!: Member;
 
+  @Getter("getSeason", { namespace: "marcoPolo" }) currentSeason!: number;
+
   @Getter("getSummary", { namespace: "marcoPolo" })
   gameSummary!: GameSummaryItem[];
 
@@ -332,7 +334,12 @@ export default class MarcoPolo extends Vue {
   }
 
   public saveGame(): void {
-    const game = new MarcoPoloGame(this.players, Date.now(), this.location);
+    const game = new MarcoPoloGame(
+      this.players,
+      Date.now(),
+      this.location,
+      this.currentSeason
+    );
     this.setLoading(true);
     axios
       .post("/.netlify/functions/marco-polo-create", game)

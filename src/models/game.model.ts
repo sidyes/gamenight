@@ -5,4 +5,5 @@ export interface Game {
   players: Player[];
   time: number;
   location: string;
+  season: number;
 }

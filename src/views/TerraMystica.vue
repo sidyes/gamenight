@@ -346,6 +346,8 @@ export default class TerraMystica extends Vue {
   @Action("fetchGames", { namespace: "terraMystica" }) fetchGames: any;
   @Action("setLoading", { namespace: "terraMystica" }) setLoading: any;
 
+  @Getter("getSeason", { namespace: "terraMystica" }) currentSeason!: number;
+
   newGameActive = false;
   players: TerraMysticaPlayer[] | any[] = [];
   location: string = "";
@@ -436,7 +438,12 @@ export default class TerraMystica extends Vue {
   }
 
   public saveGame(): void {
-    const game = new TerraMysticaGame(this.players, Date.now(), this.location);
+    const game = new TerraMysticaGame(
+      this.players,
+      Date.now(),
+      this.location,
+      this.currentSeason
+    );
     this.setLoading(true);
     axios
       .post("/.netlify/functions/terra-mystica-create", game)

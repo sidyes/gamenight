@@ -19,6 +19,7 @@ export class TerraMysticaGame implements Game {
   constructor(
     public players: TerraMysticaPlayer[],
     public time: number,
-    public location: string
+    public location: string,
+    public season: number
   ) {}
 }

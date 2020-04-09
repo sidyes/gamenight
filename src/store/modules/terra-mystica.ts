@@ -30,6 +30,7 @@ interface TerraMysticaState {
   factions: string[];
   gamesLoaded: boolean;
   isLoading: boolean;
+  season: number;
 }
 
 const state: TerraMysticaState = {
@@ -89,6 +90,7 @@ const state: TerraMysticaState = {
   ],
   gamesLoaded: false,
   isLoading: false,
+  season: 0,
 };
 
 const getters: GetterTree<TerraMysticaState, any> = {
@@ -340,6 +342,7 @@ const getters: GetterTree<TerraMysticaState, any> = {
 
     return game;
   },
+  getSeason: (state) => state.season,
 };
 
 //Mutations Must Be Synchronous
