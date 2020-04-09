@@ -448,6 +448,12 @@ export default class MarcoPolo extends Vue {
   color: lightgray;
   font-size: 12px;
 }
+
+select,
+input {
+  color: #363636;
+}
+
 .select,
 select {
   width: 100%;
