@@ -5,6 +5,7 @@ import {
   getWinDistributionPlayer,
   getAverageScores,
   getGamesLastYear,
+  getGamesForSeason,
 } from "./../shared";
 import { CharacterTableEntry } from "@/models/character-table-entry.model";
 import { ResultTableEntry } from "@/models/result-table-entry.model";
@@ -31,6 +32,7 @@ interface MarcoPoloState {
   gamesLoaded: boolean;
   isLoading: boolean;
   season: number;
+  selectedSeason: number;
 }
 
 const state: MarcoPoloState = {
@@ -90,15 +92,18 @@ const state: MarcoPoloState = {
   gamesLoaded: false,
   isLoading: false,
   season: 0,
+  selectedSeason: 0,
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
   getIsLoading: (state) => state.isLoading,
-  getAllTimeTable: (state) => getAllTimeTable(state.games),
+  getAllTimeTable: (state) =>
+    getAllTimeTable(getGamesForSeason(state.selectedSeason, state.games)),
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getResultTable: (state) =>
-    state.games
-      .map((game) => {
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as MarcoPoloGame)
+      .map((game: MarcoPoloGame) => {
         const date = new Date(game.time).toDateString();
         const copiedPlayers = [...game.players];
         copiedPlayers.sort((a, b) => {
@@ -145,42 +150,47 @@ const getters: GetterTree<MarcoPoloState, any> = {
       characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0, 0))
     );
 
-    state.games.map((game) => {
-      game.players.forEach((player) => {
-        const elem = characterTableEntries.find(
-          (entry) => entry.character === player.character
-        );
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as MarcoPoloGame)
+      .map((game) => {
+        game.players.forEach((player) => {
+          const elem = characterTableEntries.find(
+            (entry) => entry.character === player.character
+          );
 
-        if (elem) {
-          if (player.placement === 1) {
-            ++elem.games;
-            ++elem.wins;
-            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
-          } else {
-            ++elem.games;
-            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
-          }
+          if (elem) {
+            if (player.placement === 1) {
+              ++elem.games;
+              ++elem.wins;
+              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            } else {
+              ++elem.games;
+              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            }
 
-          if (elem.points !== undefined) {
-            elem.points +=
-              player.placement === 1
-                ? 5
-                : player.placement === 2
-                ? 3
-                : player.placement === 3
-                ? 2
-                : 0;
+            if (elem.points !== undefined) {
+              elem.points +=
+                player.placement === 1
+                  ? 5
+                  : player.placement === 2
+                  ? 3
+                  : player.placement === 3
+                  ? 2
+                  : 0;
+            }
           }
-        }
+        });
       });
-    });
 
     characterTableEntries.sort(compareCharacterTableEntries);
 
     characterTableEntries.forEach((entry) => {
       const total = entry.points;
       entry.points =
-        total + ` (${Math.round(((total / entry.games) * 100) / 100)})`;
+        total +
+        ` (${
+          total !== 0 ? Math.round(((total / entry.games) * 100) / 100) : 0
+        })`;
     });
 
     return characterTableEntries;
@@ -195,42 +205,47 @@ const getters: GetterTree<MarcoPoloState, any> = {
       characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0, 0))
     );
 
-    state.games.map((game) => {
-      game.players.forEach((player) => {
-        if (player.user.username === user.username) {
-          const elem = characterTableEntries.find(
-            (entry) => entry.character === player.character
-          );
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as MarcoPoloGame)
+      .map((game) => {
+        game.players.forEach((player) => {
+          if (player.user.username === user.username) {
+            const elem = characterTableEntries.find(
+              (entry) => entry.character === player.character
+            );
 
-          if (elem) {
-            if (player.placement === 1) {
-              ++elem.games;
-              ++elem.wins;
-              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            if (elem) {
+              if (player.placement === 1) {
+                ++elem.games;
+                ++elem.wins;
+                elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
 
-              if (elem.points !== undefined) {
-                elem.points += 5;
-              }
-            } else {
-              ++elem.games;
-              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+                if (elem.points !== undefined) {
+                  elem.points += 5;
+                }
+              } else {
+                ++elem.games;
+                elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
 
-              if (elem.points !== undefined) {
-                elem.points +=
-                  player.placement === 2 ? 3 : player.placement === 3 ? 2 : 0;
+                if (elem.points !== undefined) {
+                  elem.points +=
+                    player.placement === 2 ? 3 : player.placement === 3 ? 2 : 0;
+                }
               }
             }
           }
-        }
+        });
       });
-    });
 
     characterTableEntries.sort(compareCharacterTableEntries);
 
     characterTableEntries.forEach((entry) => {
       const total = entry.points;
       entry.points =
-        total + ` (${Math.round(((total / entry.games) * 100) / 100)})`;
+        total +
+        ` (${
+          total !== 0 ? Math.round(((total / entry.games) * 100) / 100) : 0
+        })`;
     });
 
     return characterTableEntries;
@@ -239,32 +254,48 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
 
-    return getSummary(state.summaryHeadings, state.games, user);
+    return getSummary(
+      state.summaryHeadings,
+      getGamesForSeason(state.selectedSeason, state.games),
+      user
+    );
   },
   getCharacters: (state) => state.characters,
   getGameScores: (state): GameScoreItem[] =>
-    getGameScores(state.gameScoresHeadings, state.games),
-  getGamesLastYear: (state) => getGamesLastYear(state.games),
-  getWinDistributionPlayer: (state) => getWinDistributionPlayer(state.games),
+    getGameScores(
+      state.gameScoresHeadings,
+      getGamesForSeason(state.selectedSeason, state.games)
+    ),
+  getGamesLastYear: (state) =>
+    getGamesLastYear(getGamesForSeason(state.selectedSeason, state.games)),
+  getWinDistributionPlayer: (state) =>
+    getWinDistributionPlayer(
+      getGamesForSeason(state.selectedSeason, state.games)
+    ),
   getWinDistributionStartPosition: (state) => {
     let startPositions: string[] = ["1", "2", "3", "4"];
     let wins: number[] = [0, 0, 0, 0];
 
-    state.games.forEach((game) => {
-      game.players.forEach((player) => {
-        if (player.placement === 1) {
-          wins[player.startPosition - 1]++;
-        }
-      });
-    });
+    const games = getGamesForSeason(state.selectedSeason, state.games);
 
-    if (state.games.length === 0) {
+    games
+      .map((game) => game as MarcoPoloGame)
+      .forEach((game) => {
+        game.players.forEach((player) => {
+          if (player.placement === 1) {
+            wins[player.startPosition - 1]++;
+          }
+        });
+      });
+
+    if (games.length === 0) {
       wins = [1, 1, 1, 1];
     }
 
     return new WinDistribution(startPositions, wins);
   },
-  getAverageScores: (state) => getAverageScores(state.games),
+  getAverageScores: (state) =>
+    getAverageScores(getGamesForSeason(state.selectedSeason, state.games)),
   getGamesLoaded: (state) => state.gamesLoaded,
   getGame: (state) => (time: number): MarcoPoloGame | undefined => {
     let game = undefined;
@@ -277,6 +308,17 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return game;
   },
   getSeason: (state) => state.season,
+  getAllSeasons: (state) => {
+    const seasons: number[] = [];
+    state.games.forEach((game) => {
+      if (!seasons.includes(game.season)) {
+        seasons.push(game.season);
+      }
+    });
+
+    return seasons;
+  },
+  getSelectedSeason: (state) => state.selectedSeason,
 };
 
 //Mutations Must Be Synchronous
@@ -295,6 +337,9 @@ const mutations: MutationTree<MarcoPoloState> = {
     state.games = [];
     state.gamesLoaded = false;
   },
+  setSelectedSeason: (state, season) => {
+    state.selectedSeason = season;
+  },
 };
 
 const actions: ActionTree<MarcoPoloState, any> = {
@@ -311,6 +356,9 @@ const actions: ActionTree<MarcoPoloState, any> = {
   },
   setLoading: ({ commit }, payload) => {
     commit("setLoadingStatus", payload);
+  },
+  setSeason: ({ commit }, payload) => {
+    commit("setSelectedSeason", payload);
   },
 };
 

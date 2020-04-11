@@ -113,9 +113,21 @@
                   <game-summary :items="gameSummary"></game-summary>
                 </div>
                 <div class="column has-text-right">
+                  <div class="select form-elem mb-10 is-info">
+                    <select @change="handleSelectedSeasonChange($event)">
+                      <option :value="-1">Gesamtstatistik</option>
+                      <option
+                        v-for="s in allSeasons"
+                        :value="s"
+                        v-bind:key="s"
+                        :selected="s === selectedSeason"
+                        >Season {{ s }}</option
+                      >
+                    </select>
+                  </div>
                   <a
                     aria-label="Erstelle ein neues Spiel"
-                    class="button is-medium is-success"
+                    class="button is-success form-elem"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
                     >Neues Spiel</a
@@ -226,7 +238,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { Action, Getter } from "vuex-class";
+import { Action, Getter, namespace } from "vuex-class";
 import { Member } from "@/models/member.model";
 import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
 import {
@@ -252,6 +264,11 @@ export default class MarcoPolo extends Vue {
   @Getter("getUser", { namespace: "user" }) user!: Member;
 
   @Getter("getSeason", { namespace: "marcoPolo" }) currentSeason!: number;
+
+  @Getter("getAllSeasons", { namespace: "marcoPolo" }) allSeasons!: number[];
+
+  @Getter("getSelectedSeason", { namespace: "marcoPolo" })
+  selectedSeason!: number;
 
   @Getter("getSummary", { namespace: "marcoPolo" })
   gameSummary!: GameSummaryItem[];
@@ -306,6 +323,7 @@ export default class MarcoPolo extends Vue {
 
   @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
   @Action("setLoading", { namespace: "marcoPolo" }) setLoading: any;
+  @Action("setSeason", { namespace: "marcoPolo" }) setSeason: any;
 
   players: MarcoPoloPlayer[] | any[] = [];
 
@@ -391,6 +409,10 @@ export default class MarcoPolo extends Vue {
     return valid;
   }
 
+  public handleSelectedSeasonChange(event: any): void {
+    this.setSeason(event.target.value);
+  }
+
   public handleStartPositions(player: MarcoPoloPlayer): void {
     this.players.forEach((pl) => {
       if (
@@ -457,5 +479,9 @@ input {
 .select,
 select {
   width: 100%;
+}
+
+.form-elem {
+  width: 200px;
 }
 </style>
