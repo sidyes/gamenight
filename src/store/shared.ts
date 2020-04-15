@@ -315,5 +315,8 @@ export const getGamesLastYear = (games: Game[]) => {
   ];
 };
 
-export const getGamesForSeason = (season: number, games: Game[]) =>
-  games.filter((game) => game.season === season || season === -1);
+export const getGamesForSeason = (season: number, games: Game[]) => {
+  return games.filter((game) => {
+    return +game.season === +season || +season === -1;
+  });
+};
