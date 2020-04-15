@@ -310,11 +310,12 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getSeason: (state) => state.season,
   getAllSeasons: (state) => {
     const seasons: number[] = [];
-    state.games.forEach((game) => {
-      if (!seasons.includes(game.season)) {
-        seasons.push(game.season);
-      }
-    });
+    let iterator = 0;
+
+    while (iterator !== state.season) {
+      seasons.push(iterator);
+      iterator++;
+    }
 
     return seasons;
   },
