@@ -312,7 +312,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
     const seasons: number[] = [];
     let iterator = 0;
 
-    while (iterator !== state.season) {
+    while (iterator !== state.season + 1) {
       seasons.push(iterator);
       iterator++;
     }
