@@ -32,24 +32,6 @@ Apex.theme = {
   palette: "palette8",
 };
 
-// Apex.colors = ["#F44336", "#E91E63", "#9C27B0"];
-
-// Apex.legend = {
-//   labels: {
-//     colors: ["#FFF"],
-//   },
-// };
-
-// Apex.markers = {
-//   colors: ["#FFF"],
-// };
-
-// Apex.dataLabels = {
-//   style: {
-//     colors: ["#FFF"],
-//   },
-// };
-
 Apex.chart = {
   foreColor: "#FFF",
 };

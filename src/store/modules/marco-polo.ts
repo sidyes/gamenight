@@ -91,7 +91,7 @@ const state: MarcoPoloState = {
   ],
   gamesLoaded: false,
   isLoading: false,
-  season: 0,
+  season: 1,
   selectedSeason: 0,
 };
 
