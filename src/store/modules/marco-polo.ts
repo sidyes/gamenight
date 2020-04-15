@@ -92,7 +92,7 @@ const state: MarcoPoloState = {
   gamesLoaded: false,
   isLoading: false,
   season: 1,
-  selectedSeason: 0,
+  selectedSeason: 1,
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
