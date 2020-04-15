@@ -123,10 +123,6 @@ export default class GamesOverTime extends Vue {
         show: false,
       },
     },
-    theme: {
-      mode: "dark",
-      palette: "palette10",
-    },
   };
 
   monthNames = [

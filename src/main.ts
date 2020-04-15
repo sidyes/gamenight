@@ -26,6 +26,34 @@ Vue.config.productionTip = false;
 
 Vue.use(VueApexCharts);
 
+// global theme
+const Apex = (window as any).Apex;
+Apex.theme = {
+  palette: "palette8",
+};
+
+// Apex.colors = ["#F44336", "#E91E63", "#9C27B0"];
+
+// Apex.legend = {
+//   labels: {
+//     colors: ["#FFF"],
+//   },
+// };
+
+// Apex.markers = {
+//   colors: ["#FFF"],
+// };
+
+// Apex.dataLabels = {
+//   style: {
+//     colors: ["#FFF"],
+//   },
+// };
+
+Apex.chart = {
+  foreColor: "#FFF",
+};
+
 library.add(faHome);
 library.add(faUser);
 library.add(faEnvelope);

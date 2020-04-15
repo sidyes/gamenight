@@ -67,10 +67,6 @@ export default class AverageScoresWidget extends Vue {
       legend: {
         offsetY: 5,
       },
-      theme: {
-        mode: "dark",
-        palette: "palette8",
-      },
       tooltip: {
         y: {
           formatter: (val: string, _opts: any) => {

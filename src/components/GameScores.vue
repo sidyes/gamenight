@@ -50,10 +50,6 @@ export default class GameScores extends Vue {
     tooltip: {
       show: false,
     },
-    theme: {
-      mode: "dark",
-      palette: "palette10",
-    },
   };
 
   public generateSeries(): any {

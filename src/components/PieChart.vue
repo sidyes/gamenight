@@ -54,10 +54,6 @@ export default class PieChart extends Vue {
         },
       },
     ],
-    theme: {
-      mode: "dark",
-      palette: "palette10",
-    },
   };
 
   public generateOptions(): any {

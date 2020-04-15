@@ -109,10 +109,6 @@ export default class StackedColumnChart extends Vue {
         stops: [50, 0, 100, 100],
       },
     },
-    theme: {
-      mode: "dark",
-      palette: "palette10",
-    },
   };
 }
 </script>
