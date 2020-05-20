@@ -158,6 +158,18 @@
                   <game-summary :items="gameSummary"></game-summary>
                 </div>
                 <div class="column has-text-right">
+                  <div class="select form-elem mb-10 is-info">
+                    <select @change="handleSelectedSeasonChange($event)">
+                      <option :value="-1">Gesamtstatistik</option>
+                      <option
+                        v-for="s in allSeasons"
+                        :value="s"
+                        v-bind:key="s"
+                        :selected="s === selectedSeason"
+                        >Season {{ s }}</option
+                      >
+                    </select>
+                  </div>
                   <a
                     aria-label="Erstelle ein neues Spiel"
                     class="button is-medium is-success"
@@ -345,8 +357,12 @@ export default class TerraMystica extends Vue {
 
   @Action("fetchGames", { namespace: "terraMystica" }) fetchGames: any;
   @Action("setLoading", { namespace: "terraMystica" }) setLoading: any;
+  @Action("setSeason", { namespace: "terraMystica" }) setSeason: any;
 
   @Getter("getSeason", { namespace: "terraMystica" }) currentSeason!: number;
+  @Getter("getSelectedSeason", { namespace: "terraMystica" })
+  selectedSeason!: number;
+  @Getter("getAllSeasons", { namespace: "terraMystica" }) allSeasons!: number[];
 
   newGameActive = false;
   players: TerraMysticaPlayer[] | any[] = [];
@@ -391,6 +407,10 @@ export default class TerraMystica extends Vue {
 
   public onLocationChange(loc: string): void {
     this.location = loc;
+  }
+
+  public handleSelectedSeasonChange(event: any): void {
+    this.setSeason(event.target.value);
   }
 
   public isFormComplete(): boolean {

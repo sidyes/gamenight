@@ -4,6 +4,9 @@ import {
   getGameScores,
   getSummary,
   getWinDistributionPlayer,
+  getAverageScores,
+  getGamesForSeason,
+  getGamesLastYear,
 } from "./../shared";
 import { TerraMysticaGame } from "./../../models/terra-mystica.model";
 import { CharacterTableEntry } from "@/models/character-table-entry.model";
@@ -31,6 +34,7 @@ interface TerraMysticaState {
   gamesLoaded: boolean;
   isLoading: boolean;
   season: number;
+  selectedSeason: number;
 }
 
 const state: TerraMysticaState = {
@@ -91,17 +95,21 @@ const state: TerraMysticaState = {
   gamesLoaded: false,
   isLoading: false,
   season: 1,
+  selectedSeason: 1,
 };
 
 const getters: GetterTree<TerraMysticaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state) => {
-    const allTimeEntries = getAllTimeTable(state.games);
+    const allTimeEntries = getAllTimeTable(
+      getGamesForSeason(state.selectedSeason, state.games)
+    );
 
     return allTimeEntries;
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
-  getResultTable: (state) => getResultTable(state.games),
+  getResultTable: (state) =>
+    getResultTable(getGamesForSeason(state.selectedSeason, state.games)),
   getResultTableHeadings: (state) => state.resultTableHeadings,
   getFactionsTable: (state, getters, _rootState, _rootGetters) => {
     const factions = getters.getFactions;
@@ -111,35 +119,37 @@ const getters: GetterTree<TerraMysticaState, any> = {
       characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0, 0))
     );
 
-    state.games.map((game) => {
-      game.players.forEach((player) => {
-        const elem = characterTableEntries.find(
-          (entry) => entry.character === player.faction
-        );
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as TerraMysticaGame)
+      .map((game) => {
+        game.players.forEach((player) => {
+          const elem = characterTableEntries.find(
+            (entry) => entry.character === player.faction
+          );
 
-        if (elem) {
-          if (player.placement === 1) {
-            ++elem.games;
-            ++elem.wins;
-            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
-          } else {
-            ++elem.games;
-            elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
-          }
+          if (elem) {
+            if (player.placement === 1) {
+              ++elem.games;
+              ++elem.wins;
+              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            } else {
+              ++elem.games;
+              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            }
 
-          if (elem.points !== undefined) {
-            elem.points +=
-              player.placement === 1
-                ? 5
-                : player.placement === 2
-                ? 3
-                : player.placement === 3
-                ? 2
-                : 0;
+            if (elem.points !== undefined) {
+              elem.points +=
+                player.placement === 1
+                  ? 5
+                  : player.placement === 2
+                  ? 3
+                  : player.placement === 3
+                  ? 2
+                  : 0;
+            }
           }
-        }
+        });
       });
-    });
 
     characterTableEntries.sort(compareCharacterTableEntries);
 
@@ -164,35 +174,37 @@ const getters: GetterTree<TerraMysticaState, any> = {
       characterTableEntries.push(new CharacterTableEntry(char, 0, 0, 0, 0))
     );
 
-    state.games.map((game) => {
-      game.players.forEach((player) => {
-        if (player.user.username === user.username) {
-          const elem = characterTableEntries.find(
-            (entry) => entry.character === player.faction
-          );
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as TerraMysticaGame)
+      .map((game) => {
+        game.players.forEach((player) => {
+          if (player.user.username === user.username) {
+            const elem = characterTableEntries.find(
+              (entry) => entry.character === player.faction
+            );
 
-          if (elem) {
-            if (player.placement === 1) {
-              ++elem.games;
-              ++elem.wins;
-              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            if (elem) {
+              if (player.placement === 1) {
+                ++elem.games;
+                ++elem.wins;
+                elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
 
-              if (elem.points !== undefined) {
-                elem.points += 5;
-              }
-            } else {
-              ++elem.games;
-              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+                if (elem.points !== undefined) {
+                  elem.points += 5;
+                }
+              } else {
+                ++elem.games;
+                elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
 
-              if (elem.points !== undefined) {
-                elem.points +=
-                  player.placement === 2 ? 3 : player.placement === 3 ? 2 : 0;
+                if (elem.points !== undefined) {
+                  elem.points +=
+                    player.placement === 2 ? 3 : player.placement === 3 ? 2 : 0;
+                }
               }
             }
           }
-        }
+        });
       });
-    });
 
     characterTableEntries.sort(compareCharacterTableEntries);
 
@@ -211,74 +223,26 @@ const getters: GetterTree<TerraMysticaState, any> = {
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
 
-    return getSummary(state.summaryHeadings, state.games, user);
+    return getSummary(
+      state.summaryHeadings,
+      getGamesForSeason(state.selectedSeason, state.games),
+      user
+    );
   },
   getFactions: (state) => state.factions,
   getGameScores: (state): GameScoreItem[] =>
-    getGameScores(state.gameScoresHeadings, state.games),
-  getGamesLastYear: (state) => {
-    const today = new Date();
-    const monthBuckets = Array.apply(null, Array(12)).map(() => 0);
-
-    for (let i = 11; i >= 0; i -= 1) {
-      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-
-      state.games.forEach((game) => {
-        const gameTime = new Date(game.time);
-        if (
-          gameTime.getFullYear() === d.getFullYear() &&
-          gameTime.getMonth() === d.getMonth()
-        ) {
-          monthBuckets[11 - i] += 1;
-        }
-      });
-    }
-
-    return [
-      new Series(
-        "Gespielt",
-        monthBuckets.map((x) => x.toString())
-      ),
-    ];
-  },
-  getWinDistributionPlayer: (state) => getWinDistributionPlayer(state.games),
-  getAverageScores: (state) => {
-    const average: AverageScores = new AverageScores([], 0);
-
-    state.games.forEach((game) => {
-      let gameAverage = 0;
-      game.players.forEach((player) => {
-        const user = average.players.find(
-          (el) => el.username === player.user.username
-        );
-
-        if (!user) {
-          average.players.push({
-            username: player.user.username,
-            average: player.points,
-            games: 1,
-          });
-        } else {
-          user.average = +user.average + +player.points;
-          user.games++;
-        }
-
-        gameAverage = +gameAverage + +player.points;
-      });
-
-      gameAverage = gameAverage / game.players.length;
-      average.totalAverage = +average.totalAverage + +gameAverage;
-    });
-
-    average.totalAverage = +(
-      +average.totalAverage / state.games.length
-    ).toFixed(2);
-    average.players.forEach((pl) => {
-      pl.average = +(pl.average / pl.games).toFixed(2);
-    });
-
-    return average;
-  },
+    getGameScores(
+      state.gameScoresHeadings,
+      getGamesForSeason(state.selectedSeason, state.games)
+    ),
+  getGamesLastYear: (state) =>
+    getGamesLastYear(getGamesForSeason(state.selectedSeason, state.games)),
+  getWinDistributionPlayer: (state) =>
+    getWinDistributionPlayer(
+      getGamesForSeason(state.selectedSeason, state.games)
+    ),
+  getAverageScores: (state) =>
+    getAverageScores(getGamesForSeason(state.selectedSeason, state.games)),
   getAveragePointsDistribution: (state): StackedColumChartData => {
     let players: string[] = [];
     let games: number[] = [];
@@ -287,31 +251,33 @@ const getters: GetterTree<TerraMysticaState, any> = {
     const cult = new Series("Kultwertung", []);
     const resources = new Series("Ressourcen", []);
 
-    state.games.forEach((game) => {
-      game.players.forEach((player) => {
-        let idx = players.indexOf(player.user.username);
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as TerraMysticaGame)
+      .forEach((game) => {
+        game.players.forEach((player) => {
+          let idx = players.indexOf(player.user.username);
 
-        if (idx === -1) {
-          players.push(player.user.username);
-          games.push(1);
-          points.data.push(player.gamePoints.toString());
-          area.data.push(player.area.toString());
-          cult.data.push(player.cult.toString());
-          resources.data.push(player.resources.toString());
-        } else {
-          points.data[idx] = (
-            +points.data[idx] + +player.gamePoints
-          ).toString();
-          area.data[idx] = (+area.data[idx] + +player.area).toString();
-          cult.data[idx] = (+cult.data[idx] + +player.cult).toString();
-          resources.data[idx] = (
-            +resources.data[idx] + +player.resources
-          ).toString();
+          if (idx === -1) {
+            players.push(player.user.username);
+            games.push(1);
+            points.data.push(player.gamePoints.toString());
+            area.data.push(player.area.toString());
+            cult.data.push(player.cult.toString());
+            resources.data.push(player.resources.toString());
+          } else {
+            points.data[idx] = (
+              +points.data[idx] + +player.gamePoints
+            ).toString();
+            area.data[idx] = (+area.data[idx] + +player.area).toString();
+            cult.data[idx] = (+cult.data[idx] + +player.cult).toString();
+            resources.data[idx] = (
+              +resources.data[idx] + +player.resources
+            ).toString();
 
-          games[idx] = +games[idx] + 1;
-        }
+            games[idx] = +games[idx] + 1;
+          }
+        });
       });
-    });
 
     points.data = points.data.map((total, idx) =>
       (+total / +games[idx]).toFixed(2)
@@ -343,6 +309,18 @@ const getters: GetterTree<TerraMysticaState, any> = {
     return game;
   },
   getSeason: (state) => state.season,
+  getAllSeasons: (state) => {
+    const seasons: number[] = [];
+    let iterator = 0;
+
+    while (iterator !== state.season + 1) {
+      seasons.push(iterator);
+      iterator++;
+    }
+
+    return seasons;
+  },
+  getSelectedSeason: (state) => state.selectedSeason,
 };
 
 //Mutations Must Be Synchronous
@@ -361,6 +339,9 @@ const mutations: MutationTree<TerraMysticaState> = {
     state.games = [];
     state.gamesLoaded = false;
   },
+  setSelectedSeason: (state, season) => {
+    state.selectedSeason = season;
+  },
 };
 
 const actions: ActionTree<TerraMysticaState, any> = {
@@ -377,6 +358,9 @@ const actions: ActionTree<TerraMysticaState, any> = {
   },
   setLoading: ({ commit }, payload) => {
     commit("setLoadingStatus", payload);
+  },
+  setSeason: ({ commit }, payload) => {
+    commit("setSelectedSeason", payload);
   },
 };
 
