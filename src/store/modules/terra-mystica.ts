@@ -90,7 +90,7 @@ const state: TerraMysticaState = {
   ],
   gamesLoaded: false,
   isLoading: false,
-  season: 0,
+  season: 1,
 };
 
 const getters: GetterTree<TerraMysticaState, any> = {
