@@ -25,7 +25,7 @@ const getters: GetterTree<UserState, any> = {
   },
   getFriends: (state) => state.friends,
   getPlayers: (state, getters) => {
-    let players = [...state.friends];
+    const players = [...state.friends];
     const me = getters.getUser;
 
     if (me) {
@@ -44,7 +44,7 @@ const mutations: MutationTree<UserState> = {
       window.localStorage.removeItem("user");
       return;
     }
-    let theUser = JSON.stringify(currentUser);
+    const theUser = JSON.stringify(currentUser);
     state.user = theUser;
     window.localStorage.setItem("user", theUser);
   },

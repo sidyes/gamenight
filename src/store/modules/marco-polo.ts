@@ -120,7 +120,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
           .join(", ");
         const location = game.location;
         const playerWon = game.players.find((pl) => pl.placement === 1);
-        let winner = playerWon
+        const winner = playerWon
           ? `${playerWon.user.username} (${playerWon.points})`
           : "-";
 
@@ -273,7 +273,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       getGamesForSeason(state.selectedSeason, state.games)
     ),
   getWinDistributionStartPosition: (state) => {
-    let startPositions: string[] = ["1", "2", "3", "4"];
+    const startPositions: string[] = ["1", "2", "3", "4"];
     let wins: number[] = [0, 0, 0, 0];
 
     const games = getGamesForSeason(state.selectedSeason, state.games);

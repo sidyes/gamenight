@@ -105,7 +105,7 @@ export const getResultTable = (games: Game[]) => {
         .join(", ");
       const location = game.location;
       const playerWon = game.players.find((pl) => pl.placement === 1);
-      let winner = playerWon
+      const winner = playerWon
         ? `${playerWon.user.username} (${playerWon.points})`
         : "-";
 
@@ -227,8 +227,8 @@ export const getGameScores = (headings: string[], games: Game[]) => {
 };
 
 export const getWinDistributionPlayer = (games: Game[]) => {
-  let players: string[] = [];
-  let wins: number[] = [];
+  const players: string[] = [];
+  const wins: number[] = [];
 
   games.forEach((game) => {
     game.players.forEach((player) => {
@@ -291,7 +291,7 @@ export const getAverageScores = (games: Game[]) => {
 
 export const getGamesLastYear = (games: Game[]) => {
   const today = new Date();
-  const monthBuckets = Array.apply(null, Array(12)).map(() => 0);
+  const monthBuckets = [...Array(12)].map(() => 0);
 
   for (let i = 11; i >= 0; i -= 1) {
     const d = new Date(today.getFullYear(), today.getMonth() - i, 1);

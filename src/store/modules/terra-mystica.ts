@@ -244,8 +244,8 @@ const getters: GetterTree<TerraMysticaState, any> = {
   getAverageScores: (state) =>
     getAverageScores(getGamesForSeason(state.selectedSeason, state.games)),
   getAveragePointsDistribution: (state): StackedColumChartData => {
-    let players: string[] = [];
-    let games: number[] = [];
+    const players: string[] = [];
+    const games: number[] = [];
     const points = new Series("Punkte", []);
     const area = new Series("Gebietswertung", []);
     const cult = new Series("Kultwertung", []);
@@ -255,7 +255,7 @@ const getters: GetterTree<TerraMysticaState, any> = {
       .map((game) => game as TerraMysticaGame)
       .forEach((game) => {
         game.players.forEach((player) => {
-          let idx = players.indexOf(player.user.username);
+          const idx = players.indexOf(player.user.username);
 
           if (idx === -1) {
             players.push(player.user.username);

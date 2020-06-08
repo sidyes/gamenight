@@ -75,8 +75,8 @@ const getters: GetterTree<WingspanState, any> = {
   getWinDistributionPlayer: (state) => getWinDistributionPlayer(state.games),
   getAverageScores: (state) => getAverageScores(state.games),
   getAveragePointsDistribution: (state): StackedColumChartData => {
-    let players: string[] = [];
-    let games: number[] = [];
+    const players: string[] = [];
+    const games: number[] = [];
     const birds = new Series("Vögel", []);
     const bonusCards = new Series("Bonuskarten", []);
     const endOfRoundGoals = new Series("Rundenziele", []);
@@ -86,7 +86,7 @@ const getters: GetterTree<WingspanState, any> = {
 
     state.games.forEach((game) => {
       game.players.forEach((player) => {
-        let idx = players.indexOf(player.user.username);
+        const idx = players.indexOf(player.user.username);
 
         if (idx === -1) {
           players.push(player.user.username);
