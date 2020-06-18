@@ -77,7 +77,9 @@ const state: MarcoPoloState = {
   characters: [
     "Altan Ord",
     "André de Longjumeau",
+    "Bellela, Fantina & Moreta",
     "Berke Khan",
+    "Donata Badoer",
     "Fratre Nicolao",
     "Gunj Kököchin",
     "Johannes Caprini",
@@ -86,6 +88,8 @@ const state: MarcoPoloState = {
     "Matteo Polo",
     "Mercator ex Tabriz",
     "Niccolo und Marco Polo",
+    "Papa Gregorio X",
+    "Piedro Tartarino",
     "Raschi ad-Din Sinan",
     "Wilhelm von Rubruk",
   ],
