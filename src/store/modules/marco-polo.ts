@@ -95,8 +95,8 @@ const state: MarcoPoloState = {
   ],
   gamesLoaded: false,
   isLoading: false,
-  season: 1,
-  selectedSeason: 1,
+  season: 2,
+  selectedSeason: 2,
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
