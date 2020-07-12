@@ -91,6 +91,7 @@ const state: MarcoPoloState = {
     "Papa Gregorio X",
     "Piedro Tartarino",
     "Raschi ad-Din Sinan",
+    "Rusticiano",
     "Wilhelm von Rubruk",
   ],
   gamesLoaded: false,
