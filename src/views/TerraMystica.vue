@@ -19,7 +19,11 @@
             <thead>
               <tr>
                 <th>Spieler</th>
-                <th v-for="(player, idx) in players" v-bind:key="idx">
+                <th
+                  v-for="(player, idx) in players"
+                  v-bind:key="idx"
+                  class="min-width-200"
+                >
                   <div class="control">
                     <div class="select">
                       <select v-model="player.user">

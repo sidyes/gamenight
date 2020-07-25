@@ -149,3 +149,7 @@ $positions: ("top", "left", "bottom", "right");
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: rgb(20, 25, 34);
 }
+
+.min-width-200 {
+  min-width: 200px;
+}

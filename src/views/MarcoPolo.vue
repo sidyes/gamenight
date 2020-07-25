@@ -18,9 +18,9 @@
           <table class="table is-fullwidth">
             <thead>
               <tr>
-                <th>Spieler</th>
+                <th class="min-width-200">Spieler</th>
                 <th>Startposition</th>
-                <th>Charakter</th>
+                <th class="min-width-200">Charakter</th>
                 <th>Punkte</th>
                 <th>Platzierung</th>
               </tr>
