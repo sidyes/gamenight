@@ -18,8 +18,9 @@
                       v-for="player in nrOfPlayers"
                       :value="player"
                       v-bind:key="player"
-                      >{{ player }}</option
                     >
+                      {{ player }}
+                    </option>
                   </select>
                 </div>
               </div>

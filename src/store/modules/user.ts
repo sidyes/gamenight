@@ -21,7 +21,7 @@ const getters: GetterTree<UserState, any> = {
     }
     const user = JSON.parse(state.user);
 
-    return new Member(user.username, user.email);
+    return new Member(user.username, user.email, user.admin);
   },
   getFriends: (state) => state.friends,
   getPlayers: (state, getters) => {

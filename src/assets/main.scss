@@ -50,6 +50,9 @@ $modal-card-title-color: hsl(0, 0%, 100%) !important;
 @import "~bulma/bulma";
 @import "~bulma-tooltip";
 
+@import "~bulma-calendar/dist/css/bulma-calendar.min.css";
+
+
 @import "~animate.css";
 
 .border {
@@ -152,4 +155,9 @@ $positions: ("top", "left", "bottom", "right");
 
 .min-width-200 {
   min-width: 200px;
+}
+
+
+.datetimepicker-dummy-input{
+  color: white !important;
 }

@@ -33,6 +33,7 @@
                 Ewigkeit festzuhalten - Probiere es aus!
               </p>
             </div>
+
             <div class="column is-6 has-text-centered is-hidden-touch">
               <transition
                 name="bounce"
@@ -48,6 +49,32 @@
                 </figure>
               </transition>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section pt-0">
+      <div class="container">
+        <div class="columns">
+          <div class="column">
+            <h2 class="title is-2 has-text-white">Upcoming Events</h2>
+            <h3 class="subtitle has-text-white">
+              Wann wird wieder perfomt? 💥
+            </h3>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column" v-if="nextEventsLoaded">
+            <next-game-event
+              :nextEvent="nextEvent"
+              :nextEventEntered="nextEventEntered"
+            >
+            </next-game-event>
+          </div>
+          <div class="column" v-if="!nextEventsLoaded">
+            <p class="has-text-warning is-italic has-text-weight-medium">
+              -- Im Moment ist kein Spieleabend geplant <span>😰</span> --
+            </p>
           </div>
         </div>
       </div>
@@ -135,15 +162,32 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+const axios = require("axios");
+
 @Component({
   components: {},
 })
 export default class Home extends Vue {
   public showDice = false;
   public animationEnd = "";
+  public nextEventsLoaded = false;
+
+  public nextEvent!: number;
+  public nextEventEntered!: number;
 
   public mounted(): void {
     this.showDice = true;
+
+    this.loadNextEvents();
+  }
+
+  public loadNextEvents(): void {
+    axios.get("/.netlify/functions/game-events-read").then((response: any) => {
+      const evt = response.data.items[response.data.items.length - 1];
+      this.nextEvent = evt.nextEvent;
+      this.nextEventEntered = evt.nextEventEntered;
+      this.nextEventsLoaded = true;
+    });
   }
 
   public afterEnter(): void {

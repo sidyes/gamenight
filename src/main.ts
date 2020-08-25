@@ -18,6 +18,8 @@ import PieChart from "@/components/PieChart.vue";
 import BannerNotification from "@/components/BannerNotification.vue";
 import AverageScoresWidget from "@/components/AverageScoresWidget.vue";
 import StackedColumnChart from "@/components/StackedColumnChart.vue";
+import NextGameEvent from "@/components/NextGameEvent.vue";
+import CountdownCircle from "@/components/CountdownCircle.vue";
 
 import "vuex-toast/dist/vuex-toast.css";
 import "@/assets/main.scss";
@@ -51,6 +53,8 @@ Vue.component("pie-chart", PieChart);
 Vue.component("banner-notification", BannerNotification);
 Vue.component("average-scores-widget", AverageScoresWidget);
 Vue.component("stacked-column-chart", StackedColumnChart);
+Vue.component("next-game-event", NextGameEvent);
+Vue.component("countdown-circle", CountdownCircle);
 
 Vue.filter("placement", function (placement: number) {
   if (!placement) {

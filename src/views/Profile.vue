@@ -106,6 +106,30 @@
             </article>
           </div>
         </div>
+        <div class="tile is-ancestor">
+          <div class="tile is-parent is-8">
+            <article class="tile is-child box">
+              <p class="title has-text-white">Nächstes GameNight Event</p>
+              <p class="subtitle has-text-light">Wann geht's wieder ab? 💥</p>
+              <div class="content">
+                <div class="columns is-vcentered">
+                  <div class="column">
+                    <button ref="calendarTrigger" type="button">Change</button>
+                  </div>
+                  <div class="column">
+                    <button
+                      class="button is-info"
+                      :disabled="isNextEventInvalid()"
+                      @click="createEvent"
+                    >
+                      Spann's auf!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -115,6 +139,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { Member } from "@/models";
+
+//@ts-ignore
+import bulmaCalendar from "bulma-calendar/dist/js/bulma-calendar.min.js";
 
 const axios = require("axios");
 const toast = require("vuex-toast");
@@ -129,9 +156,38 @@ export default class Profile extends Vue {
   @Action("addFriend", { namespace: "user" }) addBuddy!: any;
   @Action("removeFriend", { namespace: "user" }) removeBuddy!: any;
 
+  $refs!: {
+    calendarTrigger: any;
+  };
+
   public mail: string = "";
   public addFriendError: string = "";
   public addFriendLoading = false;
+
+  public nextEvent: number = 0;
+  public calendar: any;
+
+  public mounted(): void {
+    const today = new Date();
+    this.calendar = bulmaCalendar.attach(this.$refs.calendarTrigger, {
+      startDate: today,
+      type: "date",
+      showFooter: false,
+      showButtons: false,
+      minDate: today,
+      color: "#9F78D1",
+    })[0];
+    this.calendar.on("select", (e: any) => {
+      const valid = new Date(this.calendar.value()).getTime();
+      if (valid > 0 && valid > today.getTime()) {
+        this.nextEvent = valid;
+      }
+    });
+  }
+
+  public isNextEventInvalid(): boolean {
+    return this.nextEvent === 0 || this.calendar.isOpen();
+  }
 
   public isMailInvalid(): boolean {
     return (
@@ -191,6 +247,31 @@ export default class Profile extends Vue {
         });
       })
       .catch((err: any) => {
+        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+          text: "Irgendwas ist schief gelaufen! 😱",
+          type: "danger",
+          dismissAfter: 2000,
+        });
+      });
+  }
+
+  public createEvent(): void {
+    const body = {
+      nextEvent: this.nextEvent,
+      nextEventEntered: new Date().getTime(),
+    };
+
+    axios
+      .post("/.netlify/functions/game-events-create", body)
+      .then((response: any) => {
+        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+          text: "Nächste GameNight kommt! 🥳",
+          type: "success",
+          dismissAfter: 2000,
+        });
+      })
+      .catch((err: any) => {
+        this.addFriendError = err.response.data.message;
         this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",

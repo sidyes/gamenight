@@ -31,8 +31,9 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                          >{{ mem.username }}</option
                         >
+                          {{ mem.username }}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -41,9 +42,7 @@
             </thead>
             <tbody>
               <tr>
-                <td>
-                  Vögel
-                </td>
+                <td>Vögel</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -56,9 +55,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Bonuskarten
-                </td>
+                <td>Bonuskarten</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -71,9 +68,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Rundenziele
-                </td>
+                <td>Rundenziele</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -86,9 +81,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Eier
-                </td>
+                <td>Eier</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -101,9 +94,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Gelagertes Futter
-                </td>
+                <td>Gelagertes Futter</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -116,9 +107,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Karten unter Vögeln
-                </td>
+                <td>Karten unter Vögeln</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"

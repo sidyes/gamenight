@@ -17,7 +17,6 @@ import { GameSummaryItem } from "@/models/game-summary-item.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
 import { Series } from "@/models/series.model";
-import { AverageScores } from "@/models/average-scores.model";
 import { StackedColumChartData } from "@/models";
 
 const axios = require("axios");

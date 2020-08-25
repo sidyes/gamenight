@@ -31,8 +31,9 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                          >{{ mem.username }}</option
                         >
+                          {{ mem.username }}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -41,9 +42,7 @@
             </thead>
             <tbody>
               <tr>
-                <td>
-                  Volk
-                </td>
+                <td>Volk</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <div class="control">
                     <div class="select">
@@ -52,17 +51,16 @@
                           v-for="faction in factions"
                           :value="faction"
                           v-bind:key="faction"
-                          >{{ faction }}</option
                         >
+                          {{ faction }}
+                        </option>
                       </select>
                     </div>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td>
-                  Punkte
-                </td>
+                <td>Punkte</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -75,9 +73,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Gebietswertung
-                </td>
+                <td>Gebietswertung</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -90,9 +86,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Kultwertung
-                </td>
+                <td>Kultwertung</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -105,9 +99,7 @@
                 </td>
               </tr>
               <tr>
-                <td>
-                  Ressourcen
-                </td>
+                <td>Ressourcen</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
@@ -170,8 +162,9 @@
                         :value="s"
                         v-bind:key="s"
                         :selected="s === selectedSeason"
-                        >Season {{ s }}</option
                       >
+                        Season {{ s }}
+                      </option>
                     </select>
                   </div>
                   <a

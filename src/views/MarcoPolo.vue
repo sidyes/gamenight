@@ -35,8 +35,9 @@
                           v-for="mem in members"
                           :value="mem"
                           v-bind:key="mem.email"
-                          >{{ mem.username }}</option
                         >
+                          {{ mem.username }}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -52,8 +53,9 @@
                           v-for="position in players.length"
                           :value="position"
                           v-bind:key="position"
-                          >{{ position }}</option
                         >
+                          {{ position }}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -66,8 +68,9 @@
                           v-for="char in characters"
                           :value="char"
                           v-bind:key="char"
-                          >{{ char }}</option
                         >
+                          {{ char }}
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -121,8 +124,9 @@
                         :value="s"
                         v-bind:key="s"
                         :selected="s === selectedSeason"
-                        >Season {{ s }}</option
                       >
+                        Season {{ s }}
+                      </option>
                     </select>
                   </div>
                   <a
