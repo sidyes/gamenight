@@ -10,7 +10,6 @@
         <path
           :stroke-dasharray="circleDasharray()"
           class="base-timer__path-remaining"
-          :class="remainingPathColor()"
           d="
             M 50, 50
             m -45, 0
@@ -33,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component
 export default class CountdownCircle extends Vue {
@@ -42,21 +41,6 @@ export default class CountdownCircle extends Vue {
   @Prop({ default: "" }) label!: string;
 
   FULL_DASH_ARRAY = 283;
-  WARNING_THRESHOLD = 10;
-  ALERT_THRESHOLD = 5;
-  COLOR_CODES = {
-    info: {
-      color: "green",
-    },
-    warning: {
-      color: "orange",
-      threshold: this.WARNING_THRESHOLD,
-    },
-    alert: {
-      color: "red",
-      threshold: this.ALERT_THRESHOLD,
-    },
-  };
 
   formattedTimeLeft() {
     let formattedTime: any = this.timeLeft;
@@ -75,19 +59,6 @@ export default class CountdownCircle extends Vue {
   timeFraction() {
     const rawTimeFraction = this.timeLeft / this.timeStart;
     return rawTimeFraction - (1 / this.timeStart) * (1 - rawTimeFraction);
-  }
-
-  remainingPathColor() {
-    const { alert, warning, info } = this.COLOR_CODES;
-    console.log("ez");
-
-    if (this.timeLeft <= alert.threshold) {
-      return alert.color;
-    } else if (this.timeLeft <= warning.threshold) {
-      return warning.color;
-    } else {
-      return info.color;
-    }
   }
 }
 </script>
