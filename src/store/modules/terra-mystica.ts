@@ -84,6 +84,7 @@ const state: TerraMysticaState = {
     "Fakire",
     "Frostfeen",
     "Geweihte",
+    "Gestaltenwandler",
     "Giganten",
     "Halblinge",
     "Hexen",
