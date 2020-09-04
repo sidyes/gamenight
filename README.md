@@ -4,11 +4,8 @@
 
 ## Pre-Conditions
 
-1. Create a Fauna DB account as well as a database called `gamenight` and the following  collections
-    - friends
-    - marco-polo
-    - members
-2. Create a key at Faun for `server` for the previously created database `gamenight`
+1. Create a Fauna DB account as well as a database called `gamenight`. For the specific db structure take a look at the `lambda` folder.
+2. Create a key at Fauna for `server` for the previously created database `gamenight`
 3. If you want to run the project locally set the environment variable (your fauna db key) in your commandline tool:  
    `SET FAUNADB_SERVER_SECRET=XXX`
 
