@@ -11,9 +11,8 @@
 
     <div class="section has-text-light">
       <div class="container">
-        <h1>Datenschutz&shy;erkl&auml;rung</h1>
-        <h2>1. Datenschutz auf einen Blick</h2>
-        <h3>Allgemeine Hinweise</h3>
+        <h2 class="title is-2">1. Datenschutz auf einen Blick</h2>
+        <h3 class="title is-3 mt-30">Allgemeine Hinweise</h3>
         <p>
           Die folgenden Hinweise geben einen einfachen &Uuml;berblick
           dar&uuml;ber, was mit Ihren personenbezogenen Daten passiert, wenn Sie
@@ -22,8 +21,8 @@
           Ausf&uuml;hrliche Informationen zum Thema Datenschutz entnehmen Sie
           unserer unter diesem Text aufgef&uuml;hrten Datenschutzerkl&auml;rung.
         </p>
-        <h3>Datenerfassung auf dieser Website</h3>
-        <h4>
+        <h3 class="title is-3 mt-30">Datenerfassung auf dieser Website</h3>
+        <h4 class="title is-4 mt-20">
           Wer ist verantwortlich f&uuml;r die Datenerfassung auf dieser Website?
         </h4>
         <p>
@@ -31,7 +30,7 @@
           Websitebetreiber. Dessen Kontaktdaten k&ouml;nnen Sie dem Impressum
           dieser Website entnehmen.
         </p>
-        <h4>Wie erfassen wir Ihre Daten?</h4>
+        <h4 class="title is-4 mt-20">Wie erfassen wir Ihre Daten?</h4>
         <p>
           Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese
           mitteilen. Hierbei kann es sich z.&nbsp;B. um Daten handeln, die Sie
@@ -44,13 +43,15 @@
           Uhrzeit des Seitenaufrufs). Die Erfassung dieser Daten erfolgt
           automatisch, sobald Sie diese Website betreten.
         </p>
-        <h4>Wof&uuml;r nutzen wir Ihre Daten?</h4>
+        <h4 class="title is-4 mt-20">Wof&uuml;r nutzen wir Ihre Daten?</h4>
         <p>
           Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung
           der Website zu gew&auml;hrleisten. Andere Daten k&ouml;nnen zur
           Analyse Ihres Nutzerverhaltens verwendet werden.
         </p>
-        <h4>Welche Rechte haben Sie bez&uuml;glich Ihrer Daten?</h4>
+        <h4 class="title is-4 mt-20">
+          Welche Rechte haben Sie bez&uuml;glich Ihrer Daten?
+        </h4>
         <p>
           Sie haben jederzeit das Recht, unentgeltlich Auskunft &uuml;ber
           Herkunft, Empf&auml;nger und Zweck Ihrer gespeicherten
@@ -68,8 +69,10 @@
           sich jederzeit unter der im Impressum angegebenen Adresse an uns
           wenden.
         </p>
-        <h2>2. Hosting und Content Delivery Networks (CDN)</h2>
-        <h3>Nutzung von Netlify</h3>
+        <h2 class="title is-2 mt-30">
+          2. Hosting und Content Delivery Networks (CDN)
+        </h2>
+        <h3 class="title is-3 mt-30">Nutzung von Netlify</h3>
         <p>
           Unsere Website wird von Netlify gehostet. Wenn Sie eine unserer
           Webseiten aufrufen, baut Ihr Browser daher eine Verbindung zu einem
@@ -102,7 +105,7 @@
           vorübergehende Speicherung der vorgenannten Daten und der Logfiles ist
           Art. 6 Abs. 1 S. 1 lit. f) DSGVO.
         </p>
-        <h3>Externes Hosting</h3>
+        <h3 class="title is-3 mt-30">Externes Hosting</h3>
         <p>
           Diese Website wird bei einem externen Dienstleister gehostet (Hoster).
           Die personenbezogenen Daten, die auf dieser Website erfasst werden,
@@ -130,14 +133,18 @@
           San Francisco<br />
           California 94107
         </p>
-        <h4>Abschluss eines Vertrages &uuml;ber Auftragsverarbeitung</h4>
+        <h4 class="title is-4 mt-20">
+          Abschluss eines Vertrages &uuml;ber Auftragsverarbeitung
+        </h4>
         <p>
           Um die datenschutzkonforme Verarbeitung zu gew&auml;hrleisten, haben
           wir einen Vertrag &uuml;ber Auftragsverarbeitung mit unserem Hoster
           geschlossen.
         </p>
-        <h2>3. Allgemeine Hinweise und Pflicht&shy;informationen</h2>
-        <h3>Datenschutz</h3>
+        <h2 class="title is-2 mt-30">
+          3. Allgemeine Hinweise und Pflicht&shy;informationen
+        </h2>
+        <h3 class="title is-3 mt-20">Datenschutz</h3>
         <p>
           Die Betreiber dieser Seiten nehmen den Schutz Ihrer pers&ouml;nlichen
           Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten
@@ -158,7 +165,7 @@
           aufweisen kann. Ein l&uuml;ckenloser Schutz der Daten vor dem Zugriff
           durch Dritte ist nicht m&ouml;glich.
         </p>
-        <h3>Hinweis zur verantwortlichen Stelle</h3>
+        <h3 class="title is-3 mt-30">Hinweis zur verantwortlichen Stelle</h3>
         <p>
           Die verantwortliche Stelle f&uuml;r die Datenverarbeitung auf dieser
           Website ist:
@@ -180,7 +187,7 @@
           E-Mail-Adressen o. &Auml;.) entscheidet.
         </p>
 
-        <h3>Speicherdauer</h3>
+        <h3 class="title is-3 mt-30">Speicherdauer</h3>
         <p>
           Soweit innerhalb dieser Datenschutzerkl&auml;rung keine speziellere
           Speicherdauer genannt wurde, verbleiben Ihre personenbezogenen Daten
@@ -193,7 +200,9 @@
           Aufbewahrungsfristen); im letztgenannten Fall erfolgt die
           L&ouml;schung nach Fortfall dieser Gr&uuml;nde.
         </p>
-        <h3>Widerruf Ihrer Einwilligung zur Datenverarbeitung</h3>
+        <h3 class="title is-3 mt-30">
+          Widerruf Ihrer Einwilligung zur Datenverarbeitung
+        </h3>
         <p>
           Viele Datenverarbeitungsvorg&auml;nge sind nur mit Ihrer
           ausdr&uuml;cklichen Einwilligung m&ouml;glich. Sie k&ouml;nnen eine
@@ -201,7 +210,7 @@
           Rechtm&auml;&szlig;igkeit der bis zum Widerruf erfolgten
           Datenverarbeitung bleibt vom Widerruf unber&uuml;hrt.
         </p>
-        <h3>
+        <h3 class="title is-3 mt-30">
           Widerspruchsrecht gegen die Datenerhebung in besonderen F&auml;llen
           sowie gegen Direktwerbung (Art. 21 DSGVO)
         </h3>
@@ -230,7 +239,7 @@
           MEHR ZUM ZWECKE DER DIREKTWERBUNG VERWENDET (WIDERSPRUCH NACH ART. 21
           ABS. 2 DSGVO).
         </p>
-        <h3>
+        <h3 class="title is-3 mt-30">
           Beschwerde&shy;recht bei der zust&auml;ndigen
           Aufsichts&shy;beh&ouml;rde
         </h3>
@@ -242,7 +251,9 @@
           Versto&szlig;es zu. Das Beschwerderecht besteht unbeschadet
           anderweitiger verwaltungsrechtlicher oder gerichtlicher Rechtsbehelfe.
         </p>
-        <h3>Recht auf Daten&shy;&uuml;bertrag&shy;barkeit</h3>
+        <h3 class="title is-3 mt-30">
+          Recht auf Daten&shy;&uuml;bertrag&shy;barkeit
+        </h3>
         <p>
           Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung
           oder in Erf&uuml;llung eines Vertrags automatisiert verarbeiten, an
@@ -251,7 +262,7 @@
           &Uuml;bertragung der Daten an einen anderen Verantwortlichen
           verlangen, erfolgt dies nur, soweit es technisch machbar ist.
         </p>
-        <h3>SSL- bzw. TLS-Verschl&uuml;sselung</h3>
+        <h3 class="title is-3 mt-30">SSL- bzw. TLS-Verschl&uuml;sselung</h3>
         <p>
           Diese Seite nutzt aus Sicherheitsgr&uuml;nden und zum Schutz der
           &Uuml;bertragung vertraulicher Inhalte, wie zum Beispiel Bestellungen
@@ -276,7 +287,9 @@
           personenbezogene Daten k&ouml;nnen Sie sich jederzeit unter der im
           Impressum angegebenen Adresse an uns wenden.
         </p>
-        <h3>Recht auf Einschr&auml;nkung der Verarbeitung</h3>
+        <h3 class="title is-3 mt-30">
+          Recht auf Einschr&auml;nkung der Verarbeitung
+        </h3>
         <p>
           Sie haben das Recht, die Einschr&auml;nkung der Verarbeitung Ihrer
           personenbezogenen Daten zu verlangen. Hierzu k&ouml;nnen Sie sich
@@ -323,8 +336,8 @@
           wichtigen &ouml;ffentlichen Interesses der Europ&auml;ischen Union
           oder eines Mitgliedstaats verarbeitet werden.
         </p>
-        <h2>4. Datenerfassung auf dieser Website</h2>
-        <h3>Cookies</h3>
+        <h2 class="title is-2 mt-30">4. Datenerfassung auf dieser Website</h2>
+        <h3 class="title is-3 mt-30">Cookies</h3>
         <p>
           Unsere Internetseiten verwenden so genannte &bdquo;Cookies&ldquo;.
           Cookies sind kleine Textdateien und richten auf Ihrem Endger&auml;t
@@ -380,8 +393,10 @@
           Datenschutzerkl&auml;rung gesondert informieren und ggf. eine
           Einwilligung abfragen.
         </p>
-        <h2>5. eCommerce und Zahlungs&shy;anbieter</h2>
-        <h3>Verarbeiten von Daten (Kunden- und Vertragsdaten)</h3>
+        <h2 class="title is-2 mt-30">5. eCommerce und Zahlungs&shy;anbieter</h2>
+        <h3 class="title is-3 mt-30">
+          Verarbeiten von Daten (Kunden- und Vertragsdaten)
+        </h3>
         <p>
           Wir erheben, verarbeiten und nutzen personenbezogene Daten nur, soweit
           sie f&uuml;r die Begr&uuml;ndung, inhaltliche Ausgestaltung oder
