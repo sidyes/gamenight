@@ -4,7 +4,7 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">Impressum</h1>
-          <h2 class="subtitle">Stand: 21. September 2019</h2>
+          <h2 class="subtitle">Stand: 12. November 2020</h2>
         </div>
       </div>
     </section>
