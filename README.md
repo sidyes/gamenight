@@ -2,6 +2,8 @@
 
 # game-night
 
+[game-night.rocks](https://game-night.rocks)
+
 ## Pre-Conditions
 
 1. Create a Fauna DB account as well as a database called `gamenight`. For the specific db structure take a look at the `lambda` folder.
