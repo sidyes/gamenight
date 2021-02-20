@@ -139,12 +139,12 @@
 import { Component, Vue } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { Member } from "@/models";
+import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
 //@ts-ignore
 import bulmaCalendar from "bulma-calendar/dist/js/bulma-calendar.min.js";
 
 const axios = require("axios");
-const toast = require("vuex-toast");
 
 @Component({
   components: {},
@@ -215,7 +215,7 @@ export default class Profile extends Vue {
         this.addFriendError = "";
         this.addBuddy(response.data.friend);
 
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Freund hinzugefügt! 🥳",
           type: "success",
           dismissAfter: 2000,
@@ -223,7 +223,7 @@ export default class Profile extends Vue {
       })
       .catch((err: any) => {
         this.addFriendError = err.response.data.message;
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 2000,
@@ -240,14 +240,14 @@ export default class Profile extends Vue {
       })
       .then((response: any) => {
         this.removeBuddy(response.data.friend);
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Freund entfernt! 🥳",
           type: "success",
           dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 2000,
@@ -264,7 +264,7 @@ export default class Profile extends Vue {
     axios
       .post("/.netlify/functions/game-events-create", body)
       .then((response: any) => {
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Nächste GameNight kommt! 🥳",
           type: "success",
           dismissAfter: 2000,
@@ -272,7 +272,7 @@ export default class Profile extends Vue {
       })
       .catch((err: any) => {
         this.addFriendError = err.response.data.message;
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 2000,

@@ -1,4 +1,4 @@
-import faunadb from "faunadb"; /* Import faunaDB sdk */
+const faunadb = require("faunadb"); /* Import faunaDB sdk */
 
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
@@ -8,7 +8,7 @@ const client = new faunadb.Client({
 
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
-  console.log("Function `wingspan-read` invoked");
+  console.log("Function `marco-polo-read` invoked");
 
   const params = event.queryStringParameters;
 
@@ -21,7 +21,7 @@ exports.handler = (event, context, callback) => {
   return client
     .query(
       q.Map(
-        q.Paginate(q.Match(q.Index("my-wingspan"), user.email)),
+        q.Paginate(q.Match(q.Index("my-marco-polo"), user.email)),
         q.Lambda("X", q.Get(q.Var("X")))
       )
     )

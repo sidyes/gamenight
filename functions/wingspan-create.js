@@ -1,4 +1,4 @@
-import faunadb from "faunadb"; /* Import faunaDB sdk */
+const faunadb = require("faunadb"); /* Import faunaDB sdk */
 
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
@@ -10,11 +10,11 @@ const client = new faunadb.Client({
 exports.handler = (event, context, callback) => {
   /* parse the string body into a useable JS object */
   const data = JSON.parse(event.body);
-  console.log("Function `game-events-create` invoked", data);
+  console.log("Function `wingspan-create` invoked", data);
 
   /* construct the fauna query */
   return client
-    .query(q.Create(q.Collection("game-events"), { data }))
+    .query(q.Create(q.Collection("wingspan"), { data }))
     .then((response) => {
       console.log("success", response);
       /* Success! return the response with statusCode 200 */

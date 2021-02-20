@@ -242,7 +242,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { Action, Getter, namespace } from "vuex-class";
+import { Action, Getter } from "vuex-class";
 import { Member } from "@/models/member.model";
 import { MarcoPoloPlayer, MarcoPoloGame } from "@/models/marco-polo.model";
 import {
@@ -257,7 +257,8 @@ import {
 } from "@/models";
 
 const axios = require("axios");
-const toast = require("vuex-toast");
+
+import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
 @Component({
   components: {},
@@ -372,14 +373,14 @@ export default class MarcoPolo extends Vue {
 
         this.fetchGames(this.user);
 
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
           type: "success",
           dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 1000,

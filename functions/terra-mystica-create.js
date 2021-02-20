@@ -1,4 +1,4 @@
-import faunadb from "faunadb"; /* Import faunaDB sdk */
+const faunadb = require("faunadb"); /* Import faunaDB sdk */
 
 /* configure faunaDB Client with our secret */
 const q = faunadb.query;
@@ -8,30 +8,26 @@ const client = new faunadb.Client({
 
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
-  console.log("Function `game-events-read` invoked");
+  /* parse the string body into a useable JS object */
+  const data = JSON.parse(event.body);
+  console.log("Function `terra-mystica-create` invoked", data);
 
   /* construct the fauna query */
   return client
-    .query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection("game-events"))),
-        q.Lambda((x) => q.Get(x))
-      )
-    )
+    .query(q.Create(q.Collection("terra-mystica"), { data }))
     .then((response) => {
-      const items = {
-        items: response.data.map((entry) => entry.data),
-      };
-
+      console.log("success", response);
+      /* Success! return the response with statusCode 200 */
       callback(null, {
         statusCode: 200,
-        body: JSON.stringify(items),
+        body: JSON.stringify(response),
       });
     })
     .catch((error) => {
+      console.log("error", error);
       /* Error! return the error with statusCode 400 */
       callback(null, {
-        statusCode: 404,
+        statusCode: 400,
         body: JSON.stringify(error),
       });
     });

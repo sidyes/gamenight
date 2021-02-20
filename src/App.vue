@@ -20,11 +20,9 @@ import { Action, Getter } from "vuex-class";
 
 import netlifyIdentity from "netlify-identity-widget";
 import { Member } from "./models";
+import { Toast } from "vuex-toast";
 
-const toastLib = require("vuex-toast");
 const axios = require("axios");
-
-const Toast = toastLib.Toast;
 
 @Component({
   components: { Header, Footer, Toast },

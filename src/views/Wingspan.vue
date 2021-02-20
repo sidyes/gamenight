@@ -266,9 +266,9 @@ import {
   Series,
   StackedColumChartData,
 } from "@/models";
+import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
 const axios = require("axios");
-const toast = require("vuex-toast");
 
 @Component
 export default class Wingspan extends Vue {
@@ -419,21 +419,21 @@ export default class Wingspan extends Vue {
     this.setLoading(true);
     axios
       .post("/.netlify/functions/wingspan-create", game)
-      .then((response: any) => {
+      .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
         this.fetchGames(this.user);
 
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
           type: "success",
           dismissAfter: 2000,
         });
       })
       .catch((err: any) => {
-        this.$store.dispatch(toast.ADD_TOAST_MESSAGE, {
+        this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",
           dismissAfter: 1000,
