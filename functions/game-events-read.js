@@ -9,6 +9,7 @@ const client = new faunadb.Client({
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
   console.log("Function `game-events-read` invoked");
+  console.log(client);
 
   /* construct the fauna query */
   return client
