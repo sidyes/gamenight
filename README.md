@@ -2,21 +2,33 @@
 
 # game-night
 
-## Pre-Conditions
+[game-night.rocks](https://game-night.rocks)
 
-1. Create a Fauna DB account as well as a database called `gamenight`. For the specific db structure take a look at the `lambda` folder.
-2. Create a key at Fauna for `server` for the previously created database `gamenight`
-3. If you want to run the project locally set the environment variable (your fauna db key) in your commandline tool:  
-   `SET FAUNADB_SERVER_SECRET=XXX`
+
+## What is game-night
+
+It is web app that allows to track board game results. It is possible to create new events shown on the homescreen, create new seasons for each game, add friends, and see stats for almost anything for the dedicated game.
+Currently, the following games are supported:
+
+- Terra Mystica
+- Marco Polo
+- Wingspan
+
+Since it is only used privately, registrations are not permitted.
+Feel free to clone this project and use it for yourself.
 
 ## Project setup
 ```
 npm install
+npm install -g netlify-cli
+netlify link (choose your site on netlify)
+SET FAUNADB_SERVER_SECRET=XXX
 ```
+
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+netlify dev
 ```
 
 ### Compiles and minifies for production
