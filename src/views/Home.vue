@@ -168,31 +168,44 @@
           </div>
         </div>
         <div class="columns">
-          <div class="column is-one-fifth">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image">
+          <div class="column">
+            <article class="media">
+              <figure class="media-left">
+                <p class="image is-128x128">
                   <a href="https://brettspiel-empfehlungen.de/" target="_bank">
                     <img
-                      src="@/assets/img/partner/brettspiel-empfehlungen-logo_225x50.png"
+                      src="@/assets/img/partner/brettspiel-empfehlungen-logo.jpg"
                       alt="Brettspiel Empfehlungen"
                     />
                   </a>
-                </figure>
-              </div>
-              <div class="card-content">
+                </p>
+              </figure>
+              <div class="media-content">
                 <div class="content">
-                  <a href="https://brettspiel-empfehlungen.de/" target="_bank">
-                    <h4 class="title is-4 has-text-white">
-                      Brettspiel Empfehlungen
-                    </h4>
-                  </a>
-                  Ausgewählte Spiele Reviews, Spieletests und Rezensionen von
-                  Kinderspielen, Familienspielen, Kennerspielen und
-                  Expertenspielen
+                  <h5 class="title is-5 has-text-white">
+                    Brettspiel Empfehlungen
+                  </h5>
+                  <p class="has-text-white">
+                    Ausgewählte Spiele Reviews, Spieletests und Rezensionen von
+                    Kinderspielen, Familienspielen, Kennerspielen und
+                    Expertenspielen<br />
+                  </p>
+                  <nav class="level is-hidden-mobile">
+                    <div class="level-left">
+                      <div class="level-item">
+                        <a
+                          class="button is-primary"
+                          href="https://brettspiel-empfehlungen.de/"
+                          target="_bank"
+                        >
+                          Zur Webseite
+                        </a>
+                      </div>
+                    </div>
+                  </nav>
                 </div>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </div>
@@ -245,7 +258,7 @@ export default class Home extends Vue {
 
 #angles {
   width: 100%;
-  height: 100%;
+  height: 80%;
   overflow: hidden;
   transform: skewY(-12deg);
   transform-origin: 0;
