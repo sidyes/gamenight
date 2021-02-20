@@ -20,6 +20,11 @@ $modal-card-head-background-color: #343f57 !important;
 $modal-card-body-background-color: #242c3c !important;
 $modal-card-title-color: hsl(0, 0%, 100%) !important;
 
+$card-background-color: #fff;
+$card-color: #fff !important;
+$card-radius: 0.5rem;
+$card-content-background-color: #242c3c;
+
 .modal {
   label {
     color: hsl(0, 0%, 100%) !important;
@@ -51,7 +56,6 @@ $modal-card-title-color: hsl(0, 0%, 100%) !important;
 @import "~bulma-tooltip";
 
 @import "~bulma-calendar/dist/css/bulma-calendar.min.css";
-
 
 @import "~animate.css";
 
@@ -157,7 +161,6 @@ $positions: ("top", "left", "bottom", "right");
   min-width: 200px;
 }
 
-
-.datetimepicker-dummy-input{
+.datetimepicker-dummy-input {
   color: white !important;
 }

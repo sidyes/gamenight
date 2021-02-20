@@ -64,14 +64,14 @@
           </div>
         </div>
         <div class="columns">
-          <div class="column" v-if="nextEventsLoaded">
+          <div class="column" v-if="nextEventsLoaded && nextEventInFuture">
             <next-game-event
               :nextEvent="nextEvent"
               :nextEventEntered="nextEventEntered"
             >
             </next-game-event>
           </div>
-          <div class="column" v-if="!nextEventsLoaded">
+          <div class="column" v-else>
             <p class="has-text-warning is-italic has-text-weight-medium">
               -- Im Moment ist kein Spieleabend geplant <span>😰</span> --
             </p>
@@ -157,6 +157,46 @@
         </div>
       </div>
     </section>
+    <section class="section pt-0">
+      <div class="container">
+        <div class="columns">
+          <div class="column">
+            <h2 class="title is-2 has-text-white">Unsere Partner</h2>
+            <h3 class="subtitle has-text-white">
+              Schaut auch mal bei Ihnen vorbei! 🙏
+            </h3>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-one-fifth">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <a href="https://brettspiel-empfehlungen.de/" target="_bank">
+                    <img
+                      src="@/assets/img/partner/brettspiel-empfehlungen-logo_225x50.png"
+                      alt="Brettspiel Empfehlungen"
+                    />
+                  </a>
+                </figure>
+              </div>
+              <div class="card-content">
+                <div class="content">
+                  <a href="https://brettspiel-empfehlungen.de/" target="_bank">
+                    <h4 class="title is-4 has-text-white">
+                      Brettspiel Empfehlungen
+                    </h4>
+                  </a>
+                  Ausgewählte Spiele Reviews, Spieletests und Rezensionen von
+                  Kinderspielen, Familienspielen, Kennerspielen und
+                  Expertenspielen
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -171,6 +211,7 @@ export default class Home extends Vue {
   public showDice = false;
   public animationEnd = "";
   public nextEventsLoaded = false;
+  public nextEventInFuture = false;
 
   public nextEvent!: number;
   public nextEventEntered!: number;
@@ -187,6 +228,7 @@ export default class Home extends Vue {
       this.nextEvent = evt.nextEvent;
       this.nextEventEntered = evt.nextEventEntered;
       this.nextEventsLoaded = true;
+      this.nextEventInFuture = Date.now() <= this.nextEvent;
     });
   }
 
