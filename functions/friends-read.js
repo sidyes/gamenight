@@ -1,13 +1,12 @@
 const faunadb = require("faunadb"); /* Import faunaDB sdk */
 
-/* configure faunaDB Client with our secret */
+/* configure faunaDB Client*/
 const q = faunadb.query;
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
-/* export our lambda function as named "handler" export */
-exports.handler = (event, context, callback) => {
+exports.handler = async function (event, _context) {
   console.log("Function `friends-read` invoked");
 
   const params = event.queryStringParameters;
@@ -17,7 +16,6 @@ exports.handler = (event, context, callback) => {
     email: params.email,
   };
 
-  /* construct the fauna query */
   return client
     .query(q.Exists(q.Match(q.Index("my_friends"), user.email)))
     .then((result) => {
@@ -30,35 +28,33 @@ exports.handler = (event, context, callback) => {
             )
           )
           .then((response) => {
-            callback(null, {
+            return {
               statusCode: 200,
               body: JSON.stringify({ friends: response.data[0].data.friends }),
-            });
+            };
           })
           .catch((error) => {
-            /* Error! return the error with statusCode 400 */
-            callback(null, {
+            return {
               statusCode: 404,
               body: JSON.stringify(error),
-            });
+            };
           });
       } else {
         const friends = {
           friends: [],
         };
 
-        callback(null, {
+        return {
           statusCode: 200,
           body: JSON.stringify(friends),
-        });
+        };
       }
     })
     .catch((error) => {
       console.log(error);
-      /* Error! return the error with statusCode 400 */
-      callback(null, {
+      return {
         statusCode: 404,
         body: JSON.stringify(error),
-      });
+      };
     });
 };

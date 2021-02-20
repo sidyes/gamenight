@@ -1,14 +1,12 @@
 const faunadb = require("faunadb"); /* Import faunaDB sdk */
 
-/* configure faunaDB Client with our secret */
+/* configure faunaDB Client  */
 const q = faunadb.query;
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_SERVER_SECRET,
 });
 
-/* export our lambda function as named "handler" export */
-exports.handler = (event, context, callback) => {
-  /* parse the string body into a useable JS object */
+exports.handler = async function (event, _context) {
   const data = JSON.parse(event.body);
   console.log("Function `friends-remove` invoked", data);
 
@@ -44,44 +42,44 @@ exports.handler = (event, context, callback) => {
                 })
               )
               .then(() => {
-                callback(null, {
+                return {
                   statusCode: 200,
                   body: JSON.stringify({ friend }),
-                });
+                };
               })
               .catch((error) => {
                 console.log("error", error);
-                /* Error! return the error with statusCode 400 */
-                callback(null, {
+
+                return {
                   statusCode: 400,
                   body: JSON.stringify(error),
-                });
+                };
               });
           })
           .catch((error) => {
             console.log("error", error);
-            /* Error! return the error with statusCode 400 */
-            callback(null, {
+
+            return {
               statusCode: 400,
               body: JSON.stringify(error),
-            });
+            };
           });
       } else {
         const message =
           "Du hast keine Freunde! Wie willst du dann welche löschen?!";
 
-        callback(null, {
+        return {
           statusCode: 400,
           body: JSON.stringify({ message }),
-        });
+        };
       }
     })
     .catch((error) => {
       console.log("error", error);
-      /* Error! return the error with statusCode 400 */
-      callback(null, {
+
+      return {
         statusCode: 400,
         body: JSON.stringify(error),
-      });
+      };
     });
 };
