@@ -82,6 +82,7 @@ const state: TerraMysticaState = {
     "Drachenmeister",
     "Düsterlinge",
     "Fakire",
+    "Flussläufer",
     "Frostfeen",
     "Geweihte",
     "Gestaltenwandler",

@@ -22,6 +22,7 @@
     "core-js": "^3.9.0",
     "faunadb": "^4.1.0",
     "lodash": "^4.17.20",
+    "netlify-cli": "^5.4.1",
     "netlify-identity-widget": "^1.9.1",
     "netlify-lambda": "^2.0.3",
     "register-service-worker": "^1.7.2",
