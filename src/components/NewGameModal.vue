@@ -33,12 +33,17 @@
             <div class="field">
               <label class="label">Ort</label>
               <div class="control has-icons-left">
-                <input
-                  class="input is-info"
-                  type="text"
-                  :value="location"
-                  @change="locationChanged"
-                />
+                <div class="select" @change="locationChanged($event)">
+                  <select v-model="selectedLocation">
+                    <option
+                      v-for="mem in players"
+                      :value="mem"
+                      v-bind:key="mem.username"
+                    >
+                      {{ mem.username }}
+                    </option>
+                  </select>
+                </div>
                 <span class="icon is-left">
                   <font-awesome-icon :icon="['fas', 'home']" />
                 </span>
@@ -66,17 +71,20 @@
 </template>
 
 <script lang="ts">
+import { Member } from "@/models";
 import { Component, Vue, Emit, Prop } from "vue-property-decorator";
 
 @Component
 export default class NewGameModal extends Vue {
   @Prop({ default: false }) isOpened!: boolean;
+  @Prop({ default: () => [] }) players!: Member[];
   @Prop({ default: "" }) title!: string;
   @Prop({ default: "" }) location!: string;
   @Prop({ default: () => [2, 3, 4] }) nrOfPlayers!: number[];
   @Prop({ default: true }) disableSaveBtn!: boolean;
 
-  selectedNrOfPlayers = "";
+  selectedNrOfPlayers = "4";
+  selectedLocation = "";
 
   @Emit() playersChanged(event: any): number {
     return event.target.value;
@@ -93,6 +101,10 @@ export default class NewGameModal extends Vue {
 
   @Emit() closed(): boolean {
     return true;
+  }
+
+  public mounted(): void {
+    this.playersChanged({ target: { value: this.selectedNrOfPlayers } });
   }
 }
 </script>

@@ -34,12 +34,14 @@ interface TerraMysticaState {
   isLoading: boolean;
   season: number;
   selectedSeason: number;
+  maps: string[];
 }
 
 const state: TerraMysticaState = {
   resultTableHeadings: [
     new TableHeading("Datum", "date"),
     new TableHeading("Ort", "location"),
+    new TableHeading("Karte", "map"),
     new TableHeading("Spieler", "players"),
     new TableHeading("Ø Punkte", "avg"),
     new TableHeading("Gewinner (Punkte)", "winner"),
@@ -101,6 +103,13 @@ const state: TerraMysticaState = {
   isLoading: false,
   season: 3,
   selectedSeason: 3,
+  maps: [
+    "Grundspiel",
+    "Variante Grundspiel",
+    "Feuer & Eis",
+    "Die Seen",
+    "Die Fjorde",
+  ],
 };
 
 const getters: GetterTree<TerraMysticaState, any> = {
@@ -326,6 +335,7 @@ const getters: GetterTree<TerraMysticaState, any> = {
     return seasons;
   },
   getSelectedSeason: (state) => state.selectedSeason,
+  getMaps: (state) => state.maps,
 };
 
 //Mutations Must Be Synchronous

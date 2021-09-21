@@ -9,11 +9,33 @@
         :title="'Neues Spiel'"
         :disableSaveBtn="!isFormComplete()"
         :location="location"
+        :players="members"
         @players-changed="onNrOfPlayersChange"
         @closed="newGameActive = false"
         @game-saved="saveGame"
         @location-changed="onLocationChange"
       >
+        <div class="columns">
+          <div class="column is-one-third-desktop is-one-third-tablet">
+            <div class="field">
+              <label class="label">Karte</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="map">
+                    <option
+                      v-for="avlMap in maps"
+                      :value="avlMap"
+                      v-bind:key="avlMap"
+                    >
+                      {{ avlMap }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="table-container">
           <table class="table is-fullwidth">
             <thead>
@@ -301,6 +323,9 @@ export default class TerraMystica extends Vue {
   @Getter("getUser", { namespace: "user" }) user!: Member;
   @Getter("getPlayers", { namespace: "user" }) members!: Member[];
 
+  @Getter("getMaps", { namespace: "terraMystica" })
+  maps!: string[];
+
   @Getter("getFactions", { namespace: "terraMystica" })
   factions!: string[];
 
@@ -364,6 +389,7 @@ export default class TerraMystica extends Vue {
   newGameActive = false;
   players: TerraMysticaPlayer[] | any[] = [];
   location: string = "";
+  map: string = "";
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
@@ -459,6 +485,7 @@ export default class TerraMystica extends Vue {
       this.players,
       Date.now(),
       this.location,
+      this.map,
       this.currentSeason
     );
     this.setLoading(true);
@@ -468,6 +495,7 @@ export default class TerraMystica extends Vue {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
+        this.map = "";
 
         this.fetchGames(this.user);
 

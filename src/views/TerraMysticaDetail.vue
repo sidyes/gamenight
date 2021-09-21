@@ -15,7 +15,9 @@
             </div>
             <div class="column is-three-fifths">
               <h1 class="title">{{ new Date(game.time).toDateString() }}</h1>
-              <h2 class="subtitle">🏠 {{ game.location }}</h2>
+              <h2 class="subtitle">
+                🏠 {{ game.location }} // 🗺️ {{ game.map }}
+              </h2>
             </div>
             <div class="column has-text-right">
               <router-link
