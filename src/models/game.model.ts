@@ -6,4 +6,5 @@ export interface Game {
   time: number;
   location: string;
   season: number;
+  map?: string; // optional when multiple maps are available
 }

@@ -5,6 +5,7 @@ export class ResultTableEntry {
     public players: string,
     public location: string,
     public winner: string,
-    public avg: string
+    public avg: string,
+    public map?: string
   ) {}
 }

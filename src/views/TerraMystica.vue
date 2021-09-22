@@ -485,8 +485,8 @@ export default class TerraMystica extends Vue {
       this.players,
       Date.now(),
       this.location,
-      this.map,
-      this.currentSeason
+      this.currentSeason,
+      this.map
     );
     this.setLoading(true);
     axios

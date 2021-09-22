@@ -37,7 +37,7 @@
                   <select v-model="selectedLocation">
                     <option
                       v-for="mem in players"
-                      :value="mem"
+                      :value="mem.username"
                       v-bind:key="mem.username"
                     >
                       {{ mem.username }}

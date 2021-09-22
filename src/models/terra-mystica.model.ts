@@ -20,7 +20,7 @@ export class TerraMysticaGame implements Game {
     public players: TerraMysticaPlayer[],
     public time: number,
     public location: string,
-    public map: string,
-    public season: number
+    public season: number,
+    public map: string
   ) {}
 }

@@ -120,7 +120,8 @@ export const getResultTable = (games: Game[]) => {
         players,
         location,
         winner,
-        avg
+        avg,
+        game.map
       );
     })
     .sort((a, b) => {
