@@ -9,6 +9,7 @@
         :title="'Neues Spiel'"
         :disableSaveBtn="!isFormComplete()"
         :location="location"
+        :players="members"
         @players-changed="onNrOfPlayersChange"
         @closed="newGameActive = false"
         @game-saved="saveGame"
