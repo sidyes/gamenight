@@ -6,7 +6,7 @@
           <th
             v-for="header in headings"
             v-bind:key="header.label"
-            class="has-text-white"
+            class="has-text-white has-text-weight-light"
           >
             {{ header.label }}
           </th>
