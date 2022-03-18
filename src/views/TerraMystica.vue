@@ -191,7 +191,7 @@
                   </div>
                   <a
                     aria-label="Erstelle ein neues Spiel"
-                    class="button is-medium is-success"
+                    class="button is-medium is-success is-fullwidth"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
                     >Neues Spiel</a
@@ -209,6 +209,19 @@
                 :data="allTimeTable"
                 :headings="allTimeHeadings"
               ></custom-table>
+              <div class="field has-text-centered mt-4">
+                <input
+                  id="newScoringTypeActive"
+                  type="checkbox"
+                  name="newScoringTypeActive"
+                  class="switch is-outlined is-info"
+                  @click="toggleScoringType()"
+                  v-model="isNewScoringType"
+                />
+                <label for="newScoringTypeActive" class="has-text-white"
+                  >Neues Punktesystem</label
+                >
+              </div>
             </div>
           </div>
           <div class="column is-half">
@@ -339,7 +352,7 @@ export default class TerraMystica extends Vue {
   gameScores!: GameScoreItem[];
 
   @Getter("getWinDistributionPlayer", { namespace: "terraMystica" })
-  winDistributionPlayer!: WinDistribution[];
+  winDistributionPlayer!: WinDistribution;
 
   @Getter("getAverageScores", { namespace: "terraMystica" })
   averageScores!: AverageScores;
@@ -380,7 +393,11 @@ export default class TerraMystica extends Vue {
   @Action("fetchGames", { namespace: "terraMystica" }) fetchGames: any;
   @Action("setLoading", { namespace: "terraMystica" }) setLoading: any;
   @Action("setSeason", { namespace: "terraMystica" }) setSeason: any;
+  @Action("toggleScoringType", { namespace: "terraMystica" })
+  toggleScoringType: any;
 
+  @Getter("getIsNewScoringType", { namespace: "terraMystica" })
+  isNewScoringType!: boolean;
   @Getter("getSeason", { namespace: "terraMystica" }) currentSeason!: number;
   @Getter("getSelectedSeason", { namespace: "terraMystica" })
   selectedSeason!: number;

@@ -35,6 +35,7 @@ interface TerraMysticaState {
   season: number;
   selectedSeason: number;
   maps: string[];
+  newScoringType: boolean;
 }
 
 const state: TerraMysticaState = {
@@ -110,13 +111,15 @@ const state: TerraMysticaState = {
     "Die Seen",
     "Die Fjorde",
   ],
+  newScoringType: true,
 };
 
 const getters: GetterTree<TerraMysticaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state) => {
     const allTimeEntries = getAllTimeTable(
-      getGamesForSeason(state.selectedSeason, state.games)
+      getGamesForSeason(state.selectedSeason, state.games),
+      state.newScoringType
     );
 
     return allTimeEntries;
@@ -336,6 +339,7 @@ const getters: GetterTree<TerraMysticaState, any> = {
   },
   getSelectedSeason: (state) => state.selectedSeason,
   getMaps: (state) => state.maps,
+  getIsNewScoringType: (state) => state.newScoringType,
 };
 
 //Mutations Must Be Synchronous
@@ -357,6 +361,9 @@ const mutations: MutationTree<TerraMysticaState> = {
   setSelectedSeason: (state, season) => {
     state.selectedSeason = season;
   },
+  toggleScoringType: (state) => {
+    state.newScoringType = !state.newScoringType;
+  },
 };
 
 const actions: ActionTree<TerraMysticaState, any> = {
@@ -376,6 +383,9 @@ const actions: ActionTree<TerraMysticaState, any> = {
   },
   setSeason: ({ commit }, payload) => {
     commit("setSelectedSeason", payload);
+  },
+  toggleScoringType: ({ commit }) => {
+    commit("toggleScoringType");
   },
 };
 

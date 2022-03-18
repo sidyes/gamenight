@@ -33,6 +33,7 @@ interface MarcoPoloState {
   isLoading: boolean;
   season: number;
   selectedSeason: number;
+  newScoringType: boolean;
 }
 
 const state: MarcoPoloState = {
@@ -98,12 +99,16 @@ const state: MarcoPoloState = {
   isLoading: false,
   season: 2,
   selectedSeason: 2,
+  newScoringType: true,
 };
 
 const getters: GetterTree<MarcoPoloState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state) =>
-    getAllTimeTable(getGamesForSeason(state.selectedSeason, state.games)),
+    getAllTimeTable(
+      getGamesForSeason(state.selectedSeason, state.games),
+      state.newScoringType
+    ),
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getResultTable: (state) =>
     getGamesForSeason(state.selectedSeason, state.games)
@@ -325,6 +330,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return seasons;
   },
   getSelectedSeason: (state) => state.selectedSeason,
+  getIsNewScoringType: (state) => state.newScoringType,
 };
 
 //Mutations Must Be Synchronous
@@ -346,6 +352,9 @@ const mutations: MutationTree<MarcoPoloState> = {
   setSelectedSeason: (state, season) => {
     state.selectedSeason = season;
   },
+  toggleScoringType: (state) => {
+    state.newScoringType = !state.newScoringType;
+  },
 };
 
 const actions: ActionTree<MarcoPoloState, any> = {
@@ -365,6 +374,9 @@ const actions: ActionTree<MarcoPoloState, any> = {
   },
   setSeason: ({ commit }, payload) => {
     commit("setSelectedSeason", payload);
+  },
+  toggleScoringType: ({ commit }) => {
+    commit("toggleScoringType");
   },
 };
 

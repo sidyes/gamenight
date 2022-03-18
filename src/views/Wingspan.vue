@@ -165,7 +165,7 @@
                 <div class="column has-text-right">
                   <a
                     aria-label="Erstelle ein neues Spiel"
-                    class="button is-medium is-success"
+                    class="button is-medium is-success is-fullwidth"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
                     >Neues Spiel</a
@@ -183,6 +183,19 @@
                 :data="allTimeTable"
                 :headings="allTimeHeadings"
               ></custom-table>
+              <div class="field has-text-centered mt-4">
+                <input
+                  id="newScoringTypeActive"
+                  type="checkbox"
+                  name="newScoringTypeActive"
+                  class="switch is-outlined is-info"
+                  @click="toggleScoringType()"
+                  v-model="isNewScoringType"
+                />
+                <label for="newScoringTypeActive" class="has-text-white"
+                  >Neues Punktesystem</label
+                >
+              </div>
             </div>
           </div>
           <div class="column is-half">
@@ -314,8 +327,13 @@ export default class Wingspan extends Vue {
   @Getter("getIsLoading", { namespace: "wingspan" })
   isLoading!: boolean;
 
+  @Getter("getIsNewScoringType", { namespace: "wingspan" })
+  isNewScoringType!: boolean;
+
   @Action("fetchGames", { namespace: "wingspan" }) fetchGames: any;
   @Action("setLoading", { namespace: "wingspan" }) setLoading: any;
+  @Action("toggleScoringType", { namespace: "wingspan" })
+  toggleScoringType: any;
 
   newGameActive = false;
   players: WingspanPlayer[] | any[] = [];

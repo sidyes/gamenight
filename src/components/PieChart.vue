@@ -1,11 +1,12 @@
 <template>
   <div>
     <apexchart
+      ref="pieChart"
       width="380"
       height="250"
       type="pie"
-      :options="generateOptions()"
-      :series="series"
+      :options="options"
+      :series="activeSeries"
     ></apexchart>
     <p
       v-if="!labels.length"
@@ -17,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class PieChart extends Vue {
@@ -25,7 +26,8 @@ export default class PieChart extends Vue {
   @Prop({ default: () => [] }) labels!: string[];
   @Prop({ default: () => "Verteilung" }) title!: string;
 
-  options = {
+  activeSeries: number[] = [];
+  options: any = {
     title: {
       text: this.title,
     },
@@ -33,7 +35,7 @@ export default class PieChart extends Vue {
       width: 380,
       type: "pie",
     },
-    labels: this.labels,
+    labels: [],
     responsive: [
       {
         breakpoint: 768,
@@ -56,18 +58,25 @@ export default class PieChart extends Vue {
     ],
   };
 
-  public generateOptions(): any {
-    return {
+  @Watch("labels", { immediate: true })
+  labelsChanged(labels: string[]) {
+    this.options = {
       ...this.options,
-      labels: this.labels,
+      labels: labels,
       legend: {
-        show: this.labels.length,
+        show: labels.length,
         position: "right",
       },
       tooltip: {
         enabled: this.labels.length,
       },
     };
+  }
+
+  @Watch("series", { immediate: true })
+  seriesChanged(series: number[]) {
+    console.log(series)
+    this.activeSeries = series;
   }
 }
 </script>

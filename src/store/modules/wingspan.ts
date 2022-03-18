@@ -28,6 +28,7 @@ interface WingspanState {
   resultTableHeadings: TableHeading[];
   isLoading: boolean;
   season: number;
+  newScoringType: boolean;
 }
 
 const state: WingspanState = {
@@ -58,12 +59,14 @@ const state: WingspanState = {
   ],
   isLoading: false,
   season: 0,
+  newScoringType: true,
 };
 
 const getters: GetterTree<WingspanState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
-  getAllTimeTable: (state) => getAllTimeTable(state.games),
+  getAllTimeTable: (state) =>
+    getAllTimeTable(state.games, state.newScoringType),
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
@@ -151,6 +154,7 @@ const getters: GetterTree<WingspanState, any> = {
   getGamesLastYear: (state) => getGamesLastYear(state.games),
   getResultTable: (state) => getResultTable(state.games),
   getResultTableHeadings: (state) => state.resultTableHeadings,
+  getIsNewScoringType: (state) => state.newScoringType,
 };
 
 const mutations: MutationTree<WingspanState> = {
@@ -169,6 +173,9 @@ const mutations: MutationTree<WingspanState> = {
     state.gamesLoaded = false;
   },
   getSeason: (state) => state.season,
+  toggleScoringType: (state) => {
+    state.newScoringType = !state.newScoringType;
+  },
 };
 
 const actions: ActionTree<WingspanState, any> = {
@@ -185,6 +192,9 @@ const actions: ActionTree<WingspanState, any> = {
   },
   setLoading: ({ commit }, payload) => {
     commit("setLoadingStatus", payload);
+  },
+  toggleScoringType: ({ commit }) => {
+    commit("toggleScoringType");
   },
 };
 
