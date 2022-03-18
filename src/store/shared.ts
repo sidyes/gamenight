@@ -8,9 +8,10 @@ import {
   WinDistribution,
   AverageScores,
   Series,
+  Player,
 } from "@/models";
 
-export const getAllTimeTable = (games: Game[]) => {
+export const getAllTimeTable = (games: Game[], isNewScoringType: boolean) => {
   const allTimeEntries: AllTimeTableEntry[] = [];
 
   games.map((game) => {
@@ -31,24 +32,22 @@ export const getAllTimeTable = (games: Game[]) => {
         allTimeEntries.push(entry);
       }
 
+      entry.points += calculatePointsForPlayer(player, game, isNewScoringType);
+
       switch (player.placement) {
         case 1: {
           entry.wins++;
-          entry.points += 5;
           break;
         }
         case 2: {
           entry.secondPlaces++;
-          entry.points += 3;
           break;
         }
         case 3: {
-          entry.points += 2;
           entry.thirdPlaces++;
           break;
         }
         default: {
-          entry.points++;
           break;
         }
       }
@@ -59,6 +58,43 @@ export const getAllTimeTable = (games: Game[]) => {
 
   return allTimeEntries;
 };
+
+function calculatePointsForPlayer(
+  player: Player,
+  game: Game,
+  isNewScoringType: boolean
+): number {
+  if (isNewScoringType) {
+    let totalPoints = 0;
+
+    game.players.forEach((pl) => {
+      totalPoints += pl.points;
+    });
+
+    // get own share
+    const share = +((player.points / totalPoints) * 100).toFixed(0);
+
+    // get placement points
+    const placementPoints =
+      player.placement === 1
+        ? 15
+        : player.placement === 2
+        ? 10
+        : player.placement === 3
+        ? 5
+        : 0;
+
+    return share + placementPoints;
+  } else {
+    return player.placement === 1
+      ? 5
+      : player.placement === 2
+      ? 3
+      : player.placement === 3
+      ? 2
+      : 1;
+  }
+}
 
 function compareAllTimeTableEntries(
   a: AllTimeTableEntry,
@@ -145,7 +181,7 @@ export const getSummary = (headings: string[], games: Game[], user: Member) => {
 
   const winPercentage = new GameSummaryItem(
     headings[2],
-    `${+(+wins.value / games.length).toFixed(2) * 100 || 0} %`
+    `${(+(+wins.value / games.length) * 100).toFixed(2) || 0} %`
   );
 
   const avgPoints = (
@@ -316,8 +352,5 @@ export const getGamesLastYear = (games: Game[]) => {
   ];
 };
 
-export const getGamesForSeason = (season: number, games: Game[]) => {
-  return games.filter((game) => {
-    return +game.season === +season || +season === -1;
-  });
-};
+export const getGamesForSeason = (season: number, games: Game[]) =>
+  games.filter((game) => +game.season === +season || +season === -1);

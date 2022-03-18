@@ -132,7 +132,7 @@
                   </div>
                   <a
                     aria-label="Erstelle ein neues Spiel"
-                    class="button is-success form-elem"
+                    class="button is-success is-medium is-fullwidth"
                     @click="toggleNewGameActive()"
                     :disabled="newGameActive || !isLoggedIn"
                     >Neues Spiel</a
@@ -150,6 +150,19 @@
                 :data="allTimeTable"
                 :headings="allTimeHeadings"
               ></custom-table>
+              <div class="field has-text-centered mt-4">
+                <input
+                  id="newScoringTypeActive"
+                  type="checkbox"
+                  name="newScoringTypeActive"
+                  class="switch is-outlined is-info"
+                  @click="toggleScoringType()"
+                  v-model="isNewScoringType"
+                />
+                <label for="newScoringTypeActive" class="has-text-white"
+                  >Neues Punktesystem</label
+                >
+              </div>
             </div>
           </div>
           <div class="column is-half">
@@ -327,9 +340,14 @@ export default class MarcoPolo extends Vue {
   @Getter("getIsLoading", { namespace: "marcoPolo" })
   isLoading!: boolean;
 
+  @Getter("getIsNewScoringType", { namespace: "marcoPolo" })
+  isNewScoringType!: boolean;
+
   @Action("fetchGames", { namespace: "marcoPolo" }) fetchGames: any;
   @Action("setLoading", { namespace: "marcoPolo" }) setLoading: any;
   @Action("setSeason", { namespace: "marcoPolo" }) setSeason: any;
+  @Action("toggleScoringType", { namespace: "marcoPolo" })
+  toggleScoringType: any;
 
   players: MarcoPoloPlayer[] | any[] = [];
 
