@@ -283,10 +283,6 @@ export const getWinDistributionPlayer = (games: Game[]) => {
     });
   });
 
-  if (wins.length === 0) {
-    wins.push(1);
-  }
-
   return new WinDistribution(players, wins);
 };
 

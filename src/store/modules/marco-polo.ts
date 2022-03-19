@@ -307,16 +307,18 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getAverageScores: (state) =>
     getAverageScores(getGamesForSeason(state.selectedSeason, state.games)),
   getGamesLoaded: (state) => state.gamesLoaded,
-  getGame: (state) => (time: number): MarcoPoloGame | undefined => {
-    let game = undefined;
-    state.games.forEach((g: MarcoPoloGame) => {
-      if (g.time === time) {
-        game = g;
-      }
-    });
+  getGame:
+    (state) =>
+    (time: number): MarcoPoloGame | undefined => {
+      let game = undefined;
+      state.games.forEach((g: MarcoPoloGame) => {
+        if (g.time === time) {
+          game = g;
+        }
+      });
 
-    return game;
-  },
+      return game;
+    },
   getSeason: (state) => state.season,
   getAllSeasons: (state) => {
     const seasons: number[] = [];

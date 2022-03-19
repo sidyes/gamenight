@@ -9,7 +9,7 @@
       :series="activeSeries"
     ></apexchart>
     <p
-      v-if="!labels.length"
+      v-if="!labels.length || !activeSeries.length"
       class="has-text-warning has-text-centered is-italic has-text-weight-medium"
     >
       Keine Daten vorhanden.
@@ -62,7 +62,7 @@ export default class PieChart extends Vue {
   labelsChanged(labels: string[]) {
     this.options = {
       ...this.options,
-      labels: labels,
+      labels,
       legend: {
         show: labels.length,
         position: "right",
@@ -75,8 +75,19 @@ export default class PieChart extends Vue {
 
   @Watch("series", { immediate: true })
   seriesChanged(series: number[]) {
-    console.log(series)
-    this.activeSeries = series;
+    if (series.length !== 0) {
+      this.activeSeries = series;
+    }
+  }
+
+  @Watch("title", { immediate: true })
+  titleChanged(title: string) {
+    this.options = {
+      ...this.options,
+      title: {
+        text: title,
+      },
+    };
   }
 }
 </script>

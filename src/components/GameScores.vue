@@ -4,20 +4,20 @@
       type="bar"
       height="250"
       :options="chartOptions"
-      :series="generateSeries()"
+      :series="series"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { GameScoreItem } from "@/models";
 
 @Component
 export default class GameScores extends Vue {
-  @Prop({ default: () => [] }) data!: GameScoreItem[];
+  series: any[] = [];
 
-  chartOptions = {
+  chartOptions: any = {
     title: {
       text: "Scores",
       align: "center",
@@ -39,12 +39,8 @@ export default class GameScores extends Vue {
     dataLabels: {
       enabled: true,
       offsetX: -40,
-      formatter: (val: string, { dataPointIndex }: any) => {
-        return this.data[dataPointIndex].player;
-      },
     },
     xaxis: {
-      categories: this.data.map((el) => el.category),
       min: 0,
     },
     tooltip: {
@@ -52,11 +48,28 @@ export default class GameScores extends Vue {
     },
   };
 
-  public generateSeries(): any {
-    return [
+  @Prop({ default: () => [] }) data!: GameScoreItem[];
+
+  @Watch("data", { immediate: true })
+  dataChanged(data: GameScoreItem[]) {
+    this.chartOptions = {
+      ...this.chartOptions,
+      dataLabels: {
+        ...this.chartOptions.dataLabels,
+        formatter: (val: string, { dataPointIndex }: any) => {
+          return data[dataPointIndex].player;
+        },
+      },
+      xaxis: {
+        ...this.chartOptions.xaxis,
+        categories: data.map((el) => el.category),
+      },
+    };
+
+    this.series = [
       {
         name: "Anzahl",
-        data: this.data.map((el) => el.count),
+        data: data.map((el) => el.count),
       },
     ];
   }
