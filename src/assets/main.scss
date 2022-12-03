@@ -84,8 +84,13 @@ body {
 }
 
 .is-200x200 {
-  height: 200px;
+  height: 200px !important;
   width: 200px;
+}
+
+.is-128x128 {
+  height: 128px !important;
+  width: 128px;
 }
 
 .is-horizontal-center {

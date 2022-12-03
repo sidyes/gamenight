@@ -1,7 +1,7 @@
 <template>
   <div>
     <apexchart
-      ref="pieChart"
+      v-if="activeSeries.length"
       width="380"
       height="250"
       type="pie"
@@ -75,9 +75,7 @@ export default class PieChart extends Vue {
 
   @Watch("series", { immediate: true })
   seriesChanged(series: number[]) {
-    if (series.length !== 0) {
-      this.activeSeries = series;
-    }
+    this.activeSeries = series;
   }
 
   @Watch("title", { immediate: true })

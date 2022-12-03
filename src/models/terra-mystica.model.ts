@@ -21,6 +21,7 @@ export class TerraMysticaGame implements Game {
     public time: number,
     public location: string,
     public season: number,
-    public map: string
+    public map: string,
+    public timePlayed: number
   ) {}
 }

@@ -14,3 +14,4 @@ export * from "./stacked-column-chart-data.model";
 export * from "./terra-mystica.model";
 export * from "./game.model";
 export * from "./player.model";
+export * from "./ark-nova.model";

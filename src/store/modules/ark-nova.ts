@@ -1,3 +1,4 @@
+import { ArkNovaGame } from "./../../models/ark-nova.model";
 import {
   getAllTimeTable,
   getResultTable,
@@ -8,20 +9,14 @@ import {
   getGamesLastYear,
   getTimePlayed,
 } from "./../shared";
-import { WingspanGame } from "@/models/wingspan.model";
 import { GetterTree, MutationTree, ActionTree } from "vuex";
-import {
-  GameSummaryItem,
-  TableHeading,
-  GameScoreItem,
-  Series,
-  StackedColumChartData,
-} from "@/models";
+import { GameSummaryItem, TableHeading, GameScoreItem } from "@/models";
 
 const axios = require("axios");
 
-interface WingspanState {
-  games: WingspanGame[];
+interface ArkNovaState {
+  games: ArkNovaGame[];
+  zooMaps: string[];
   gamesLoaded: boolean;
   allTimeTableHeadings: TableHeading[];
   summaryHeadings: string[];
@@ -32,8 +27,20 @@ interface WingspanState {
   newScoringType: boolean;
 }
 
-const state: WingspanState = {
+const state: ArkNovaState = {
   games: [],
+  zooMaps: [
+    "Plan A",
+    "Plan 0",
+    "Plan 1",
+    "Plan 2",
+    "Plan 3",
+    "Plan 4",
+    "Plan 5",
+    "Plan 6",
+    "Plan 7",
+    "Plan 8",
+  ],
   gamesLoaded: false,
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
@@ -63,8 +70,7 @@ const state: WingspanState = {
   newScoringType: true,
 };
 
-const getters: GetterTree<WingspanState, any> = {
-  getTimePlayed: (state) => getTimePlayed(state.games),
+const getters: GetterTree<ArkNovaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
   getAllTimeTable: (state) =>
@@ -75,92 +81,20 @@ const getters: GetterTree<WingspanState, any> = {
 
     return getSummary(state.summaryHeadings, state.games, user);
   },
+  getZooMaps: (state) => state.zooMaps,
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),
   getWinDistributionPlayer: (state) => getWinDistributionPlayer(state.games),
   getAverageScores: (state) => getAverageScores(state.games),
-  getAveragePointsDistribution: (state): StackedColumChartData => {
-    const players: string[] = [];
-    const games: number[] = [];
-    const birds = new Series("Vögel", []);
-    const bonusCards = new Series("Bonuskarten", []);
-    const endOfRoundGoals = new Series("Rundenziele", []);
-    const eggs = new Series("Eier", []);
-    const foodOnCards = new Series("Gelagertes Futter", []);
-    const tuckedCards = new Series("Karten unter Vögeln", []);
-
-    state.games.forEach((game) => {
-      game.players.forEach((player) => {
-        const idx = players.indexOf(player.user.username);
-
-        if (idx === -1) {
-          players.push(player.user.username);
-          games.push(1);
-          birds.data.push(player.birds.toString());
-          bonusCards.data.push(player.bonusCards.toString());
-          endOfRoundGoals.data.push(player.endOfRoundGoals.toString());
-          eggs.data.push(player.eggs.toString());
-          foodOnCards.data.push(player.foodOnCards.toString());
-          tuckedCards.data.push(player.tuckedCards.toString());
-        } else {
-          birds.data[idx] = (+birds.data[idx] + +player.birds).toString();
-          bonusCards.data[idx] = (
-            +bonusCards.data[idx] + +player.bonusCards
-          ).toString();
-          endOfRoundGoals.data[idx] = (
-            +endOfRoundGoals.data[idx] + +player.endOfRoundGoals
-          ).toString();
-          eggs.data[idx] = (+eggs.data[idx] + +player.eggs).toString();
-          foodOnCards.data[idx] = (
-            +foodOnCards.data[idx] + +player.foodOnCards
-          ).toString();
-          tuckedCards.data[idx] = (
-            +tuckedCards.data[idx] + +player.tuckedCards
-          ).toString();
-          games[idx] = +games[idx] + 1;
-        }
-      });
-    });
-
-    birds.data = birds.data.map((total, idx) =>
-      (+total / +games[idx]).toFixed(2)
-    );
-    bonusCards.data = bonusCards.data.map((total, idx) =>
-      (+total / +games[idx]).toFixed(2)
-    );
-    endOfRoundGoals.data = endOfRoundGoals.data.map((total, idx) =>
-      (+total / +games[idx]).toFixed(2)
-    );
-    eggs.data = eggs.data.map((total, idx) =>
-      (+total / +games[idx]).toFixed(2)
-    );
-    foodOnCards.data = foodOnCards.data.map((total, idx) =>
-      (+total / +games[idx]).toFixed(2)
-    );
-    tuckedCards.data = tuckedCards.data.map((total, idx) =>
-      (+total / +games[idx]).toFixed(2)
-    );
-
-    return {
-      categories: players,
-      series: [
-        birds,
-        bonusCards,
-        endOfRoundGoals,
-        eggs,
-        foodOnCards,
-        tuckedCards,
-      ],
-    };
-  },
   getGamesLastYear: (state) => getGamesLastYear(state.games),
   getResultTable: (state) => getResultTable(state.games),
   getResultTableHeadings: (state) => state.resultTableHeadings,
   getIsNewScoringType: (state) => state.newScoringType,
+  getTimePlayed: (state) => getTimePlayed(state.games),
 };
 
-const mutations: MutationTree<WingspanState> = {
-  setGames: (state, games: WingspanGame[]) => {
+const mutations: MutationTree<ArkNovaState> = {
+  setGames: (state, games: ArkNovaGame[]) => {
     games.forEach((game) =>
       game.players.sort((a, b) => (a.placement < b.placement ? -1 : 1))
     );
@@ -180,11 +114,11 @@ const mutations: MutationTree<WingspanState> = {
   },
 };
 
-const actions: ActionTree<WingspanState, any> = {
+const actions: ActionTree<ArkNovaState, any> = {
   fetchGames: ({ commit }, payload) => {
     commit("setLoadingStatus", true);
     axios
-      .get("/.netlify/functions/wingspan-read", { params: payload })
+      .get("/.netlify/functions/ark-nova-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
       })
@@ -200,7 +134,7 @@ const actions: ActionTree<WingspanState, any> = {
   },
 };
 
-export const wingspan = {
+export const arkNova = {
   namespaced: true,
   state,
   getters,

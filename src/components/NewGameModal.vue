@@ -51,6 +51,25 @@
             </div>
           </div>
         </div>
+        <div class="columns">
+          <div class="column is-narrow">
+            <div class="field">
+              <label class="label">Spielzeit (in Minuten)</label>
+              <p class="control has-icons-left">
+                <input
+                  class="input"
+                  type="number"
+                  min="0"
+                  max="450"
+                  @change="timeChanged($event)"
+                />
+                <span class="icon is-small is-left">
+                  <font-awesome-icon :icon="['fas', 'hourglass']" />
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
 
         <slot v-if="selectedNrOfPlayers">
           <!-- Add Game-Specific Table / Controls here -->
@@ -91,6 +110,10 @@ export default class NewGameModal extends Vue {
   }
 
   @Emit() locationChanged(event: any): string {
+    return event.target.value;
+  }
+
+  @Emit() timeChanged(event: any): number {
     return event.target.value;
   }
 

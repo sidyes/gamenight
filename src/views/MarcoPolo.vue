@@ -14,6 +14,7 @@
         @closed="newGameActive = false"
         @game-saved="saveGame"
         @location-changed="onLocationChange"
+        @time-changed="onTimeChange"
       >
         <div class="table-container">
           <table class="table is-fullwidth">
@@ -103,7 +104,7 @@
         <div class="columns">
           <div class="column is-full">
             <div class="box">
-              <div class="columns is-vcentered">
+              <div class="columns is-vcentered is-multiline">
                 <div class="column is-one-fifth">
                   <figure class="image is-128x128 has-image-centered">
                     <img
@@ -137,6 +138,9 @@
                     :disabled="newGameActive || !isLoggedIn"
                     >Neues Spiel</a
                   >
+                </div>
+                <div class="column is-full has-text-centered has-text-white">
+                  Durchschnittliche Spielzeit: {{ avgTime }}
                 </div>
               </div>
             </div>
@@ -283,6 +287,7 @@ export default class MarcoPolo extends Vue {
   @Getter("getUser", { namespace: "user" }) user!: Member;
 
   @Getter("getSeason", { namespace: "marcoPolo" }) currentSeason!: number;
+  @Getter("getTimePlayed", { namespace: "marcoPolo" }) avgTime!: string;
 
   @Getter("getAllSeasons", { namespace: "marcoPolo" }) allSeasons!: number[];
 
@@ -352,6 +357,7 @@ export default class MarcoPolo extends Vue {
   players: MarcoPoloPlayer[] | any[] = [];
 
   location: string = "";
+  timePlayed: number = 0;
 
   newGameActive = false;
 
@@ -380,7 +386,8 @@ export default class MarcoPolo extends Vue {
       this.players,
       Date.now(),
       this.location,
-      this.currentSeason
+      this.currentSeason,
+      this.timePlayed
     );
     this.setLoading(true);
     axios
@@ -466,6 +473,10 @@ export default class MarcoPolo extends Vue {
 
   public onLocationChange(loc: string): void {
     this.location = loc;
+  }
+
+  public onTimeChange(time: number): void {
+    this.timePlayed = time;
   }
 
   public onPointsChange(event: any): void {

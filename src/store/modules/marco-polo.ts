@@ -6,6 +6,7 @@ import {
   getAverageScores,
   getGamesLastYear,
   getGamesForSeason,
+  getTimePlayed,
 } from "./../shared";
 import { CharacterTableEntry } from "@/models/character-table-entry.model";
 import { ResultTableEntry } from "@/models/result-table-entry.model";
@@ -304,6 +305,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
 
     return new WinDistribution(startPositions, wins);
   },
+  getTimePlayed: (state) => getTimePlayed(state.games),
   getAverageScores: (state) =>
     getAverageScores(getGamesForSeason(state.selectedSeason, state.games)),
   getGamesLoaded: (state) => state.gamesLoaded,

@@ -14,6 +14,7 @@
         @closed="newGameActive = false"
         @game-saved="saveGame"
         @location-changed="onLocationChange"
+        @time-changed="onTimeChange"
       >
         <div class="table-container">
           <table class="table is-fullwidth">
@@ -149,7 +150,7 @@
         <div class="columns">
           <div class="column is-full">
             <div class="box">
-              <div class="columns is-vcentered">
+              <div class="columns is-vcentered is-multiline">
                 <div class="column is-one-fifth">
                   <figure class="image is-128x128 has-image-centered">
                     <img
@@ -170,6 +171,9 @@
                     :disabled="newGameActive || !isLoggedIn"
                     >Neues Spiel</a
                   >
+                </div>
+                <div class="column is-full has-text-centered has-text-white">
+                  Durchschnittliche Spielzeit: {{ avgTime }}
                 </div>
               </div>
             </div>
@@ -293,7 +297,8 @@ export default class Wingspan extends Vue {
   @Getter("getGamesLoaded", { namespace: "wingspan" })
   gamesLoaded!: boolean;
 
-  @Getter("getSeason", { namespace: "marcoPolo" }) currentSeason!: number;
+  @Getter("getSeason", { namespace: "wingspan" }) currentSeason!: number;
+  @Getter("getTimePlayed", { namespace: "wingspan" }) avgTime!: string;
 
   @Getter("getAllTimeTable", { namespace: "wingspan" })
   allTimeTable!: AllTimeTableEntry[];
@@ -338,6 +343,7 @@ export default class Wingspan extends Vue {
   newGameActive = false;
   players: WingspanPlayer[] | any[] = [];
   location: string = "";
+  timePlayed: number = 0;
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
@@ -379,6 +385,10 @@ export default class Wingspan extends Vue {
 
   public onLocationChange(loc: string): void {
     this.location = loc;
+  }
+
+  public onTimeChange(time: number): void {
+    this.timePlayed = time;
   }
 
   public isFormComplete(): boolean {
@@ -433,7 +443,8 @@ export default class Wingspan extends Vue {
       this.players,
       Date.now(),
       this.location,
-      this.currentSeason
+      this.currentSeason,
+      this.timePlayed
     );
     this.setLoading(true);
     axios

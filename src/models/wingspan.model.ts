@@ -20,6 +20,7 @@ export class WingspanGame implements Game {
     public players: WingspanPlayer[],
     public time: number,
     public location: string,
-    public season: number
+    public season: number,
+    public timePlayed: number
   ) {}
 }

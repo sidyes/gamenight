@@ -1,3 +1,4 @@
+import { arkNova } from "./modules/ark-nova";
 import { terraMystica } from "./modules/terra-mystica";
 import Vue from "vue";
 import Vuex from "vuex";
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     marcoPolo,
     wingspan,
     terraMystica,
+    arkNova,
   },
   actions: {
     clearStore({ commit }) {
@@ -25,6 +27,7 @@ export default new Vuex.Store({
       commit("marcoPolo/reset");
       commit("wingspan/reset");
       commit("terraMystica/reset");
+      commit("arkNova/reset");
     },
   },
 });

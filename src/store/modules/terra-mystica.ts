@@ -7,6 +7,7 @@ import {
   getAverageScores,
   getGamesForSeason,
   getGamesLastYear,
+  getTimePlayed,
 } from "./../shared";
 import { TerraMysticaGame } from "./../../models/terra-mystica.model";
 import { CharacterTableEntry } from "@/models/character-table-entry.model";
@@ -125,6 +126,7 @@ const getters: GetterTree<TerraMysticaState, any> = {
     return allTimeEntries;
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
+  getTimePlayed: (state) => getTimePlayed(state.games),
   getResultTable: (state) =>
     getResultTable(getGamesForSeason(state.selectedSeason, state.games)),
   getResultTableHeadings: (state) => state.resultTableHeadings,
@@ -315,16 +317,18 @@ const getters: GetterTree<TerraMysticaState, any> = {
     };
   },
   getGamesLoaded: (state) => state.gamesLoaded,
-  getGame: (state) => (time: number): TerraMysticaGame | undefined => {
-    let game = undefined;
-    state.games.forEach((g: TerraMysticaGame) => {
-      if (g.time === time) {
-        game = g;
-      }
-    });
+  getGame:
+    (state) =>
+    (time: number): TerraMysticaGame | undefined => {
+      let game = undefined;
+      state.games.forEach((g: TerraMysticaGame) => {
+        if (g.time === time) {
+          game = g;
+        }
+      });
 
-    return game;
-  },
+      return game;
+    },
   getSeason: (state) => state.season,
   getAllSeasons: (state) => {
     const seasons: number[] = [];

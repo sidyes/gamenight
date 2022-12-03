@@ -16,6 +16,7 @@ export class MarcoPoloGame implements Game {
     public players: MarcoPoloPlayer[],
     public time: number,
     public location: string,
-    public season: number
+    public season: number,
+    public timePlayed: number
   ) {}
 }

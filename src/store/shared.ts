@@ -165,6 +165,26 @@ export const getResultTable = (games: Game[]) => {
     });
 };
 
+export const getTimePlayed = (games: Game[]) => {
+  const gamesWithTimeInfo = games.filter((game) => game.timePlayed);
+
+  if (gamesWithTimeInfo.length === 0) {
+    return `n/a`;
+  }
+
+  const totalTime = gamesWithTimeInfo.reduce(
+    (partialSum, a) => partialSum + (a.timePlayed as number),
+    0
+  );
+
+  const averageTime = +(totalTime / gamesWithTimeInfo.length).toFixed(2);
+
+  const hours = Math.floor(averageTime / 60);
+  const minutes = averageTime % 60;
+
+  return `${hours}h ${minutes}min`;
+};
+
 export const getSummary = (headings: string[], games: Game[], user: Member) => {
   const game = new GameSummaryItem(headings[0], games.length.toString());
 

@@ -45,6 +45,11 @@ export default new Router({
       component: () => import("./views/TerraMystica.vue"),
     },
     {
+      path: "/ark-nova",
+      name: "ark-nova",
+      component: () => import("./views/ArkNova.vue"),
+    },
+    {
       path: "/terra-mystica/:time",
       name: "terra-mystica-detail",
       component: () => import("./views/TerraMysticaDetail.vue"),

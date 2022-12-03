@@ -144,15 +144,21 @@
           </div>
           <div class="column has-text-centered">
             <figure class="image is-200x200 has-image-centered">
-              <img
-                class="is-rounded"
-                src="https://bulma.io/images/placeholders/256x256.png"
-                alt="placeholder"
-              />
+              <router-link to="ark-nova">
+                <img
+                  class="is-rounded is-200x200"
+                  src="@/assets/img/ark-nova/arche-nova.webp"
+                  alt="Arche Nova"
+                />
+              </router-link>
             </figure>
-            <button class="button is-primary mt-25" disabled>
-              Coming soon...
-            </button>
+            <router-link
+              tag="button"
+              class="button is-primary mt-25"
+              to="ark-nova"
+            >
+              Arche Nova
+            </router-link>
           </div>
         </div>
       </div>

@@ -37,11 +37,14 @@
             <a class="navbar-link" aria-label="Spieleübersicht">Spiele</a>
 
             <div class="navbar-dropdown">
-              <router-link to="/marco-polo" class="navbar-item"
-                >Marco Polo</router-link
+              <router-link to="/ark-nova" class="navbar-item"
+                >Arche Nova</router-link
               >
               <router-link to="/wingspan" class="navbar-item"
                 >Flügelschlag</router-link
+              >
+              <router-link to="/marco-polo" class="navbar-item"
+                >Marco Polo</router-link
               >
               <router-link to="/terra-mystica" class="navbar-item"
                 >Terra Mystica</router-link
@@ -90,9 +93,8 @@
 
 <script lang="ts">
 import { Component, Vue, Watch, Emit, Prop } from "vue-property-decorator";
-import netlifyIdentity from "netlify-identity-widget";
 
-import { Getter, Action } from "vuex-class";
+import { Action } from "vuex-class";
 
 const axios = require("axios");
 

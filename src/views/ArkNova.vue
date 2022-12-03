@@ -1,5 +1,5 @@
 <template>
-  <div class="wingspan">
+  <div class="arkNova">
     <div class="loading-wrapper" v-if="isLoading">
       <progress class="progress is-small is-primary" max="100">15%</progress>
     </div>
@@ -19,24 +19,17 @@
         <div class="columns">
           <div class="column is-one-third-desktop is-one-third-tablet">
             <div class="field">
-              <label class="label">Karte</label>
-              <div class="control">
-                <div class="select">
-                  <select v-model="map">
-                    <option
-                      v-for="avlMap in maps"
-                      :value="avlMap"
-                      v-bind:key="avlMap"
-                    >
-                      {{ avlMap }}
-                    </option>
-                  </select>
-                </div>
-              </div>
+              <label class="label">Anzahl Pausen</label>
+              <input
+                class="input"
+                type="number"
+                min="0"
+                max="100"
+                v-model="numberOfBreaks"
+              />
             </div>
           </div>
         </div>
-
         <div class="table-container">
           <table class="table is-fullwidth">
             <thead>
@@ -65,17 +58,17 @@
             </thead>
             <tbody>
               <tr>
-                <td>Volk</td>
+                <td>Zookarte</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <div class="control">
                     <div class="select">
-                      <select v-model="player.faction">
+                      <select v-model="player.zooMap">
                         <option
-                          v-for="faction in factions"
-                          :value="faction"
-                          v-bind:key="faction"
+                          v-for="zooMap in zooMaps"
+                          :value="zooMap"
+                          v-bind:key="zooMap"
                         >
-                          {{ faction }}
+                          {{ zooMap }}
                         </option>
                       </select>
                     </div>
@@ -83,53 +76,111 @@
                 </td>
               </tr>
               <tr>
-                <td>Punkte</td>
+                <td>Startposition</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
-                  <input
-                    class="input"
-                    type="number"
-                    min="0"
-                    max="18"
-                    v-model="player.gamePoints"
-                    @change="onPointsChange($event)"
-                  />
+                  <div class="control">
+                    <div class="select">
+                      <select
+                        v-model="player.startPosition"
+                        @change="handleStartPositions(player)"
+                      >
+                        <option
+                          v-for="position in players.length"
+                          :value="position"
+                          v-bind:key="position"
+                        >
+                          {{ position }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
                 </td>
               </tr>
               <tr>
-                <td>Gebietswertung</td>
+                <td>Zoo vollständig gebaut</td>
+                <td v-for="(player, idx) in players" v-bind:key="idx">
+                  <div class="field has-text-centered">
+                    <input
+                      id="zooFullToggle"
+                      type="checkbox"
+                      name="zooFullToggle"
+                      class="switch is-small"
+                      v-model="player.zooMapFull"
+                    />
+                    <label for="zooFullToggle"></label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Anzahl ausgespielter Tiere</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
                     type="number"
                     min="0"
                     max="200"
-                    v-model="player.area"
-                    @change="onPointsChange($event)"
+                    v-model="player.numberOfAnimals"
                   />
                 </td>
               </tr>
               <tr>
-                <td>Kultwertung</td>
+                <td>Anzahl ausgespielter Sponsoren</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
                     type="number"
                     min="0"
                     max="200"
-                    v-model="player.cult"
-                    @change="onPointsChange($event)"
+                    v-model="player.numberOfSponsors"
                   />
                 </td>
               </tr>
               <tr>
-                <td>Ressourcen</td>
+                <td>Anzahl unterstützter Artenschutzprojekte</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
                     class="input"
                     type="number"
                     min="0"
                     max="200"
-                    v-model="player.resources"
+                    v-model="player.numberOfSupportedProjects"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Artenschutzpunkte</td>
+                <td v-for="(player, idx) in players" v-bind:key="idx">
+                  <input
+                    class="input"
+                    type="number"
+                    min="0"
+                    max="200"
+                    v-model="player.conservationPoints"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Attraktionspunkte</td>
+                <td v-for="(player, idx) in players" v-bind:key="idx">
+                  <input
+                    class="input"
+                    type="number"
+                    min="0"
+                    max="200"
+                    v-model="player.appealPoints"
+                    @change="onPointsChange($event)"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Attraktionspunkte - Zielwert</td>
+                <td v-for="(player, idx) in players" v-bind:key="idx">
+                  <input
+                    class="input"
+                    type="number"
+                    min="0"
+                    max="200"
+                    v-model="player.appealPointsCompare"
                     @change="onPointsChange($event)"
                   />
                 </td>
@@ -137,7 +188,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <th>Gesamtpunktzahl</th>
+                <th>Punkte</th>
                 <th v-for="(player, idx) in players" v-bind:key="idx">
                   <p>{{ calcTotalPoints(player) }}</p>
                 </th>
@@ -167,9 +218,9 @@
                 <div class="column is-one-fifth">
                   <figure class="image is-128x128 has-image-centered">
                     <img
-                      class="is-rounded"
-                      src="@/assets/img/terra-mystica/terra-mystica.jpg"
-                      alt="Terra Mystica"
+                      class="is-rounded is-128x128"
+                      src="@/assets/img/ark-nova/arche-nova.webp"
+                      alt="Arche Nova"
                     />
                   </figure>
                 </div>
@@ -177,19 +228,6 @@
                   <game-summary :items="gameSummary"></game-summary>
                 </div>
                 <div class="column has-text-right">
-                  <div class="select form-elem mb-10 is-info">
-                    <select @change="handleSelectedSeasonChange($event)">
-                      <option :value="-1">Gesamtstatistik</option>
-                      <option
-                        v-for="s in allSeasons"
-                        :value="s"
-                        v-bind:key="s"
-                        :selected="s === selectedSeason"
-                      >
-                        Season {{ s }}
-                      </option>
-                    </select>
-                  </div>
                   <a
                     aria-label="Erstelle ein neues Spiel"
                     class="button is-medium is-success is-fullwidth"
@@ -261,31 +299,9 @@
 
         <div class="columns is-vcentered">
           <div class="column is-half">
-            <div class="box">
-              <custom-table
-                :data="factionsTable"
-                :headings="factionsTableHeadings"
-              ></custom-table>
-            </div>
-          </div>
-
-          <div class="column is-half">
-            <div class="box">
-              <custom-table
-                :data="myTopFactionsTable"
-                :headings="myTopFactionsTableHeadings"
-              ></custom-table>
-            </div>
-          </div>
-        </div>
-
-        <div class="columns is-vcentered">
-          <div class="column is-half">
-            <div class="box">
-              <stacked-column-chart
-                :series="averagePointsDistribution.series"
-                :categories="averagePointsDistribution.categories"
-                title="Durchnittliche Punkte pro Kategorie"
+            <div class="box has-text-centered">
+              <img
+                src="https://pics.me.me/thumb_when-you-trying-to-make-a-sex-tape-but-you-37900019.png"
               />
             </div>
           </div>
@@ -318,15 +334,15 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {
   Member,
+  ArkNovaPlayer,
+  ArkNovaGame,
+  GameSummaryItem,
   AllTimeTableEntry,
   TableHeading,
-  ResultTableEntry,
-  TerraMysticaPlayer,
-  TerraMysticaGame,
   GameScoreItem,
-  GameSummaryItem,
   WinDistribution,
   AverageScores,
+  ResultTableEntry,
   Series,
   StackedColumChartData,
 } from "@/models";
@@ -335,83 +351,61 @@ import { ADD_TOAST_MESSAGE } from "vuex-toast";
 const axios = require("axios");
 
 @Component
-export default class TerraMystica extends Vue {
+export default class Arknova extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
   @Getter("getPlayers", { namespace: "user" }) members!: Member[];
 
-  @Getter("getMaps", { namespace: "terraMystica" })
-  maps!: string[];
+  @Getter("getZooMaps", { namespace: "arkNova" })
+  zooMaps!: string[];
 
-  @Getter("getFactions", { namespace: "terraMystica" })
-  factions!: string[];
-
-  @Getter("getGamesLoaded", { namespace: "terraMystica" })
+  @Getter("getGamesLoaded", { namespace: "arkNova" })
   gamesLoaded!: boolean;
 
-  @Getter("getSummary", { namespace: "terraMystica" })
-  gameSummary!: GameSummaryItem[];
+  @Getter("getTimePlayed", { namespace: "arkNova" }) avgTime!: string;
+  @Getter("getSeason", { namespace: "arkNova" }) currentSeason!: number;
 
-  @Getter("getGameScores", { namespace: "terraMystica" })
-  gameScores!: GameScoreItem[];
-
-  @Getter("getWinDistributionPlayer", { namespace: "terraMystica" })
-  winDistributionPlayer!: WinDistribution;
-
-  @Getter("getAverageScores", { namespace: "terraMystica" })
-  averageScores!: AverageScores;
-
-  @Getter("getFactionsTable", { namespace: "terraMystica" })
-  factionsTable!: ResultTableEntry[];
-
-  @Getter("getFactionsTableHeadings", { namespace: "terraMystica" })
-  factionsTableHeadings!: TableHeading[];
-
-  @Getter("getMyTopFactionsTable", { namespace: "terraMystica" })
-  myTopFactionsTable!: ResultTableEntry[];
-
-  @Getter("getMyTopFactionsTableHeadings", { namespace: "terraMystica" })
-  myTopFactionsTableHeadings!: TableHeading[];
-
-  @Getter("getAveragePointsDistribution", { namespace: "terraMystica" })
-  averagePointsDistribution!: StackedColumChartData;
-
-  @Getter("getGamesLastYear", { namespace: "terraMystica" })
-  gamesOverTime!: Series[];
-
-  @Getter("getAllTimeTable", { namespace: "terraMystica" })
+  @Getter("getAllTimeTable", { namespace: "arkNova" })
   allTimeTable!: AllTimeTableEntry[];
-
-  @Getter("getAllTimeTableHeadings", { namespace: "terraMystica" })
+  @Getter("getAllTimeTableHeadings", { namespace: "arkNova" })
   allTimeHeadings!: TableHeading[];
 
-  @Getter("getResultTable", { namespace: "terraMystica" })
+  @Getter("getSummary", { namespace: "arkNova" })
+  gameSummary!: GameSummaryItem[];
+
+  @Getter("getGameScores", { namespace: "arkNova" })
+  gameScores!: GameScoreItem[];
+
+  @Getter("getWinDistributionPlayer", { namespace: "arkNova" })
+  winDistributionPlayer!: WinDistribution[];
+
+  @Getter("getAverageScores", { namespace: "arkNova" })
+  averageScores!: AverageScores;
+
+  @Getter("getGamesLastYear", { namespace: "arkNova" })
+  gamesOverTime!: Series[];
+
+  @Getter("getResultTable", { namespace: "arkNova" })
   resultTable!: ResultTableEntry[];
 
-  @Getter("getResultTableHeadings", { namespace: "terraMystica" })
+  @Getter("getResultTableHeadings", { namespace: "arkNova" })
   resultHeadings!: TableHeading[];
 
-  @Getter("getIsLoading", { namespace: "terraMystica" })
+  @Getter("getIsLoading", { namespace: "arkNova" })
   isLoading!: boolean;
 
-  @Action("fetchGames", { namespace: "terraMystica" }) fetchGames: any;
-  @Action("setLoading", { namespace: "terraMystica" }) setLoading: any;
-  @Action("setSeason", { namespace: "terraMystica" }) setSeason: any;
-  @Action("toggleScoringType", { namespace: "terraMystica" })
+  @Getter("getIsNewScoringType", { namespace: "arkNova" })
+  isNewScoringType!: boolean;
+
+  @Action("fetchGames", { namespace: "arkNova" }) fetchGames: any;
+  @Action("setLoading", { namespace: "arkNova" }) setLoading: any;
+  @Action("toggleScoringType", { namespace: "arkNova" })
   toggleScoringType: any;
 
-  @Getter("getIsNewScoringType", { namespace: "terraMystica" })
-  isNewScoringType!: boolean;
-  @Getter("getSeason", { namespace: "terraMystica" }) currentSeason!: number;
-  @Getter("getTimePlayed", { namespace: "terraMystica" }) avgTime!: string;
-  @Getter("getSelectedSeason", { namespace: "terraMystica" })
-  selectedSeason!: number;
-  @Getter("getAllSeasons", { namespace: "terraMystica" }) allSeasons!: number[];
-
   newGameActive = false;
-  players: TerraMysticaPlayer[] | any[] = [];
+  players: ArkNovaPlayer[] | any[] = [];
   location: string = "";
-  map: string = "";
+  numberOfBreaks: number = 0;
   timePlayed: number = 0;
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
@@ -428,10 +422,10 @@ export default class TerraMystica extends Vue {
   }
 
   public onRowClicked(row: number): void {
-    this.$router.push({
-      name: "terra-mystica-detail",
-      params: { time: this.resultTable[row].id.toString() },
-    });
+    // this.$router.push({
+    //   name: "marco-polo-detail",
+    //   params: { time: this.resultTable[row].id.toString() }
+    // });
   }
 
   public onNrOfPlayersChange(nr: number): void {
@@ -440,11 +434,16 @@ export default class TerraMystica extends Vue {
       const player = {
         user: undefined,
         placement: undefined,
-        faction: undefined,
         points: undefined,
-        area: undefined,
-        cult: undefined,
-        resources: undefined,
+        appealPoints: undefined,
+        appealPointsCompare: undefined,
+        conservationPoints: undefined,
+        startPosition: undefined,
+        numberOfAnimals: undefined,
+        zooMapFull: undefined,
+        numberOfSponsors: undefined,
+        numberOfSupportedProjects: undefined,
+        zooMap: undefined,
       };
 
       this.players.push(player as any);
@@ -459,10 +458,6 @@ export default class TerraMystica extends Vue {
     this.timePlayed = time;
   }
 
-  public handleSelectedSeasonChange(event: any): void {
-    this.setSeason(event.target.value);
-  }
-
   public isFormComplete(): boolean {
     if (this.players.length === 0) {
       return false;
@@ -474,12 +469,15 @@ export default class TerraMystica extends Vue {
       if (
         !pl.user ||
         !pl.placement ||
-        !pl.faction ||
-        !pl.gamePoints ||
-        !pl.area ||
-        !pl.cult ||
-        !pl.resources ||
-        !this.location
+        !pl.appealPoints ||
+        !pl.appealPointsCompare ||
+        !pl.conservationPoints ||
+        !pl.startPosition ||
+        !pl.numberOfAnimals ||
+        !pl.numberOfSponsors ||
+        !pl.numberOfSupportedProjects ||
+        !this.location ||
+        !this.numberOfBreaks
       ) {
         valid = false;
       }
@@ -488,13 +486,11 @@ export default class TerraMystica extends Vue {
     return valid;
   }
 
-  public calcTotalPoints(player: TerraMysticaPlayer): number {
+  public calcTotalPoints(player: ArkNovaPlayer): number {
     let sum = 0;
 
-    sum += +player.gamePoints || 0;
-    sum += +player.area || 0;
-    sum += +player.cult || 0;
-    sum += +player.resources || 0;
+    sum += +player.appealPoints || 0;
+    sum -= +player.appealPointsCompare || 0;
 
     player.points = sum;
 
@@ -507,23 +503,34 @@ export default class TerraMystica extends Vue {
     });
   }
 
+  public handleStartPositions(player: ArkNovaPlayer): void {
+    this.players.forEach((pl) => {
+      if (
+        pl !== player &&
+        pl.startPosition &&
+        pl.startPosition === player.startPosition
+      ) {
+        pl.startPosition = 0;
+      }
+    });
+  }
+
   public saveGame(): void {
-    const game = new TerraMysticaGame(
+    const game = new ArkNovaGame(
       this.players,
+      this.numberOfBreaks,
       Date.now(),
       this.location,
       this.currentSeason,
-      this.map,
       this.timePlayed
     );
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/terra-mystica-create", game)
-      .then((response: any) => {
+      .post("/.netlify/functions/ark-nova-create", game)
+      .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
-        this.map = "";
 
         this.fetchGames(this.user);
 
@@ -554,11 +561,8 @@ export default class TerraMystica extends Vue {
 
     let placement = 1;
     this.players.forEach((pl) => {
-      if (
-        pl !== player &&
-        this.calcTotalPoints(player) <
-          (this.calcTotalPoints(pl) ? this.calcTotalPoints(pl) : 0)
-      ) {
+      const tmpPoints = this.calcTotalPoints(pl);
+      if (pl !== player && points < (tmpPoints ? tmpPoints : 0)) {
         placement++;
       }
     });
