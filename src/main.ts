@@ -49,6 +49,7 @@ library.add(faEnvelope);
 library.add(faHourglass);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
+// eslint-disable-next-line vue/multi-word-component-names
 Vue.component("apexchart", VueApexCharts);
 Vue.component("game-summary", GameSummary);
 Vue.component("custom-table", CustomTable);
