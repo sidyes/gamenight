@@ -96,8 +96,6 @@ import { Component, Vue, Watch, Emit, Prop } from "vue-property-decorator";
 
 import { Action } from "vuex-class";
 
-const axios = require("axios");
-
 const namespace: string = "user";
 
 @Component

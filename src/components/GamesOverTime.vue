@@ -142,7 +142,7 @@ export default class GamesOverTime extends Vue {
 
   public generateLastYear(): string[] {
     const today = new Date();
-    let d, month, year;
+    let d, month;
 
     let series = [];
 
