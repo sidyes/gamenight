@@ -16,20 +16,6 @@
         @location-changed="onLocationChange"
         @time-changed="onTimeChange"
       >
-        <div class="columns">
-          <div class="column is-one-third-desktop is-one-third-tablet">
-            <div class="field">
-              <label class="label">Anzahl Pausen</label>
-              <input
-                class="input"
-                type="number"
-                min="0"
-                max="100"
-                v-model="numberOfBreaks"
-              />
-            </div>
-          </div>
-        </div>
         <div class="table-container">
           <table class="table is-fullwidth">
             <thead>
@@ -112,42 +98,6 @@
                 </td>
               </tr>
               <tr>
-                <td>Anzahl ausgespielter Tiere</td>
-                <td v-for="(player, idx) in players" v-bind:key="idx">
-                  <input
-                    class="input"
-                    type="number"
-                    min="0"
-                    max="200"
-                    v-model="player.numberOfAnimals"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Anzahl ausgespielter Sponsoren</td>
-                <td v-for="(player, idx) in players" v-bind:key="idx">
-                  <input
-                    class="input"
-                    type="number"
-                    min="0"
-                    max="200"
-                    v-model="player.numberOfSponsors"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Anzahl unterstützter Artenschutzprojekte</td>
-                <td v-for="(player, idx) in players" v-bind:key="idx">
-                  <input
-                    class="input"
-                    type="number"
-                    min="0"
-                    max="200"
-                    v-model="player.numberOfSupportedProjects"
-                  />
-                </td>
-              </tr>
-              <tr>
                 <td>Artenschutzpunkte</td>
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <input
@@ -196,7 +146,7 @@
               <tr>
                 <th>Platzierung</th>
                 <th v-for="(player, idx) in players" v-bind:key="idx">
-                  <p>{{ player.placement | placement }}</p>
+                  <p>{{ player.placement }}</p>
                 </th>
               </tr>
             </tfoot>
@@ -405,7 +355,6 @@ export default class Arknova extends Vue {
   newGameActive = false;
   players: ArkNovaPlayer[] | any[] = [];
   location: string = "";
-  numberOfBreaks: number = 0;
   timePlayed: number = 0;
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
@@ -439,10 +388,7 @@ export default class Arknova extends Vue {
         appealPointsCompare: undefined,
         conservationPoints: undefined,
         startPosition: undefined,
-        numberOfAnimals: undefined,
         zooMapFull: undefined,
-        numberOfSponsors: undefined,
-        numberOfSupportedProjects: undefined,
         zooMap: undefined,
       };
 
@@ -473,11 +419,7 @@ export default class Arknova extends Vue {
         !pl.appealPointsCompare ||
         !pl.conservationPoints ||
         !pl.startPosition ||
-        !pl.numberOfAnimals ||
-        !pl.numberOfSponsors ||
-        !pl.numberOfSupportedProjects ||
-        !this.location ||
-        !this.numberOfBreaks
+        !this.location 
       ) {
         valid = false;
       }
@@ -518,7 +460,6 @@ export default class Arknova extends Vue {
   public saveGame(): void {
     const game = new ArkNovaGame(
       this.players,
-      this.numberOfBreaks,
       Date.now(),
       this.location,
       this.currentSeason,

@@ -10,10 +10,7 @@ export class ArkNovaPlayer implements Player {
     public appealPointsCompare: number,
     public conservationPoints: number, // Artenschutz
     public startPosition: number,
-    public numberOfAnimals: number,
     public zooMapFull: boolean,
-    public numberOfSponsors: number,
-    public numberOfSupportedProjects: number,
     public zooMap: string
   ) {}
 }
@@ -21,7 +18,6 @@ export class ArkNovaPlayer implements Player {
 export class ArkNovaGame implements Game {
   constructor(
     public players: ArkNovaPlayer[],
-    public numberOfBreaks: number,
     public time: number,
     public location: string,
     public season: number,
