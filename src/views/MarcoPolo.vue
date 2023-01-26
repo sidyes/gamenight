@@ -161,7 +161,7 @@
                   name="newScoringTypeActive"
                   class="switch is-outlined is-info"
                   @click="toggleScoringType()"
-                  :value="isNewScoringType"
+                  v-model="isNewScoringType"
                 />
                 <label for="newScoringTypeActive" class="has-text-white"
                   >Neues Punktesystem</label
