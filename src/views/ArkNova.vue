@@ -87,13 +87,13 @@
                 <td v-for="(player, idx) in players" v-bind:key="idx">
                   <div class="field has-text-centered">
                     <input
-                      id="zooFullToggle"
                       type="checkbox"
                       name="zooFullToggle"
                       class="switch is-small"
+                      v-bind:id="'zooFullToggle-' + idx"
                       v-model="player.zooMapFull"
                     />
-                    <label for="zooFullToggle"></label>
+                    <label v-bind:for="'zooFullToggle-' + idx"></label>
                   </div>
                 </td>
               </tr>
@@ -208,7 +208,7 @@
                   name="newScoringTypeActive"
                   class="switch is-outlined is-info"
                   @click="toggleScoringType()"
-                  v-model="isNewScoringType"
+                  :value="isNewScoringType"
                 />
                 <label for="newScoringTypeActive" class="has-text-white"
                   >Neues Punktesystem</label
@@ -249,10 +249,11 @@
 
         <div class="columns is-vcentered">
           <div class="column is-half">
-            <div class="box has-text-centered">
-              <img
-                src="https://pics.me.me/thumb_when-you-trying-to-make-a-sex-tape-but-you-37900019.png"
-              />
+            <div class="box">
+              <custom-table
+                :data="zooTable"
+                :headings="zooTableHeadings"
+              ></custom-table>
             </div>
           </div>
 
@@ -294,7 +295,6 @@ import {
   AverageScores,
   ResultTableEntry,
   Series,
-  StackedColumChartData,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -343,6 +343,12 @@ export default class Arknova extends Vue {
 
   @Getter("getIsLoading", { namespace: "arkNova" })
   isLoading!: boolean;
+
+  @Getter("getZooTable", { namespace: "arkNova" })
+  zooTable!: ResultTableEntry[];
+
+  @Getter("getZooTableHeadings", { namespace: "arkNova" })
+  zooTableHeadings!: TableHeading[];
 
   @Getter("getIsNewScoringType", { namespace: "arkNova" })
   isNewScoringType!: boolean;
@@ -419,7 +425,7 @@ export default class Arknova extends Vue {
         !pl.appealPointsCompare ||
         !pl.conservationPoints ||
         !pl.startPosition ||
-        !this.location 
+        !this.location
       ) {
         valid = false;
       }

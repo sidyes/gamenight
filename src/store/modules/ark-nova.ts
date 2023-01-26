@@ -8,9 +8,16 @@ import {
   getAverageScores,
   getGamesLastYear,
   getTimePlayed,
+  getGamesForSeason,
+  compareCharacterTableEntries,
 } from "./../shared";
 import { GetterTree, MutationTree, ActionTree } from "vuex";
-import { GameSummaryItem, TableHeading, GameScoreItem } from "@/models";
+import {
+  GameSummaryItem,
+  TableHeading,
+  GameScoreItem,
+  CharacterTableEntry,
+} from "@/models";
 
 const axios = require("axios");
 
@@ -25,6 +32,8 @@ interface ArkNovaState {
   isLoading: boolean;
   season: number;
   newScoringType: boolean;
+  zooTableHeadings: TableHeading[];
+  selectedSeason: number;
 }
 
 const state: ArkNovaState = {
@@ -40,6 +49,13 @@ const state: ArkNovaState = {
     "Plan 6",
     "Plan 7",
     "Plan 8",
+  ],
+  zooTableHeadings: [
+    new TableHeading("Top Zoos", "character"),
+    new TableHeading("Spiele", "games"),
+    new TableHeading("Siege", "wins"),
+    new TableHeading("Siegquote (%)", "winrate"),
+    new TableHeading("Erspielte Gesamtpunkte (Ø pro Spiel)", "points"),
   ],
   gamesLoaded: false,
   allTimeTableHeadings: [
@@ -67,6 +83,7 @@ const state: ArkNovaState = {
   ],
   isLoading: false,
   season: 0,
+  selectedSeason: 0,
   newScoringType: true,
 };
 
@@ -81,6 +98,7 @@ const getters: GetterTree<ArkNovaState, any> = {
 
     return getSummary(state.summaryHeadings, state.games, user);
   },
+  getSeason: (state) => state.season,
   getZooMaps: (state) => state.zooMaps,
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),
@@ -91,6 +109,53 @@ const getters: GetterTree<ArkNovaState, any> = {
   getResultTableHeadings: (state) => state.resultTableHeadings,
   getIsNewScoringType: (state) => state.newScoringType,
   getTimePlayed: (state) => getTimePlayed(state.games),
+  getZooTableHeadings: (state) => state.zooTableHeadings,
+  getZooTable: (state, getters, _rootState, _rootGetters) => {
+    const zoos = getters.getZooMaps;
+
+    const zooTableEntries: CharacterTableEntry[] = [];
+    zoos.forEach((zoo: string) =>
+      zooTableEntries.push(new CharacterTableEntry(zoo, 0, 0, 0, 0))
+    );
+
+    getGamesForSeason(state.selectedSeason, state.games)
+      .map((game) => game as ArkNovaGame)
+      .map((game) => {
+        game.players.forEach((player) => {
+          const elem = zooTableEntries.find(
+            (entry) => entry.character === player.zooMap
+          );
+
+          if (elem) {
+            if (player.placement === 1) {
+              ++elem.games;
+              ++elem.wins;
+              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            } else {
+              ++elem.games;
+              elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
+            }
+
+            if (elem.points !== undefined) {
+              elem.points += player.points;
+            }
+          }
+        });
+      });
+
+    zooTableEntries.sort(compareCharacterTableEntries);
+
+    zooTableEntries.forEach((entry) => {
+      const total = entry.points;
+      entry.points =
+        total +
+        ` (${
+          total !== 0 ? Math.round(((total / entry.games) * 100) / 100) : 0
+        })`;
+    });
+
+    return zooTableEntries;
+  },
 };
 
 const mutations: MutationTree<ArkNovaState> = {
@@ -108,7 +173,9 @@ const mutations: MutationTree<ArkNovaState> = {
     state.games = [];
     state.gamesLoaded = false;
   },
-  getSeason: (state) => state.season,
+  setSelectedSeason: (state, season) => {
+    state.selectedSeason = season;
+  },
   toggleScoringType: (state) => {
     state.newScoringType = !state.newScoringType;
   },
@@ -131,6 +198,9 @@ const actions: ActionTree<ArkNovaState, any> = {
   },
   toggleScoringType: ({ commit }) => {
     commit("toggleScoringType");
+  },
+  setSeason: ({ commit }, payload) => {
+    commit("setSelectedSeason", payload);
   },
 };
 

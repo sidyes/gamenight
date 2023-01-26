@@ -40,9 +40,6 @@ export default class GameScores extends Vue {
       enabled: true,
       offsetX: -40,
     },
-    xaxis: {
-      min: 0,
-    },
     tooltip: {
       show: false,
     },

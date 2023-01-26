@@ -7,6 +7,7 @@ import {
   getGamesLastYear,
   getGamesForSeason,
   getTimePlayed,
+  compareCharacterTableEntries,
 } from "./../shared";
 import { CharacterTableEntry } from "@/models/character-table-entry.model";
 import { ResultTableEntry } from "@/models/result-table-entry.model";
@@ -180,14 +181,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
             }
 
             if (elem.points !== undefined) {
-              elem.points +=
-                player.placement === 1
-                  ? 5
-                  : player.placement === 2
-                  ? 3
-                  : player.placement === 3
-                  ? 2
-                  : 0;
+              elem.points += player.points;
             }
           }
         });
@@ -232,15 +226,14 @@ const getters: GetterTree<MarcoPoloState, any> = {
                 elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
 
                 if (elem.points !== undefined) {
-                  elem.points += 5;
+                  elem.points += player.points;
                 }
               } else {
                 ++elem.games;
                 elem.winrate = +(elem.wins / elem.games).toFixed(2) * 100;
 
                 if (elem.points !== undefined) {
-                  elem.points +=
-                    player.placement === 2 ? 3 : player.placement === 3 ? 2 : 0;
+                  elem.points += player.points;
                 }
               }
             }
@@ -383,31 +376,6 @@ const actions: ActionTree<MarcoPoloState, any> = {
     commit("toggleScoringType");
   },
 };
-
-function compareCharacterTableEntries(
-  a: CharacterTableEntry,
-  b: CharacterTableEntry
-): number {
-  if (a.winrate > b.winrate) {
-    return -1;
-  }
-
-  if (a.winrate < b.winrate) {
-    return 1;
-  }
-
-  if (a.winrate === b.winrate) {
-    if (a.games > b.games) {
-      return -1;
-    }
-
-    if (a.games < b.games) {
-      return 1;
-    }
-  }
-
-  return 0;
-}
 
 export const marcoPolo = {
   namespaced: true,

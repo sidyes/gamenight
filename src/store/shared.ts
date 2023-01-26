@@ -9,6 +9,7 @@ import {
   AverageScores,
   Series,
   Player,
+  CharacterTableEntry,
 } from "@/models";
 
 export const getAllTimeTable = (games: Game[], isNewScoringType: boolean) => {
@@ -66,13 +67,26 @@ function calculatePointsForPlayer(
 ): number {
   if (isNewScoringType) {
     let totalPoints = 0;
+    let lowestScore = Number.MAX_SAFE_INTEGER;
 
     game.players.forEach((pl) => {
-      totalPoints += pl.points;
+      totalPoints += Math.abs(pl.points);
+
+      if (pl.points < lowestScore) {
+        lowestScore = pl.points;
+      }
     });
 
+    // adapt points if lowest score is negative
+    let pointsToAdd = 0;
+    if (lowestScore < 0) {
+      pointsToAdd = Math.abs(lowestScore) + 1;
+    }
+
     // get own share
-    const share = +((player.points / totalPoints) * 100).toFixed(0);
+    const ownPoints =
+      lowestScore < 0 ? player.points + pointsToAdd : player.points;
+    const share = +((ownPoints / (totalPoints + pointsToAdd)) * 100).toFixed(0);
 
     // get placement points
     const placementPoints =
@@ -166,19 +180,20 @@ export const getResultTable = (games: Game[]) => {
 };
 
 export const getTimePlayed = (games: Game[]) => {
-  const gamesWithTimeInfo = games.filter((game) => game.timePlayed);
+  const gamesWithTimeInfo = games
+    .filter((game) => game.timePlayed)
+    .map((game) => +(game.timePlayed as number));
 
   if (gamesWithTimeInfo.length === 0) {
     return `n/a`;
   }
 
   const totalTime = gamesWithTimeInfo.reduce(
-    (partialSum, a) => partialSum + (a.timePlayed as number),
+    (partialSum, a) => partialSum + a,
     0
   );
 
   const averageTime = +(totalTime / gamesWithTimeInfo.length).toFixed(2);
-
   const hours = Math.floor(averageTime / 60);
   const minutes = averageTime % 60;
 
@@ -370,3 +385,28 @@ export const getGamesLastYear = (games: Game[]) => {
 
 export const getGamesForSeason = (season: number, games: Game[]) =>
   games.filter((game) => +game.season === +season || +season === -1);
+
+export const compareCharacterTableEntries = (
+  a: CharacterTableEntry,
+  b: CharacterTableEntry
+): number => {
+  if (a.winrate > b.winrate) {
+    return -1;
+  }
+
+  if (a.winrate < b.winrate) {
+    return 1;
+  }
+
+  if (a.winrate === b.winrate) {
+    if (a.games > b.games) {
+      return -1;
+    }
+
+    if (a.games < b.games) {
+      return 1;
+    }
+  }
+
+  return 0;
+};
