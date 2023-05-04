@@ -50,6 +50,20 @@ export default new Router({
       component: () => import("./views/ArkNova.vue"),
     },
     {
+      path: "/ark-nova/:time",
+      name: "ark-nova-detail",
+      component: () => import("./views/ArkNovaDetail.vue"),
+      props: (route) => {
+        const time = Number.parseInt(route.params.time);
+        if (Number.isNaN(time)) {
+          return { time: 0 };
+        }
+
+        return { time };
+      },
+      beforeEnter: checkAuth,
+    },
+    {
       path: "/terra-mystica/:time",
       name: "terra-mystica-detail",
       component: () => import("./views/TerraMysticaDetail.vue"),

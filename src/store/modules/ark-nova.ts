@@ -49,6 +49,8 @@ const state: ArkNovaState = {
     "Plan 6",
     "Plan 7",
     "Plan 8",
+    "Plan 9",
+    "Plan 10",
   ],
   zooTableHeadings: [
     new TableHeading("Top Zoos", "character"),
@@ -156,6 +158,18 @@ const getters: GetterTree<ArkNovaState, any> = {
 
     return zooTableEntries;
   },
+  getGame:
+    (state) =>
+    (time: number): ArkNovaGame | undefined => {
+      let game = undefined;
+      state.games.forEach((g: ArkNovaGame) => {
+        if (g.time === time) {
+          game = g;
+        }
+      });
+
+      return game;
+    },
 };
 
 const mutations: MutationTree<ArkNovaState> = {

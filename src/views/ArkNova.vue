@@ -377,10 +377,10 @@ export default class Arknova extends Vue {
   }
 
   public onRowClicked(row: number): void {
-    // this.$router.push({
-    //   name: "marco-polo-detail",
-    //   params: { time: this.resultTable[row].id.toString() }
-    // });
+    this.$router.push({
+      name: "ark-nova-detail",
+      params: { time: this.resultTable[row].id.toString() }
+    });
   }
 
   public onNrOfPlayersChange(nr: number): void {
