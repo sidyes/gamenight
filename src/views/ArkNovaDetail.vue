@@ -40,7 +40,7 @@
             time
           ).toDateString()}) gefunden.`"
         ></banner-notification>
-        <div class="columns is-multiline is-mobile" v-if="gameFound">
+        <div class="columns is-multiline" v-if="gameFound">
           <div
             class="column is-half"
             v-for="(player, idx) in game.players"
