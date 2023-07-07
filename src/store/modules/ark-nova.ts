@@ -84,8 +84,8 @@ const state: ArkNovaState = {
     new TableHeading("Gewinner (Punkte)", "winner"),
   ],
   isLoading: false,
-  season: 0,
-  selectedSeason: 0,
+  season: 1,
+  selectedSeason: 1,
   newScoringType: true,
 };
 
