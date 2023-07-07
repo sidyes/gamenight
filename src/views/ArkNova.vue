@@ -502,10 +502,6 @@ export default class Arknova extends Vue {
   private getPlacement(player: any): number | undefined {
     const points = this.calcTotalPoints(player);
 
-    if (points === 0) {
-      return undefined;
-    }
-
     let placement = 1;
     this.players.forEach((pl) => {
       const tmpPoints = this.calcTotalPoints(pl);
