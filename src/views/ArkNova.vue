@@ -178,6 +178,19 @@
                   <game-summary :items="gameSummary"></game-summary>
                 </div>
                 <div class="column has-text-right">
+                  <div class="select form-elem mb-10 is-info">
+                    <select @change="handleSelectedSeasonChange($event)">
+                      <option :value="-1">Gesamtstatistik</option>
+                      <option
+                        v-for="s in allSeasons"
+                        :value="s"
+                        v-bind:key="s"
+                        :selected="s === selectedSeason"
+                      >
+                        Season {{ s }}
+                      </option>
+                    </select>
+                  </div>
                   <a
                     aria-label="Erstelle ein neues Spiel"
                     class="button is-medium is-success is-fullwidth"
@@ -306,6 +319,10 @@ export default class Arknova extends Vue {
   @Getter("getUser", { namespace: "user" }) user!: Member;
   @Getter("getPlayers", { namespace: "user" }) members!: Member[];
 
+  @Getter("getSelectedSeason", { namespace: "arkNova" })
+  selectedSeason!: number;
+  @Getter("getAllSeasons", { namespace: "arkNova" }) allSeasons!: number[];
+
   @Getter("getZooMaps", { namespace: "arkNova" })
   zooMaps!: string[];
 
@@ -353,6 +370,7 @@ export default class Arknova extends Vue {
   @Getter("getIsNewScoringType", { namespace: "arkNova" })
   isNewScoringType!: boolean;
 
+  @Action("setSeason", { namespace: "arkNova" }) setSeason: any;
   @Action("fetchGames", { namespace: "arkNova" }) fetchGames: any;
   @Action("setLoading", { namespace: "arkNova" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "arkNova" })
@@ -379,7 +397,7 @@ export default class Arknova extends Vue {
   public onRowClicked(row: number): void {
     this.$router.push({
       name: "ark-nova-detail",
-      params: { time: this.resultTable[row].id.toString() }
+      params: { time: this.resultTable[row].id.toString() },
     });
   }
 
@@ -408,6 +426,10 @@ export default class Arknova extends Vue {
 
   public onTimeChange(time: number): void {
     this.timePlayed = time;
+  }
+
+  public handleSelectedSeasonChange(event: any): void {
+    this.setSeason(event.target.value);
   }
 
   public isFormComplete(): boolean {

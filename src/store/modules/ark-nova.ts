@@ -92,25 +92,45 @@ const state: ArkNovaState = {
 const getters: GetterTree<ArkNovaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
-  getAllTimeTable: (state) =>
-    getAllTimeTable(state.games, state.newScoringType),
+  getAllTimeTable: (state) => {
+    const allTimeEntries = getAllTimeTable(
+      getGamesForSeason(state.selectedSeason, state.games),
+      state.newScoringType
+    );
+
+    return allTimeEntries;
+  },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
 
-    return getSummary(state.summaryHeadings, state.games, user);
+    return getSummary(
+      state.summaryHeadings,
+      getGamesForSeason(state.selectedSeason, state.games),
+      user
+    );
   },
   getSeason: (state) => state.season,
   getZooMaps: (state) => state.zooMaps,
   getGameScores: (state): GameScoreItem[] =>
-    getGameScores(state.gameScoresHeadings, state.games),
-  getWinDistributionPlayer: (state) => getWinDistributionPlayer(state.games),
-  getAverageScores: (state) => getAverageScores(state.games),
-  getGamesLastYear: (state) => getGamesLastYear(state.games),
-  getResultTable: (state) => getResultTable(state.games),
+    getGameScores(
+      state.gameScoresHeadings,
+      getGamesForSeason(state.selectedSeason, state.games)
+    ),
+  getWinDistributionPlayer: (state) =>
+    getWinDistributionPlayer(
+      getGamesForSeason(state.selectedSeason, state.games)
+    ),
+  getAverageScores: (state) =>
+    getAverageScores(getGamesForSeason(state.selectedSeason, state.games)),
+  getGamesLastYear: (state) =>
+    getGamesLastYear(getGamesForSeason(state.selectedSeason, state.games)),
+  getResultTable: (state) =>
+    getResultTable(getGamesForSeason(state.selectedSeason, state.games)),
   getResultTableHeadings: (state) => state.resultTableHeadings,
   getIsNewScoringType: (state) => state.newScoringType,
-  getTimePlayed: (state) => getTimePlayed(state.games),
+  getTimePlayed: (state) =>
+    getTimePlayed(getGamesForSeason(state.selectedSeason, state.games)),
   getZooTableHeadings: (state) => state.zooTableHeadings,
   getZooTable: (state, getters, _rootState, _rootGetters) => {
     const zoos = getters.getZooMaps;
@@ -170,6 +190,18 @@ const getters: GetterTree<ArkNovaState, any> = {
 
       return game;
     },
+  getAllSeasons: (state) => {
+    const seasons: number[] = [];
+    let iterator = 0;
+
+    while (iterator !== state.season + 1) {
+      seasons.push(iterator);
+      iterator++;
+    }
+
+    return seasons;
+  },
+  getSelectedSeason: (state) => state.selectedSeason,
 };
 
 const mutations: MutationTree<ArkNovaState> = {
