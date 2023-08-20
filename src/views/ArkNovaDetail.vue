@@ -115,7 +115,7 @@
                       <p class="has-text-white is-size-7">
                         Zoo vollständig bebaut<br />
                         <span class="title is-2 has-text-white">{{
-                          player.zooMapFull ? '✅' : '❌'
+                          player.zooMapFull ? "✅" : "❌"
                         }}</span>
                       </p>
                     </div>
@@ -135,7 +135,6 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
 import { Member, ArkNovaGame } from "@/models";
 
-import * as _ from "lodash";
 import { getTimePlayed } from "@/store/shared";
 
 @Component

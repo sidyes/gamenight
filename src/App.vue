@@ -59,12 +59,10 @@ export default class App extends Vue {
         email: this.currentUser.email,
       };
 
-      axios
-        .post("/.netlify/functions/members-create", member)
-        .then((response: any) => {
-          // eslint-disable-next-line no-console
-          console.log("Member added", member);
-        });
+      axios.post("/.netlify/functions/members-create", member).then(() => {
+        // eslint-disable-next-line no-console
+        console.log("Member added", member);
+      });
       netlifyIdentity.close();
     });
   }

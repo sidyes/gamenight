@@ -160,6 +160,24 @@
               Arche Nova
             </router-link>
           </div>
+          <div class="column has-text-centered">
+            <figure class="image is-200x200 has-image-centered">
+              <router-link to="challengers">
+                <img
+                  class="is-rounded is-200x200"
+                  src="@/assets/img/challengers/challengers.png"
+                  alt="Challengers!"
+                />
+              </router-link>
+            </figure>
+            <router-link
+              tag="button"
+              class="button is-primary mt-25"
+              to="challengers"
+            >
+              Challengers!
+            </router-link>
+          </div>
         </div>
       </div>
     </section>
