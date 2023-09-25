@@ -67,13 +67,16 @@ const getters: GetterTree<WingspanState, any> = {
   getTimePlayed: (state) => getTimePlayed(state.games),
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
-  getAllTimeTable: (state) =>
-    getAllTimeTable(state.games, state.newScoringType),
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"]("wingspan");
+
+    return getAllTimeTable(state.games, state.newScoringType, elos);
+  },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
 
-    return getSummary(state.summaryHeadings, state.games, user);
+    return getSummary(state.summaryHeadings, state.games, user, "wingspan");
   },
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),

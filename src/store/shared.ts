@@ -10,11 +10,16 @@ import {
   Series,
   Player,
   CharacterTableEntry,
+  PlayerElo,
 } from "@/models";
 
-export const getAllTimeTable = (games: Game[], isNewScoringType: boolean) => {
+export const getAllTimeTable = (
+  games: Game[],
+  isNewScoringType: boolean,
+  elos: PlayerElo[]
+) => {
   const allTimeEntries: AllTimeTableEntry[] = [];
-
+  console.log(elos);
   games.map((game) => {
     game.players.forEach((player) => {
       let entry = allTimeEntries.find(
@@ -24,6 +29,7 @@ export const getAllTimeTable = (games: Game[], isNewScoringType: boolean) => {
       if (!entry) {
         entry = new AllTimeTableEntry(
           player.user.username,
+          elos.find((p) => p.email === player.user.email)?.elo as number,
           games.length,
           0,
           0,
@@ -200,7 +206,13 @@ export const getTimePlayed = (games: Game[]) => {
   return `${hours}h ${minutes}min`;
 };
 
-export const getSummary = (headings: string[], games: Game[], user: Member) => {
+export const getSummary = (
+  headings: string[],
+  games: Game[],
+  user: Member,
+  name: string
+) => {
+  const elo = new GameSummaryItem(headings[0], `⭐ ${(user.elo as any)[name]}`);
   const game = new GameSummaryItem(headings[0], games.length.toString());
 
   const wins = new GameSummaryItem(
@@ -237,7 +249,7 @@ export const getSummary = (headings: string[], games: Game[], user: Member) => {
     isNaN(+avgPoints) ? "0" : avgPoints
   );
 
-  return [game, wins, winPercentage, avg];
+  return [elo, game, wins, winPercentage, avg];
 };
 
 export const getGameScores = (headings: string[], games: Game[]) => {

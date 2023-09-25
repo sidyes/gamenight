@@ -1,16 +1,19 @@
 import { Member } from "@/models/member.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
+import { PlayerElo } from "@/models";
 const axios = require("axios");
 
 interface UserState {
   user: any;
   friends: Member[];
+  allPlayers: Member[];
 }
 
 const state: UserState = {
   user: window.localStorage.getItem("user"),
   friends: [],
+  allPlayers: [],
 };
 
 const getters: GetterTree<UserState, any> = {
@@ -34,6 +37,11 @@ const getters: GetterTree<UserState, any> = {
 
     return players;
   },
+  getElos: (state) => (game: string) => {
+    return state.allPlayers.map(
+      (player) => new PlayerElo(player.email, (player.elo as any)[game])
+    );
+  },
 };
 
 //Mutations Must Be Synchronous
@@ -50,6 +58,10 @@ const mutations: MutationTree<UserState> = {
   },
   setFriends: (state, friends: Member[]) => {
     state.friends = friends;
+  },
+  setAllPlayers: (state, allPlayers: Member[]) => {
+    console.log(allPlayers);
+    state.allPlayers = allPlayers;
   },
   addFriend: (state, friend: Member) => {
     state.friends = [...state.friends, friend];
@@ -70,6 +82,11 @@ const actions: ActionTree<UserState, any> = {
     axios
       .get("/.netlify/functions/friends-read", { params: payload })
       .then((response: any) => commit("setFriends", response.data.friends));
+  },
+  fetchAllPlayers: ({ commit }) => {
+    axios
+      .get("/.netlify/functions/members-read")
+      .then((response: any) => commit("setAllPlayers", response.data.items));
   },
   addFriend: ({ commit }, payload) => {
     commit("addFriend", payload);

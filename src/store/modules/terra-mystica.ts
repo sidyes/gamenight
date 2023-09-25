@@ -118,10 +118,13 @@ const state: TerraMysticaState = {
 
 const getters: GetterTree<TerraMysticaState, any> = {
   getIsLoading: (state) => state.isLoading,
-  getAllTimeTable: (state) => {
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"]("terraMystica");
+
     const allTimeEntries = getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
-      state.newScoringType
+      state.newScoringType,
+      elos
     );
 
     return allTimeEntries;
@@ -238,7 +241,8 @@ const getters: GetterTree<TerraMysticaState, any> = {
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user
+      user,
+      "terraMystica"
     );
   },
   getFactions: (state) => state.factions,

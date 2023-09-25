@@ -62,13 +62,14 @@ const state: ArkNovaState = {
   gamesLoaded: false,
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
     new TableHeading("🥉", "thirdPlaces"),
     new TableHeading("Punkte", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo", "Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -92,10 +93,13 @@ const state: ArkNovaState = {
 const getters: GetterTree<ArkNovaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
-  getAllTimeTable: (state) => {
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"]("arkNova");
+
     const allTimeEntries = getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
-      state.newScoringType
+      state.newScoringType,
+      elos
     );
 
     return allTimeEntries;
@@ -107,7 +111,8 @@ const getters: GetterTree<ArkNovaState, any> = {
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user
+      user,
+      "arkNova"
     );
   },
   getSeason: (state) => state.season,

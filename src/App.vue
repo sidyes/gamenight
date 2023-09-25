@@ -30,6 +30,7 @@ const axios = require("axios");
 })
 export default class App extends Vue {
   @Action("fetchFriends", { namespace: "user" }) fetchFriends: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
   @Action("updateUser", { namespace: "user" }) updateUser: any;
   @Action("clearStore") clearStore: any;
 
@@ -71,6 +72,7 @@ export default class App extends Vue {
   onIsLoggedInChange(newVal: boolean) {
     if (newVal) {
       this.fetchFriends(this.user);
+      this.fetchAllPlayers();
     }
   }
 

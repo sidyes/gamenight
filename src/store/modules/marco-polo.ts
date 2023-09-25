@@ -106,11 +106,14 @@ const state: MarcoPoloState = {
 
 const getters: GetterTree<MarcoPoloState, any> = {
   getIsLoading: (state) => state.isLoading,
-  getAllTimeTable: (state) =>
-    getAllTimeTable(
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"]("marcoPolo");
+    return getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
-      state.newScoringType
-    ),
+      state.newScoringType,
+      elos
+    );
+  },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getResultTable: (state) =>
     getGamesForSeason(state.selectedSeason, state.games)
@@ -261,7 +264,8 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user
+      user,
+      "marcoPolo"
     );
   },
   getCharacters: (state) => state.characters,
