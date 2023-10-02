@@ -1,3 +1,7 @@
 export class PlayerElo {
-  constructor(public email: string, public elo: number) {}
+  constructor(
+    public username: string,
+    public email: string,
+    public elo: number
+  ) {}
 }

@@ -17,6 +17,8 @@ import {
   TableHeading,
   GameScoreItem,
   CharacterTableEntry,
+  GameName,
+  Member,
 } from "@/models";
 
 const axios = require("axios");
@@ -107,12 +109,15 @@ const getters: GetterTree<ArkNovaState, any> = {
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
+    const allPlayers = rootGetters["user/getPlayers"](GameName.ARK_NOVA);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user,
-      "arkNova"
+      userWithElo
     );
   },
   getSeason: (state) => state.season,
@@ -207,6 +212,7 @@ const getters: GetterTree<ArkNovaState, any> = {
     return seasons;
   },
   getSelectedSeason: (state) => state.selectedSeason,
+  getAllGames: (state) => state.games,
 };
 
 const mutations: MutationTree<ArkNovaState> = {

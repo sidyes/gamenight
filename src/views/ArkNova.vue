@@ -308,7 +308,9 @@ import {
   AverageScores,
   ResultTableEntry,
   Series,
+  GameName,
 } from "@/models";
+import { calculateElo } from "@/utils/elo-calculation";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
 const axios = require("axios");
@@ -317,7 +319,9 @@ const axios = require("axios");
 export default class Arknova extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getSelectedSeason", { namespace: "arkNova" })
   selectedSeason!: number;
@@ -328,6 +332,9 @@ export default class Arknova extends Vue {
 
   @Getter("getGamesLoaded", { namespace: "arkNova" })
   gamesLoaded!: boolean;
+
+  @Getter("getAllGames", { namespace: "arkNova" })
+  allGames!: ArkNovaGame[];
 
   @Getter("getTimePlayed", { namespace: "arkNova" }) avgTime!: string;
   @Getter("getSeason", { namespace: "arkNova" }) currentSeason!: number;
@@ -371,6 +378,7 @@ export default class Arknova extends Vue {
   isNewScoringType!: boolean;
 
   @Action("setSeason", { namespace: "arkNova" }) setSeason: any;
+  @Action("setElos", { namespace: "user" }) setElos: any;
   @Action("fetchGames", { namespace: "arkNova" }) fetchGames: any;
   @Action("setLoading", { namespace: "arkNova" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "arkNova" })
@@ -380,6 +388,7 @@ export default class Arknova extends Vue {
   players: ArkNovaPlayer[] | any[] = [];
   location: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
@@ -391,6 +400,7 @@ export default class Arknova extends Vue {
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.ARK_NOVA);
     }
   }
 
@@ -501,6 +511,9 @@ export default class Arknova extends Vue {
         this.players = [];
         this.location = "";
 
+        // calculate new elos
+        const elos = calculateElo(game, this.allGames);
+        this.setElos({ elos, game: GameName.ARK_NOVA });
         this.fetchGames(this.user);
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
@@ -509,7 +522,7 @@ export default class Arknova extends Vue {
           dismissAfter: 2000,
         });
       })
-      .catch((err: any) => {
+      .catch((_err: any) => {
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",

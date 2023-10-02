@@ -1,7 +1,7 @@
 import { Member } from "@/models/member.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
-import { PlayerElo } from "@/models";
+import { GameName, PlayerElo } from "@/models";
 const axios = require("axios");
 
 interface UserState {
@@ -24,10 +24,13 @@ const getters: GetterTree<UserState, any> = {
     }
     const user = JSON.parse(state.user);
 
-    return new Member(user.username, user.email, user.admin);
+    return user;
   },
   getFriends: (state) => state.friends,
-  getPlayers: (state, getters) => {
+  getAllPlayers: (state) => state.allPlayers,
+  getPlayers: (state, getters) => (game: GameName) => {
+    // merge elo information with players info
+    const allPlayers = getters.getAllPlayers;
     const players = [...state.friends];
     const me = getters.getUser;
 
@@ -35,11 +38,15 @@ const getters: GetterTree<UserState, any> = {
       players.push(me);
     }
 
-    return players;
+    return players.map((pl) => ({
+      ...pl,
+      elo: allPlayers.find((p: Member) => p.email === pl.email)?.elo[game],
+    }));
   },
   getElos: (state) => (game: string) => {
     return state.allPlayers.map(
-      (player) => new PlayerElo(player.email, (player.elo as any)[game])
+      (player) =>
+        new PlayerElo(player.username, player.email, (player.elo as any)[game])
     );
   },
 };
@@ -60,7 +67,6 @@ const mutations: MutationTree<UserState> = {
     state.friends = friends;
   },
   setAllPlayers: (state, allPlayers: Member[]) => {
-    console.log(allPlayers);
     state.allPlayers = allPlayers;
   },
   addFriend: (state, friend: Member) => {
@@ -93,6 +99,22 @@ const actions: ActionTree<UserState, any> = {
   },
   removeFriend: ({ commit }, payload) => {
     commit("removeFriend", payload);
+  },
+  setElos: ({ commit, state }, payload) => {
+    const updatedMembers = state.allPlayers.map((member) => {
+      return {
+        ...member,
+        elo: {
+          ...member.elo,
+          [payload.game]: payload.elos.find(
+            (elo: PlayerElo) => elo.email === member.email
+          )?.elo,
+        },
+      };
+    });
+    axios
+      .post(".netlify/functions/members-update", updatedMembers)
+      .then((_response: any) => commit("setAllPlayers", updatedMembers));
   },
 };
 

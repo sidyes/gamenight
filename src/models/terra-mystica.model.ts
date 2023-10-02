@@ -1,10 +1,10 @@
 import { Game } from "./game.model";
+import { PlayerElo } from "./player-elo.model";
 import { Player } from "./player.model";
-import { Member } from "@/models/member.model";
 
 export class TerraMysticaPlayer implements Player {
   constructor(
-    public user: Member,
+    public user: PlayerElo,
     public placement: number,
     public faction: string,
     public gamePoints: number,

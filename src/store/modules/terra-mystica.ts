@@ -19,7 +19,7 @@ import { GameSummaryItem } from "@/models/game-summary-item.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
 import { Series } from "@/models/series.model";
-import { StackedColumChartData } from "@/models";
+import { GameName, Member, StackedColumChartData } from "@/models";
 
 const axios = require("axios");
 
@@ -237,12 +237,15 @@ const getters: GetterTree<TerraMysticaState, any> = {
   getMyTopFactionsTableHeadings: (state) => state.myTopFactionsTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
+    const allPlayers = rootGetters["user/getPlayers"](GameName.TERRA_MYSTICA);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user,
-      "terraMystica"
+      userWithElo
     );
   },
   getFactions: (state) => state.factions,

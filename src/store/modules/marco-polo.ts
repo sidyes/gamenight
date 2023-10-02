@@ -19,6 +19,7 @@ import { GameSummaryItem } from "@/models/game-summary-item.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
 import { MarcoPoloGame } from "@/models/marco-polo.model";
+import { GameName, Member } from "@/models";
 
 const axios = require("axios");
 
@@ -260,12 +261,15 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getMyTopCharacterTableHeadings: (state) => state.myTopcharacterTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
+    const allPlayers = rootGetters["user/getPlayers"](GameName.MARCO_POLO);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user,
-      "marcoPolo"
+      userWithElo
     );
   },
   getCharacters: (state) => state.characters,

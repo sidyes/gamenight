@@ -16,6 +16,8 @@ import {
   Series,
   StackedColumChartData,
   ChallengersGame,
+  GameName,
+  Member,
 } from "@/models";
 
 const axios = require("axios");
@@ -68,14 +70,19 @@ const getters: GetterTree<ChallengersState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"]("challengers");
+    const elos = rootGetters["user/getElos"](GameName.CHALLENGERS);
     return getAllTimeTable(state.games, state.newScoringType, elos);
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
 
-    return getSummary(state.summaryHeadings, state.games, user, "challengers");
+    const allPlayers = rootGetters["user/getPlayers"](GameName.CHALLENGERS);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
+
+    return getSummary(state.summaryHeadings, state.games, userWithElo);
   },
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),

@@ -1,9 +1,9 @@
 import { Player } from "./player.model";
-import { Member } from "@/models/member.model";
 import { Game } from "./game.model";
+import { PlayerElo } from "./player-elo.model";
 export class MarcoPoloPlayer implements Player {
   constructor(
-    public user: Member,
+    public user: PlayerElo,
     public character: string,
     public points: number,
     public placement: number,

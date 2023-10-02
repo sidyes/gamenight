@@ -11,6 +11,7 @@ import {
   Player,
   CharacterTableEntry,
   PlayerElo,
+  GameName,
 } from "@/models";
 
 export const getAllTimeTable = (
@@ -19,7 +20,6 @@ export const getAllTimeTable = (
   elos: PlayerElo[]
 ) => {
   const allTimeEntries: AllTimeTableEntry[] = [];
-  console.log(elos);
   games.map((game) => {
     game.players.forEach((player) => {
       let entry = allTimeEntries.find(
@@ -206,17 +206,12 @@ export const getTimePlayed = (games: Game[]) => {
   return `${hours}h ${minutes}min`;
 };
 
-export const getSummary = (
-  headings: string[],
-  games: Game[],
-  user: Member,
-  name: string
-) => {
-  const elo = new GameSummaryItem(headings[0], `⭐ ${(user.elo as any)[name]}`);
-  const game = new GameSummaryItem(headings[0], games.length.toString());
+export const getSummary = (headings: string[], games: Game[], user: Member) => {
+  const elo = new GameSummaryItem(headings[0], `⭐ ${user.elo}`);
+  const game = new GameSummaryItem(headings[1], games.length.toString());
 
   const wins = new GameSummaryItem(
-    headings[1],
+    headings[2],
     games
       .map((game) => {
         const winner = game.players.find((pl) => pl.placement === 1);
@@ -227,7 +222,7 @@ export const getSummary = (
   );
 
   const winPercentage = new GameSummaryItem(
-    headings[2],
+    headings[3],
     `${(+(+wins.value / games.length) * 100).toFixed(2) || 0} %`
   );
 
@@ -245,7 +240,7 @@ export const getSummary = (
   ).toFixed(2);
 
   const avg = new GameSummaryItem(
-    headings[3],
+    headings[4],
     isNaN(+avgPoints) ? "0" : avgPoints
   );
 

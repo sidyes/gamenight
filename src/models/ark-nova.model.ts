@@ -1,9 +1,9 @@
 import { Player } from "./player.model";
 import { Game } from "./game.model";
-import { Member } from "@/models/member.model";
+import { PlayerElo } from "./player-elo.model";
 export class ArkNovaPlayer implements Player {
   constructor(
-    public user: Member,
+    public user: PlayerElo,
     public placement: number,
     public points: number,
     public appealPoints: number, // Attraktion

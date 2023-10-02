@@ -8,11 +8,11 @@ type Elo = {
 
 export class Member {
   elo: Elo = {
-    arkNova: 100,
-    terraMystica: 100,
-    challengers: 100,
-    wingspan: 100,
-    marcoPolo: 100,
+    arkNova: 0,
+    terraMystica: 0,
+    challengers: 0,
+    wingspan: 0,
+    marcoPolo: 0,
   };
 
   constructor(
