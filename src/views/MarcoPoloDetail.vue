@@ -94,7 +94,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
-import { Member, MarcoPoloGame } from "@/models";
+import { Member, MarcoPoloGame, GameCollection } from "@/models";
 
 import * as _ from "lodash";
 
@@ -125,7 +125,11 @@ export default class MarcoPoloDetail extends Vue {
 
   public created(): void {
     if (!this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.MARCO_POLO,
+      };
+      this.fetchGames(payload);
     }
   }
 

@@ -19,6 +19,7 @@ import { GameSummaryItem } from "@/models/game-summary-item.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
 import { MarcoPoloGame } from "@/models/marco-polo.model";
+import { GameName, Member } from "@/models";
 
 const axios = require("axios");
 
@@ -48,6 +49,7 @@ const state: MarcoPoloState = {
   ],
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
@@ -68,7 +70,7 @@ const state: MarcoPoloState = {
     new TableHeading("Siegquote (%)", "winrate"),
     new TableHeading("Erspielte Punkte (Ø pro Spiel)", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo","Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -106,11 +108,14 @@ const state: MarcoPoloState = {
 
 const getters: GetterTree<MarcoPoloState, any> = {
   getIsLoading: (state) => state.isLoading,
-  getAllTimeTable: (state) =>
-    getAllTimeTable(
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"](GameName.MARCO_POLO);
+    return getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
-      state.newScoringType
-    ),
+      state.newScoringType,
+      elos
+    );
+  },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getResultTable: (state) =>
     getGamesForSeason(state.selectedSeason, state.games)
@@ -257,11 +262,15 @@ const getters: GetterTree<MarcoPoloState, any> = {
   getMyTopCharacterTableHeadings: (state) => state.myTopcharacterTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
+    const allPlayers = rootGetters["user/getPlayers"](GameName.MARCO_POLO);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user
+      userWithElo
     );
   },
   getCharacters: (state) => state.characters,
@@ -358,7 +367,7 @@ const actions: ActionTree<MarcoPoloState, any> = {
   fetchGames: ({ commit }, payload) => {
     commit("setLoadingStatus", true);
     axios
-      .get("/.netlify/functions/marco-polo-read", { params: payload })
+      .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
       })

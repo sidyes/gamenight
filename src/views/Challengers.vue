@@ -230,6 +230,9 @@ import {
   StackedColumChartData,
   ChallengersPlayer,
   ChallengersGame,
+  CreateGameRequestModel,
+  GameCollection,
+  GameName,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -239,7 +242,9 @@ const axios = require("axios");
 export default class Challengers extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getGamesLoaded", { namespace: "challengers" })
   gamesLoaded!: boolean;
@@ -286,22 +291,29 @@ export default class Challengers extends Vue {
   @Action("setLoading", { namespace: "challengers" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "challengers" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   newGameActive = false;
   players: ChallengersPlayer[] | any[] = [];
   location: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.CHALLENGERS,
+      };
+      this.fetchGames(payload);
     }
   }
 
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.CHALLENGERS);
     }
   }
 
@@ -363,15 +375,26 @@ export default class Challengers extends Vue {
       this.currentSeason,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.CHALLENGERS,
+      GameName.CHALLENGERS
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/challengers-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.CHALLENGERS,
+        };
+        this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

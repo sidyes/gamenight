@@ -17,6 +17,8 @@ import {
   TableHeading,
   GameScoreItem,
   CharacterTableEntry,
+  GameName,
+  Member,
 } from "@/models";
 
 const axios = require("axios");
@@ -62,13 +64,14 @@ const state: ArkNovaState = {
   gamesLoaded: false,
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
     new TableHeading("🥉", "thirdPlaces"),
     new TableHeading("Punkte", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo", "Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -92,10 +95,13 @@ const state: ArkNovaState = {
 const getters: GetterTree<ArkNovaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
-  getAllTimeTable: (state) => {
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"](GameName.ARK_NOVA);
+
     const allTimeEntries = getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
-      state.newScoringType
+      state.newScoringType,
+      elos
     );
 
     return allTimeEntries;
@@ -103,11 +109,15 @@ const getters: GetterTree<ArkNovaState, any> = {
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
+    const allPlayers = rootGetters["user/getPlayers"](GameName.ARK_NOVA);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user
+      userWithElo
     );
   },
   getSeason: (state) => state.season,
@@ -231,7 +241,7 @@ const actions: ActionTree<ArkNovaState, any> = {
   fetchGames: ({ commit }, payload) => {
     commit("setLoadingStatus", true);
     axios
-      .get("/.netlify/functions/ark-nova-read", { params: payload })
+      .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
       })

@@ -1,16 +1,19 @@
 import { Member } from "@/models/member.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
+import { GameName, PlayerElo } from "@/models";
 const axios = require("axios");
 
 interface UserState {
   user: any;
   friends: Member[];
+  allPlayers: Member[];
 }
 
 const state: UserState = {
   user: window.localStorage.getItem("user"),
   friends: [],
+  allPlayers: [],
 };
 
 const getters: GetterTree<UserState, any> = {
@@ -21,10 +24,13 @@ const getters: GetterTree<UserState, any> = {
     }
     const user = JSON.parse(state.user);
 
-    return new Member(user.username, user.email, user.admin);
+    return user;
   },
   getFriends: (state) => state.friends,
-  getPlayers: (state, getters) => {
+  getAllPlayers: (state) => state.allPlayers,
+  getPlayers: (state, getters) => (game: GameName) => {
+    // merge elo information with players info
+    const allPlayers = getters.getAllPlayers;
     const players = [...state.friends];
     const me = getters.getUser;
 
@@ -32,7 +38,16 @@ const getters: GetterTree<UserState, any> = {
       players.push(me);
     }
 
-    return players;
+    return players.map((pl) => ({
+      ...pl,
+      elo: allPlayers.find((p: Member) => p.email === pl.email)?.elo[game],
+    }));
+  },
+  getElos: (state) => (game: string) => {
+    return state.allPlayers.map(
+      (player) =>
+        new PlayerElo(player.username, player.email, (player.elo as any)[game])
+    );
   },
 };
 
@@ -50,6 +65,9 @@ const mutations: MutationTree<UserState> = {
   },
   setFriends: (state, friends: Member[]) => {
     state.friends = friends;
+  },
+  setAllPlayers: (state, allPlayers: Member[]) => {
+    state.allPlayers = allPlayers;
   },
   addFriend: (state, friend: Member) => {
     state.friends = [...state.friends, friend];
@@ -70,6 +88,11 @@ const actions: ActionTree<UserState, any> = {
     axios
       .get("/.netlify/functions/friends-read", { params: payload })
       .then((response: any) => commit("setFriends", response.data.friends));
+  },
+  fetchAllPlayers: ({ commit }) => {
+    axios
+      .get("/.netlify/functions/members-read")
+      .then((response: any) => commit("setAllPlayers", response.data.items));
   },
   addFriend: ({ commit }, payload) => {
     commit("addFriend", payload);

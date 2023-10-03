@@ -19,7 +19,7 @@ import { GameSummaryItem } from "@/models/game-summary-item.model";
 import { MutationTree, ActionTree, GetterTree } from "vuex";
 import {} from "axios";
 import { Series } from "@/models/series.model";
-import { StackedColumChartData } from "@/models";
+import { GameName, Member, StackedColumChartData } from "@/models";
 
 const axios = require("axios");
 
@@ -51,6 +51,7 @@ const state: TerraMysticaState = {
   ],
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
@@ -71,7 +72,7 @@ const state: TerraMysticaState = {
     new TableHeading("Siegquote (%)", "winrate"),
     new TableHeading("Erspielte Gesamtpunkte (Ø pro Spiel)", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo", "Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -118,10 +119,13 @@ const state: TerraMysticaState = {
 
 const getters: GetterTree<TerraMysticaState, any> = {
   getIsLoading: (state) => state.isLoading,
-  getAllTimeTable: (state) => {
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"](GameName.TERRA_MYSTICA);
+
     const allTimeEntries = getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
-      state.newScoringType
+      state.newScoringType,
+      elos
     );
 
     return allTimeEntries;
@@ -234,11 +238,15 @@ const getters: GetterTree<TerraMysticaState, any> = {
   getMyTopFactionsTableHeadings: (state) => state.myTopFactionsTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
+    const allPlayers = rootGetters["user/getPlayers"](GameName.TERRA_MYSTICA);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      user
+      userWithElo
     );
   },
   getFactions: (state) => state.factions,
@@ -367,7 +375,7 @@ const actions: ActionTree<TerraMysticaState, any> = {
   fetchGames: ({ commit }, payload) => {
     commit("setLoadingStatus", true);
     axios
-      .get("/.netlify/functions/terra-mystica-read", { params: payload })
+      .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
       })

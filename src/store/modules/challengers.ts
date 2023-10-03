@@ -16,6 +16,8 @@ import {
   Series,
   StackedColumChartData,
   ChallengersGame,
+  GameName,
+  Member,
 } from "@/models";
 
 const axios = require("axios");
@@ -37,13 +39,14 @@ const state: ChallengersState = {
   gamesLoaded: false,
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
     new TableHeading("🥉", "thirdPlaces"),
     new TableHeading("Punkte", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo", "Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -67,13 +70,20 @@ const getters: GetterTree<ChallengersState, any> = {
   getTimePlayed: (state) => getTimePlayed(state.games),
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
-  getAllTimeTable: (state) =>
-    getAllTimeTable(state.games, state.newScoringType),
+  getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
+    const elos = rootGetters["user/getElos"](GameName.CHALLENGERS);
+    return getAllTimeTable(state.games, state.newScoringType, elos);
+  },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
 
-    return getSummary(state.summaryHeadings, state.games, user);
+    const allPlayers = rootGetters["user/getPlayers"](GameName.CHALLENGERS);
+
+    const userWithElo =
+      allPlayers?.find((pl: Member) => pl.email === user.email) || user;
+
+    return getSummary(state.summaryHeadings, state.games, userWithElo);
   },
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),
@@ -148,7 +158,7 @@ const actions: ActionTree<ChallengersState, any> = {
   fetchGames: ({ commit }, payload) => {
     commit("setLoadingStatus", true);
     axios
-      .get("/.netlify/functions/challengers-read", { params: payload })
+      .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
         commit("setGames", response.data.items);
       })

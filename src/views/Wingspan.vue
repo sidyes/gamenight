@@ -283,6 +283,9 @@ import {
   ResultTableEntry,
   Series,
   StackedColumChartData,
+  CreateGameRequestModel,
+  GameCollection,
+  GameName,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -292,7 +295,9 @@ const axios = require("axios");
 export default class Wingspan extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getGamesLoaded", { namespace: "wingspan" })
   gamesLoaded!: boolean;
@@ -339,22 +344,29 @@ export default class Wingspan extends Vue {
   @Action("setLoading", { namespace: "wingspan" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "wingspan" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   newGameActive = false;
   players: WingspanPlayer[] | any[] = [];
   location: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.WINGSPAN,
+      };
+      this.fetchGames(payload);
     }
   }
 
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.WINGSPAN);
     }
   }
 
@@ -446,15 +458,26 @@ export default class Wingspan extends Vue {
       this.currentSeason,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.WINGSPAN,
+      GameName.WINGSPAN
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/wingspan-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.WINGSPAN,
+        };
+        this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

@@ -308,6 +308,9 @@ import {
   AverageScores,
   ResultTableEntry,
   Series,
+  GameName,
+  CreateGameRequestModel,
+  GameCollection,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -317,7 +320,9 @@ const axios = require("axios");
 export default class Arknova extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getSelectedSeason", { namespace: "arkNova" })
   selectedSeason!: number;
@@ -375,22 +380,29 @@ export default class Arknova extends Vue {
   @Action("setLoading", { namespace: "arkNova" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "arkNova" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   newGameActive = false;
   players: ArkNovaPlayer[] | any[] = [];
   location: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.ARK_NOVA,
+      };
+      this.fetchGames(payload);
     }
   }
 
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.ARK_NOVA);
     }
   }
 
@@ -493,15 +505,26 @@ export default class Arknova extends Vue {
       this.currentSeason,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.ARK_NOVA,
+      GameName.ARK_NOVA
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/ark-nova-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.ARK_NOVA,
+        };
+        this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
@@ -509,7 +532,7 @@ export default class Arknova extends Vue {
           dismissAfter: 2000,
         });
       })
-      .catch((err: any) => {
+      .catch((_err: any) => {
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Irgendwas ist schief gelaufen! 😱",
           type: "danger",

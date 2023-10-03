@@ -329,6 +329,9 @@ import {
   AverageScores,
   Series,
   StackedColumChartData,
+  CreateGameRequestModel,
+  GameCollection,
+  GameName,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -338,7 +341,9 @@ const axios = require("axios");
 export default class TerraMystica extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getMaps", { namespace: "terraMystica" })
   maps!: string[];
@@ -399,6 +404,7 @@ export default class TerraMystica extends Vue {
   @Action("setSeason", { namespace: "terraMystica" }) setSeason: any;
   @Action("toggleScoringType", { namespace: "terraMystica" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   @Getter("getIsNewScoringType", { namespace: "terraMystica" })
   isNewScoringType!: boolean;
@@ -413,17 +419,23 @@ export default class TerraMystica extends Vue {
   location: string = "";
   map: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.TERRA_MYSTICA,
+      };
+      this.fetchGames(payload);
     }
   }
 
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.TERRA_MYSTICA);
     }
   }
 
@@ -516,16 +528,27 @@ export default class TerraMystica extends Vue {
       this.map,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.TERRA_MYSTICA,
+      GameName.TERRA_MYSTICA
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/terra-mystica-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
         this.map = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.TERRA_MYSTICA,
+        };
+        this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",
