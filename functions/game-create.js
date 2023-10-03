@@ -1,4 +1,5 @@
 const faunadb = require("faunadb"); /* Import faunaDB sdk */
+const axios = require("axios");
 
 /* configure faunaDB Client */
 const q = faunadb.query;

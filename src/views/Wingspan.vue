@@ -295,7 +295,9 @@ const axios = require("axios");
 export default class Wingspan extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getGamesLoaded", { namespace: "wingspan" })
   gamesLoaded!: boolean;
@@ -342,11 +344,13 @@ export default class Wingspan extends Vue {
   @Action("setLoading", { namespace: "wingspan" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "wingspan" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   newGameActive = false;
   players: WingspanPlayer[] | any[] = [];
   location: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
@@ -362,6 +366,7 @@ export default class Wingspan extends Vue {
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.WINGSPAN);
     }
   }
 
@@ -472,6 +477,7 @@ export default class Wingspan extends Vue {
           collection: GameCollection.WINGSPAN,
         };
         this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

@@ -49,6 +49,7 @@ const state: MarcoPoloState = {
   ],
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
@@ -69,7 +70,7 @@ const state: MarcoPoloState = {
     new TableHeading("Siegquote (%)", "winrate"),
     new TableHeading("Erspielte Punkte (Ø pro Spiel)", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo","Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -108,7 +109,7 @@ const state: MarcoPoloState = {
 const getters: GetterTree<MarcoPoloState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"]("marcoPolo");
+    const elos = rootGetters["user/getElos"](GameName.MARCO_POLO);
     return getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
       state.newScoringType,

@@ -341,7 +341,9 @@ const axios = require("axios");
 export default class TerraMystica extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
   @Getter("getUser", { namespace: "user" }) user!: Member;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
 
   @Getter("getMaps", { namespace: "terraMystica" })
   maps!: string[];
@@ -402,6 +404,7 @@ export default class TerraMystica extends Vue {
   @Action("setSeason", { namespace: "terraMystica" }) setSeason: any;
   @Action("toggleScoringType", { namespace: "terraMystica" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   @Getter("getIsNewScoringType", { namespace: "terraMystica" })
   isNewScoringType!: boolean;
@@ -416,6 +419,7 @@ export default class TerraMystica extends Vue {
   location: string = "";
   map: string = "";
   timePlayed: number = 0;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
@@ -431,6 +435,7 @@ export default class TerraMystica extends Vue {
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.TERRA_MYSTICA);
     }
   }
 
@@ -543,6 +548,7 @@ export default class TerraMystica extends Vue {
           collection: GameCollection.TERRA_MYSTICA,
         };
         this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

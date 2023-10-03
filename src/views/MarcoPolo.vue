@@ -286,7 +286,9 @@ import { ADD_TOAST_MESSAGE } from "vuex-toast";
 })
 export default class MarcoPolo extends Vue {
   @Getter("getUserStatus", { namespace: "user" }) isLoggedIn!: boolean;
-  @Getter("getPlayers", { namespace: "user" }) members!: Member[];
+  @Getter("getPlayers", { namespace: "user" }) getPlayers!: (
+    game: GameName
+  ) => Member[];
   @Getter("getUser", { namespace: "user" }) user!: Member;
 
   @Getter("getSeason", { namespace: "marcoPolo" }) currentSeason!: number;
@@ -356,6 +358,7 @@ export default class MarcoPolo extends Vue {
   @Action("setSeason", { namespace: "marcoPolo" }) setSeason: any;
   @Action("toggleScoringType", { namespace: "marcoPolo" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   players: MarcoPoloPlayer[] | any[] = [];
 
@@ -363,6 +366,7 @@ export default class MarcoPolo extends Vue {
   timePlayed: number = 0;
 
   newGameActive = false;
+  members: Member[] = [];
 
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
@@ -385,6 +389,7 @@ export default class MarcoPolo extends Vue {
   public toggleNewGameActive(): void {
     if (this.isLoggedIn) {
       this.newGameActive = !this.newGameActive;
+      this.members = this.getPlayers(GameName.MARCO_POLO);
     }
   }
 
@@ -415,6 +420,7 @@ export default class MarcoPolo extends Vue {
           collection: GameCollection.MARCO_POLO,
         };
         this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

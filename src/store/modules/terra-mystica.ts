@@ -51,6 +51,7 @@ const state: TerraMysticaState = {
   ],
   allTimeTableHeadings: [
     new TableHeading("Spieler", "username"),
+    new TableHeading("⭐", "elo"),
     new TableHeading("Spiele", "games"),
     new TableHeading("🥇", "wins"),
     new TableHeading("🥈", "secondPlaces"),
@@ -71,7 +72,7 @@ const state: TerraMysticaState = {
     new TableHeading("Siegquote (%)", "winrate"),
     new TableHeading("Erspielte Gesamtpunkte (Ø pro Spiel)", "points"),
   ],
-  summaryHeadings: ["Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo", "Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -119,7 +120,7 @@ const state: TerraMysticaState = {
 const getters: GetterTree<TerraMysticaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"]("terraMystica");
+    const elos = rootGetters["user/getElos"](GameName.TERRA_MYSTICA);
 
     const allTimeEntries = getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),

@@ -334,9 +334,6 @@ export default class Arknova extends Vue {
   @Getter("getGamesLoaded", { namespace: "arkNova" })
   gamesLoaded!: boolean;
 
-  @Getter("getAllGames", { namespace: "arkNova" })
-  allGames!: ArkNovaGame[];
-
   @Getter("getTimePlayed", { namespace: "arkNova" }) avgTime!: string;
   @Getter("getSeason", { namespace: "arkNova" }) currentSeason!: number;
 
@@ -383,6 +380,7 @@ export default class Arknova extends Vue {
   @Action("setLoading", { namespace: "arkNova" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "arkNova" })
   toggleScoringType: any;
+  @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
 
   newGameActive = false;
   players: ArkNovaPlayer[] | any[] = [];
@@ -526,6 +524,7 @@ export default class Arknova extends Vue {
           collection: GameCollection.ARK_NOVA,
         };
         this.fetchGames(payload);
+        this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

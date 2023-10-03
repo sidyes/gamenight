@@ -96,7 +96,7 @@ const getters: GetterTree<ArkNovaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"]("arkNova");
+    const elos = rootGetters["user/getElos"](GameName.ARK_NOVA);
 
     const allTimeEntries = getAllTimeTable(
       getGamesForSeason(state.selectedSeason, state.games),
@@ -212,7 +212,6 @@ const getters: GetterTree<ArkNovaState, any> = {
     return seasons;
   },
   getSelectedSeason: (state) => state.selectedSeason,
-  getAllGames: (state) => state.games,
 };
 
 const mutations: MutationTree<ArkNovaState> = {
