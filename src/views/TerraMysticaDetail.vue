@@ -125,7 +125,12 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
-import { Member, MarcoPoloGame, TerraMysticaGame } from "@/models";
+import {
+  Member,
+  MarcoPoloGame,
+  TerraMysticaGame,
+  GameCollection,
+} from "@/models";
 
 import * as _ from "lodash";
 
@@ -156,7 +161,11 @@ export default class TerraMysticaDetail extends Vue {
 
   public created(): void {
     if (!this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.TERRA_MYSTICA,
+      };
+      this.fetchGames(payload);
     }
   }
 

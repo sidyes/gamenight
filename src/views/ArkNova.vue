@@ -309,8 +309,9 @@ import {
   ResultTableEntry,
   Series,
   GameName,
+  CreateGameRequestModel,
+  GameCollection,
 } from "@/models";
-import { calculateElo } from "@/utils/elo-calculation";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
 const axios = require("axios");
@@ -378,7 +379,6 @@ export default class Arknova extends Vue {
   isNewScoringType!: boolean;
 
   @Action("setSeason", { namespace: "arkNova" }) setSeason: any;
-  @Action("setElos", { namespace: "user" }) setElos: any;
   @Action("fetchGames", { namespace: "arkNova" }) fetchGames: any;
   @Action("setLoading", { namespace: "arkNova" }) setLoading: any;
   @Action("toggleScoringType", { namespace: "arkNova" })
@@ -393,7 +393,11 @@ export default class Arknova extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.ARK_NOVA,
+      };
+      this.fetchGames(payload);
     }
   }
 
@@ -503,18 +507,25 @@ export default class Arknova extends Vue {
       this.currentSeason,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.ARK_NOVA,
+      GameName.ARK_NOVA
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/ark-nova-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        // calculate new elos
-        const elos = calculateElo(game, this.allGames);
-        this.setElos({ elos, game: GameName.ARK_NOVA });
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.ARK_NOVA,
+        };
+        this.fetchGames(payload);
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

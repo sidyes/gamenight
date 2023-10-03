@@ -329,6 +329,9 @@ import {
   AverageScores,
   Series,
   StackedColumChartData,
+  CreateGameRequestModel,
+  GameCollection,
+  GameName,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -417,7 +420,11 @@ export default class TerraMystica extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.TERRA_MYSTICA,
+      };
+      this.fetchGames(payload);
     }
   }
 
@@ -516,16 +523,26 @@ export default class TerraMystica extends Vue {
       this.map,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.TERRA_MYSTICA,
+      GameName.TERRA_MYSTICA
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/terra-mystica-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
         this.map = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.TERRA_MYSTICA,
+        };
+        this.fetchGames(payload);
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

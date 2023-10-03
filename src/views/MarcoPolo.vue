@@ -272,6 +272,9 @@ import {
   WinDistribution,
   ResultTableEntry,
   AverageScores,
+  CreateGameRequestModel,
+  GameCollection,
+  GameName,
 } from "@/models";
 
 const axios = require("axios");
@@ -364,7 +367,11 @@ export default class MarcoPolo extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.MARCO_POLO,
+      };
+      this.fetchGames(payload);
     }
   }
 
@@ -389,15 +396,25 @@ export default class MarcoPolo extends Vue {
       this.currentSeason,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.MARCO_POLO,
+      GameName.MARCO_POLO
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/marco-polo-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.MARCO_POLO,
+        };
+        this.fetchGames(payload);
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

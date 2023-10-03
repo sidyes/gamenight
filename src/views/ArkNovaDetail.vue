@@ -133,7 +133,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { Action, Getter } from "vuex-class";
-import { Member, ArkNovaGame } from "@/models";
+import { Member, ArkNovaGame, GameCollection } from "@/models";
 
 import { getTimePlayed } from "@/store/shared";
 
@@ -167,7 +167,11 @@ export default class ArkNovaDetail extends Vue {
 
   public created(): void {
     if (!this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.ARK_NOVA,
+      };
+      this.fetchGames(payload);
     }
   }
 

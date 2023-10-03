@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 });
 
 exports.handler = async function (event, _context) {
-  console.log("Function `marco-polo-read` invoked");
+  console.log("Function `game-read` invoked");
 
   const params = event.queryStringParameters;
 
@@ -19,7 +19,7 @@ exports.handler = async function (event, _context) {
   return client
     .query(
       q.Map(
-        q.Paginate(q.Match(q.Index("my-marco-polo"), user.email)),
+        q.Paginate(q.Match(q.Index(`my-${params.collection}`), user.email)),
         q.Lambda("X", q.Get(q.Var("X")))
       )
     )

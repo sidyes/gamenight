@@ -283,6 +283,9 @@ import {
   ResultTableEntry,
   Series,
   StackedColumChartData,
+  CreateGameRequestModel,
+  GameCollection,
+  GameName,
 } from "@/models";
 import { ADD_TOAST_MESSAGE } from "vuex-toast";
 
@@ -348,7 +351,11 @@ export default class Wingspan extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      this.fetchGames(this.user);
+      const payload = {
+        ...this.user,
+        collection: GameCollection.WINGSPAN,
+      };
+      this.fetchGames(payload);
     }
   }
 
@@ -446,15 +453,25 @@ export default class Wingspan extends Vue {
       this.currentSeason,
       this.timePlayed
     );
+    const request = new CreateGameRequestModel(
+      game,
+      GameCollection.WINGSPAN,
+      GameName.WINGSPAN
+    );
+
     this.setLoading(true);
     axios
-      .post("/.netlify/functions/wingspan-create", game)
+      .post("/.netlify/functions/game-create", request)
       .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        this.fetchGames(this.user);
+        const payload = {
+          ...this.user,
+          collection: GameCollection.WINGSPAN,
+        };
+        this.fetchGames(payload);
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {
           text: "Spiel gespeichert! 🥳",

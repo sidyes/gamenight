@@ -100,22 +100,6 @@ const actions: ActionTree<UserState, any> = {
   removeFriend: ({ commit }, payload) => {
     commit("removeFriend", payload);
   },
-  setElos: ({ commit, state }, payload) => {
-    const updatedMembers = state.allPlayers.map((member) => {
-      return {
-        ...member,
-        elo: {
-          ...member.elo,
-          [payload.game]: payload.elos.find(
-            (elo: PlayerElo) => elo.email === member.email
-          )?.elo,
-        },
-      };
-    });
-    axios
-      .post(".netlify/functions/members-update", updatedMembers)
-      .then((_response: any) => commit("setAllPlayers", updatedMembers));
-  },
 };
 
 export const user = {
