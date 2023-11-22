@@ -109,7 +109,6 @@ export default class NewGameModal extends Vue {
 
   @Watch("players", { immediate: true, deep: true })
   onPlayersInputChange(newVal: Member[]) {
-    console.log(newVal)
     if (newVal) {
       this.locationOptions = [
         ...newVal.map((member) => member.username),
