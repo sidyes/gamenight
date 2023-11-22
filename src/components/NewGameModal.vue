@@ -36,11 +36,11 @@
                 <div class="select" @change="locationChanged($event)">
                   <select v-model="selectedLocation">
                     <option
-                      v-for="mem in players"
-                      :value="mem.username"
-                      v-bind:key="mem.username"
+                      v-for="loc in locationOptions"
+                      :value="loc"
+                      v-bind:key="loc"
                     >
-                      {{ mem.username }}
+                      {{ loc }}
                     </option>
                   </select>
                 </div>
@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import { Member } from "@/models";
-import { Component, Vue, Emit, Prop } from "vue-property-decorator";
+import { Component, Vue, Emit, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class NewGameModal extends Vue {
@@ -104,6 +104,19 @@ export default class NewGameModal extends Vue {
 
   selectedNrOfPlayers = "4";
   selectedLocation = "";
+
+  locationOptions: string[] = [];
+
+  @Watch("players", { immediate: true, deep: true })
+  onPlayersInputChange(newVal: Member[]) {
+    console.log(newVal)
+    if (newVal) {
+      this.locationOptions = [
+        ...newVal.map((member) => member.username),
+        "BGA",
+      ];
+    }
+  }
 
   @Emit() playersChanged(event: any): number {
     return event.target.value;
