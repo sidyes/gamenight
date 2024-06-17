@@ -524,7 +524,7 @@ export default class TerraMystica extends Vue {
       this.players,
       Date.now(),
       this.location,
-      this.currentSeason,
+      this.players.length === 4 ? this.currentSeason : -1, // -1 season to count also games not part of a season
       this.map,
       this.timePlayed
     );

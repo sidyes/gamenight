@@ -11,7 +11,6 @@ import {
   Player,
   CharacterTableEntry,
   PlayerElo,
-  GameName,
 } from "@/models";
 
 export const getAllTimeTable = (
@@ -62,6 +61,11 @@ export const getAllTimeTable = (
   });
 
   allTimeEntries.sort(compareAllTimeTableEntries);
+
+  // add elo to playerName
+  allTimeEntries.forEach((entry) => {
+    entry.username = `${entry.username} (⭐${entry.elo})`;
+  });
 
   return allTimeEntries;
 };
@@ -203,7 +207,7 @@ export const getTimePlayed = (games: Game[]) => {
   const hours = Math.floor(averageTime / 60);
   const minutes = averageTime % 60;
 
-  return `${hours}h ${minutes}min`;
+  return `${hours}h ${Math.round(minutes)}min`;
 };
 
 export const getSummary = (headings: string[], games: Game[], user: Member) => {

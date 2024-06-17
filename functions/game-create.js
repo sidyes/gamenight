@@ -55,7 +55,13 @@ exports.handler = async function (event, _context) {
       };
     });
 
-  for (let i = 0; i < allPlayers.length; i++) {
+  const mailAddresses = game.players.map((player) => player.user.email);
+
+  const activePlayers = allPlayers.filter(p => {
+    return mailAddresses.includes(p.email)
+  });
+
+  for (let i = 0; i < activePlayers.length; i++) {
     const player = allPlayers[i];
     player.elo[gameName] = calculatedElos.find(
       (playerWithElo) => playerWithElo.email === player.email
@@ -65,7 +71,7 @@ exports.handler = async function (event, _context) {
   // update all players remotely
   await axios.post(
     `${process.env.URL}/.netlify/functions/members-update`,
-    allPlayers
+    activePlayers
   );
 
   return client
