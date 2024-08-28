@@ -57,12 +57,12 @@ exports.handler = async function (event, _context) {
 
   const mailAddresses = game.players.map((player) => player.user.email);
 
-  const activePlayers = allPlayers.filter(p => {
-    return mailAddresses.includes(p.email)
+  const activePlayers = allPlayers.filter((p) => {
+    return mailAddresses.includes(p.email);
   });
 
   for (let i = 0; i < activePlayers.length; i++) {
-    const player = allPlayers[i];
+    const player = activePlayers[i];
     player.elo[gameName] = calculatedElos.find(
       (playerWithElo) => playerWithElo.email === player.email
     ).elo;
