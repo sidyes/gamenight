@@ -1,42 +1,18 @@
-const faunadb = require("faunadb"); /* Import faunaDB sdk */
+const { createClient } = require("@supabase/supabase-js");
 
-/* configure faunaDB Client */
-const q = faunadb.query;
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET,
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET
+);
 
-exports.handler = async function (event, _context) {
+exports.handler = async function (_event, _context) {
   console.log("Function `members-read` invoked");
 
-  const params = event.queryStringParameters;
 
-  const user = {
-    username: params.username,
-    email: params.email,
+  let { data, error } = await supabase.from("member").select(`*, elo:elo(*)`);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(data),
   };
-
-  return client
-    .query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection("members"))),
-        q.Lambda((x) => q.Get(x))
-      )
-    )
-    .then((response) => {
-      const items = {
-        items: response.data.map((entry) => entry.data),
-      };
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify(items),
-      };
-    })
-    .catch((error) => {
-      return {
-        statusCode: 404,
-        body: JSON.stringify(error),
-      };
-    });
 };

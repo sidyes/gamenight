@@ -16,7 +16,6 @@ export * from "./game.model";
 export * from "./player.model";
 export * from "./ark-nova.model";
 export * from "./challengers.model";
-export * from "./player-elo.model";
 export * from "./game-name.enum";
 export * from "./create-game-request.model";
 export * from "./game-collection.enum";

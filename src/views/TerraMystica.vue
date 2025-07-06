@@ -424,11 +424,7 @@ export default class TerraMystica extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.TERRA_MYSTICA,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.TERRA_MYSTICA });
     }
   }
 
@@ -537,17 +533,13 @@ export default class TerraMystica extends Vue {
     this.setLoading(true);
     axios
       .post("/.netlify/functions/game-create", request)
-      .then((response: any) => {
+      .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
         this.map = "";
 
-        const payload = {
-          ...this.user,
-          collection: GameCollection.TERRA_MYSTICA,
-        };
-        this.fetchGames(payload);
+        this.fetchGames({ game: GameCollection.TERRA_MYSTICA });
         this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {

@@ -391,11 +391,7 @@ export default class Arknova extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.ARK_NOVA,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.ARK_NOVA });
     }
   }
 
@@ -417,7 +413,7 @@ export default class Arknova extends Vue {
     this.players = [];
     for (let i = 0; i < nr; i++) {
       const player = {
-        user: undefined,
+        user: undefined, // member object
         placement: undefined,
         points: undefined,
         appealPoints: undefined,
@@ -519,11 +515,7 @@ export default class Arknova extends Vue {
         this.players = [];
         this.location = "";
 
-        const payload = {
-          ...this.user,
-          collection: GameCollection.ARK_NOVA,
-        };
-        this.fetchGames(payload);
+        this.fetchGames({ game: GameCollection.ARK_NOVA });
         this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {

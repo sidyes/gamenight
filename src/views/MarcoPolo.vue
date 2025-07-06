@@ -371,11 +371,7 @@ export default class MarcoPolo extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.MARCO_POLO,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.MARCO_POLO });
     }
   }
 
@@ -410,16 +406,12 @@ export default class MarcoPolo extends Vue {
     this.setLoading(true);
     axios
       .post("/.netlify/functions/game-create", request)
-      .then((response: any) => {
+      .then((_response: any) => {
         this.newGameActive = false;
         this.players = [];
         this.location = "";
 
-        const payload = {
-          ...this.user,
-          collection: GameCollection.MARCO_POLO,
-        };
-        this.fetchGames(payload);
+        this.fetchGames({ game: GameCollection.MARCO_POLO });
         this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {

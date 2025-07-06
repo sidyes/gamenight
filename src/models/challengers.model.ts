@@ -1,10 +1,10 @@
 import { Player } from "./player.model";
 import { Game } from "./game.model";
-import { PlayerElo } from "./player-elo.model";
 export class ChallengersPlayer implements Player {
   constructor(
-    public user: PlayerElo,
+    public username: string,
     public placement: number,
+    public elo: number,
     public points: number, // === fans
     public trophies: number
   ) {}

@@ -161,11 +161,7 @@ export default class TerraMysticaDetail extends Vue {
 
   public created(): void {
     if (!this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.TERRA_MYSTICA,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.TERRA_MYSTICA });
     }
   }
 

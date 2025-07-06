@@ -69,7 +69,7 @@ const state: MarcoPoloState = {
     new TableHeading("Siegquote (%)", "winrate"),
     new TableHeading("Erspielte Punkte (Ø pro Spiel)", "points"),
   ],
-  summaryHeadings: ["Elo","Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
+  summaryHeadings: ["Elo", "Spiele", "Siege", "Siegquote (%)", "Ø Punkte"],
   gameScoresHeadings: [
     "Top Score",
     "Highest Losing Score",
@@ -108,11 +108,14 @@ const state: MarcoPoloState = {
 const getters: GetterTree<MarcoPoloState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"](GameName.MARCO_POLO);
+    const allPlayers = rootGetters["user/getPlayers"]();
+
     return getAllTimeTable(
-      getGamesForSeason(state.selectedSeason, state.games),
+      state.season,
+      state.games,
       state.newScoringType,
-      elos
+      allPlayers,
+      GameName.MARCO_POLO
     );
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
@@ -131,13 +134,13 @@ const getters: GetterTree<MarcoPoloState, any> = {
         });
         const players = copiedPlayers
           .map((user) =>
-            user.user ? `${user.user.username} (${user.startPosition})` : ""
+            user ? `${user.username} (${user.startPosition})` : ""
           )
           .join(", ");
         const location = game.location;
         const playerWon = game.players.find((pl) => pl.placement === 1);
         const winner = playerWon
-          ? `${playerWon.user.username} (${playerWon.points})`
+          ? `${playerWon.username} (${playerWon.points})`
           : "-";
 
         const avg = (
@@ -218,7 +221,7 @@ const getters: GetterTree<MarcoPoloState, any> = {
       .map((game) => game as MarcoPoloGame)
       .map((game) => {
         game.players.forEach((player) => {
-          if (player.user.username === user.username) {
+          if (player.username === user.username) {
             const elem = characterTableEntries.find(
               (entry) => entry.character === player.character
             );
@@ -269,7 +272,8 @@ const getters: GetterTree<MarcoPoloState, any> = {
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      userWithElo
+      userWithElo,
+      GameName.MARCO_POLO
     );
   },
   getCharacters: (state) => state.characters,
@@ -368,7 +372,7 @@ const actions: ActionTree<MarcoPoloState, any> = {
     axios
       .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
-        commit("setGames", response.data.items);
+        commit("setGames", response.data);
       })
       .finally(() => {
         commit("setLoadingStatus", false);

@@ -1,6 +1,6 @@
-const getKFactor = (games, email) => {
+const getKFactor = (games, username) => {
   const nrOfGames = games.filter((game) =>
-    game.players.some((player) => player.user.email === email)
+    game.players.some((player) => player.player === username)
   ).length;
 
   if (nrOfGames <= 5) {
@@ -13,12 +13,16 @@ const getKFactor = (games, email) => {
 exports.handler = async function (event, _context) {
   const data = JSON.parse(event.body);
 
+
   const game = data.game;
   const allGames = data.allGames;
 
   const result = [];
 
   game.players.forEach((player) => {
+    console.log(
+      `Calculating ELO for player: ${player.user.username} (${player.user.email})`, player
+    );
     const currentElo = +player.user.elo;
 
     let totalChanceOfWinning = 0;

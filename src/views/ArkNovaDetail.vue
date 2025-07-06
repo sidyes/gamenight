@@ -69,7 +69,7 @@
                 </div>
                 <div class="column is-half has-text-centered">
                   <h2 class="title is-6 has-text-white">
-                    {{ player.user.username }}
+                    {{ player.username }}
                   </h2>
                   <p class="has-text-white is-size-7">
                     Gesamt<br />
@@ -167,11 +167,7 @@ export default class ArkNovaDetail extends Vue {
 
   public created(): void {
     if (!this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.ARK_NOVA,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.ARK_NOVA });
     }
   }
 

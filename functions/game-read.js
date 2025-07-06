@@ -1,42 +1,21 @@
-const faunadb = require("faunadb"); /* Import faunaDB sdk */
+const { createClient } = require("@supabase/supabase-js");
 
-/* configure faunaDB Client */
-const q = faunadb.query;
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET,
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET
+);
 
 exports.handler = async function (event, _context) {
-  console.log("Function `game-read` invoked");
-
   const params = event.queryStringParameters;
+  console.log("Function `game-read` invoked", params.game);
 
-  const user = {
-    username: params.username,
-    email: params.email,
+  let { data, error } = await supabase.from(params.game).select(`
+    *,
+    players:${params.game}-player-result(*, username:player)
+`);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(data),
   };
-
-  return client
-    .query(
-      q.Map(
-        q.Paginate(q.Match(q.Index(`my-${params.collection}`), user.email)),
-        q.Lambda("X", q.Get(q.Var("X")))
-      )
-    )
-    .then((response) => {
-      const items = {
-        items: response.data.map((entry) => entry.data),
-      };
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify(items),
-      };
-    })
-    .catch((error) => {
-      return {
-        statusCode: 404,
-        body: JSON.stringify(error),
-      };
-    });
 };

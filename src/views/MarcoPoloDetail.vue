@@ -125,11 +125,7 @@ export default class MarcoPoloDetail extends Vue {
 
   public created(): void {
     if (!this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.MARCO_POLO,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.MARCO_POLO });
     }
   }
 

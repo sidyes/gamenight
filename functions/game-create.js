@@ -1,95 +1,167 @@
-const faunadb = require("faunadb"); /* Import faunaDB sdk */
+const { createClient } = require("@supabase/supabase-js");
 const axios = require("axios");
 
-/* configure faunaDB Client */
-const q = faunadb.query;
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET,
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET
+);
 
 exports.handler = async function (event, _context) {
+  console.log("📨 Received event:", event.body);
+
   const data = JSON.parse(event.body);
-  const game = data.game;
+  const game = {
+    ...data.game,
+    players: data.game.players.map((p) => ({
+      ...p,
+      user: { ...p.user, elo: p.user.elo[data.gameName] },
+    })),
+  };
   const collection = data.collection;
   const gameName = data.gameName;
-  console.log("Function `create-game` invoked", data);
 
-  // get all games
-  let allGames = await client
-    .query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection(collection))),
-        q.Lambda((x) => q.Get(x))
-      )
+  const resultTable = `${collection}-player-result`;
+
+  // Step 1: Fetch all past games for this game type
+  const { data: allGames, error: gameFetchError } = await supabase
+    .from(collection)
+    .select(
+      `
+      *,
+      players:${resultTable}(*)
+    `
     )
-    .then((response) => response.data.map((entry) => entry.data))
-    .catch((error) => {
-      return {
-        statusCode: 500,
-        body: JSON.stringify(error),
-      };
-    });
+    .order("id", { ascending: true });
 
-  // calculate new elo for incoming game
-  const calculatedElos = await axios
-    .post(`${process.env.URL}/.netlify/functions/calculate-elo`, {
-      game,
-      allGames,
-      gameName,
-    })
-    .then((response) => response.data)
-    .catch((error) => {
-      return {
-        statusCode: 500,
-        body: JSON.stringify(error),
-      };
-    });
+  if (gameFetchError) {
+    console.error("❌ Error fetching past games:", gameFetchError);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(gameFetchError),
+    };
+  }
+  console.log(`✅ Retrieved ${allGames.length} past games for ELO calculation`);
 
-  const allPlayers = await axios
-    .get(`${process.env.URL}/.netlify/functions/members-read`)
-    .then((response) => response.data.items)
-    .catch((error) => {
-      return {
-        statusCode: 500,
-        body: JSON.stringify(error),
-      };
-    });
-
-  const mailAddresses = game.players.map((player) => player.user.email);
-
-  const activePlayers = allPlayers.filter((p) => {
-    return mailAddresses.includes(p.email);
-  });
-
-  for (let i = 0; i < activePlayers.length; i++) {
-    const player = activePlayers[i];
-    player.elo[gameName] = calculatedElos.find(
-      (playerWithElo) => playerWithElo.email === player.email
-    ).elo;
+  // Step 2: Call elo calculation function
+  let calculatedElos;
+  try {
+    const response = await axios.post(
+      `${process.env.URL}/.netlify/functions/calculate-elo`,
+      {
+        game,
+        allGames,
+      }
+    );
+    calculatedElos = response.data;
+  } catch (err) {
+    console.error("❌ Error calling calculate-elo function:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(err),
+    };
   }
 
-  // update all players remotely
-  await axios.post(
-    `${process.env.URL}/.netlify/functions/members-update`,
-    activePlayers
+  // Step 3: Fetch all member data
+  const { data: allPlayers, error: membersError } = await supabase
+    .from("member")
+    .select("*");
+
+  if (membersError) {
+    console.error("❌ Error fetching members:", membersError);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(membersError),
+    };
+  }
+  console.log(`👥 Retrieved ${allPlayers.length} members`);
+
+  const emails = game.players.map((p) => p.user.email);
+  const activePlayers = allPlayers.filter((p) => emails.includes(p.email));
+  console.log(
+    "🎯 Matched active players by email:",
+    activePlayers.map((p) => p.username)
   );
 
-  return client
-    .query(q.Create(q.Collection(collection), { data: game }))
-    .then((response) => {
-      console.log("success", response);
+  // Step 4: Update ELO ratings
+  for (let player of activePlayers) {
+    const updatedElo = calculatedElos.find(
+      (e) => e.email === player.email
+    )?.elo;
+    if (updatedElo !== undefined) {
+      console.log(`🔄 Updating ELO for ${player.username}: ${updatedElo}`);
+      const { error: updateEloError } = await supabase
+        .from("elo")
+        .update({ [gameName]: updatedElo })
+        .eq("player", player.username);
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify(response),
-      };
+      if (updateEloError) {
+        console.error(
+          `❌ Failed to update ELO for ${player.username}:`,
+          updateEloError
+        );
+      } else {
+        console.log(`✅ Updated ELO for ${player.username}: ${updatedElo}`);
+      }
+    }
+  }
+
+  // Step 5: Insert new game
+  const { data: insertedGame, error: insertGameError } = await supabase
+    .from(collection)
+    .insert({
+      location: game.location,
+      season: game.season,
+      time: game.time,
+      timePlayed: game.timePlayed,
     })
-    .catch((error) => {
-      console.log("error", error);
+    .select("id")
+    .single();
 
-      return {
-        statusCode: 400,
-        body: JSON.stringify(error),
-      };
-    });
+  if (insertGameError) {
+    console.error("❌ Error inserting game:", insertGameError);
+    return {
+      statusCode: 400,
+      body: JSON.stringify(insertGameError),
+    };
+  }
+  console.log("✅ Inserted new game with ID:", insertedGame.id);
+
+  // Step 6: Insert player results
+  const playerResults = game.players.map((p) => {
+    const result = {
+      player: p.user.username,
+      placement: p.placement,
+      points: p.points,
+      appealPoints: p.appealPoints,
+      conservationPoints: p.conservationPoints,
+      startPosition: p.startPosition,
+      zooMap: p.zooMap,
+      game: insertedGame.id,
+      appealPointsCompare: p.appealPointsCompare,
+      elo: calculatedElos.find((e) => e.email === p.user.email)?.elo || null,
+    };
+    console.log(`📝 Prepared result for ${result.player}:`, result);
+    return result;
+  });
+
+  const { error: insertResultsError } = await supabase
+    .from(resultTable)
+    .insert(playerResults);
+
+  if (insertResultsError) {
+    console.error("❌ Error inserting player results:", insertResultsError);
+    return {
+      statusCode: 400,
+      body: JSON.stringify(insertResultsError),
+    };
+  }
+
+  console.log(
+    `✅ Successfully inserted ${playerResults.length} player results`
+  );
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ success: true, gameId: insertedGame.id }),
+  };
 };
