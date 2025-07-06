@@ -19,7 +19,6 @@ export const getAllTimeTable = (
   players: Member[],
   gameName: string
 ) => {
-  console.log(season)
   return getAllTimeTableEntries(
     getGamesForSeason(season, games),
     newScoringType,
