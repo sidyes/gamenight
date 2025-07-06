@@ -7,12 +7,13 @@
 
 ## What is game-night
 
-It is web app that allows to track board game results. It is possible to create new events shown on the homescreen, create new seasons for each game, add friends, and see stats for almost anything for the dedicated game.
+It is web app that allows to track board game results. It is possible to create new events shown on the homescreen, create new seasons for each game, and see stats for almost anything for the dedicated game.
 Currently, the following games are supported:
 
 - Terra Mystica
 - Marco Polo
 - Wingspan
+- Ark Nova
 
 Since it is only used privately, registrations are not permitted.
 Feel free to clone this project and use it for yourself.
@@ -22,7 +23,8 @@ Feel free to clone this project and use it for yourself.
 npm install
 npm install -g netlify-cli
 netlify link (choose your site on netlify)
-SET FAUNADB_SERVER_SECRET=XXX
+SET SUPABASE_URL=XXX
+SET SUPABASE_SECRET=XXX
 ```
 
 

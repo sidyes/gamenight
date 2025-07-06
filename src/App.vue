@@ -22,14 +22,12 @@ import netlifyIdentity from "netlify-identity-widget";
 import { Member } from "./models";
 import { Toast } from "vuex-toast";
 
-const axios = require("axios");
 
 @Component({
   components: { Header, Footer, Toast },
   name: "App",
 })
 export default class App extends Vue {
-  @Action("fetchFriends", { namespace: "user" }) fetchFriends: any;
   @Action("fetchAllPlayers", { namespace: "user" }) fetchAllPlayers: any;
   @Action("updateUser", { namespace: "user" }) updateUser: any;
   @Action("clearStore") clearStore: any;
@@ -55,15 +53,6 @@ export default class App extends Vue {
         currentUser: this.currentUser,
       });
 
-      const member = {
-        username: this.currentUser.username,
-        email: this.currentUser.email,
-      };
-
-      axios.post("/.netlify/functions/members-create", member).then(() => {
-        // eslint-disable-next-line no-console
-        console.log("Member added", member);
-      });
       netlifyIdentity.close();
     });
   }
@@ -71,7 +60,6 @@ export default class App extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal) {
-      this.fetchFriends(this.user);
       this.fetchAllPlayers();
     }
   }

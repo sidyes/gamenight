@@ -16,8 +16,8 @@ import {
   Series,
   StackedColumChartData,
   ChallengersGame,
-  GameName,
   Member,
+  GameName,
 } from "@/models";
 
 const axios = require("axios");
@@ -70,8 +70,15 @@ const getters: GetterTree<ChallengersState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"](GameName.CHALLENGERS);
-    return getAllTimeTable(state.games, state.newScoringType, elos);
+    const allPlayers = rootGetters["user/getPlayers"]();
+
+    return getAllTimeTable(
+      state.season,
+      state.games,
+      state.newScoringType,
+      allPlayers,
+      GameName.CHALLENGERS
+    );
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
@@ -82,7 +89,12 @@ const getters: GetterTree<ChallengersState, any> = {
     const userWithElo =
       allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
-    return getSummary(state.summaryHeadings, state.games, userWithElo);
+    return getSummary(
+      state.summaryHeadings,
+      state.games,
+      userWithElo,
+      GameName.CHALLENGERS
+    );
   },
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),
@@ -96,10 +108,10 @@ const getters: GetterTree<ChallengersState, any> = {
 
     state.games.forEach((game) => {
       game.players.forEach((player) => {
-        const idx = players.indexOf(player.user.username);
+        const idx = players.indexOf(player.username);
 
         if (idx === -1) {
-          players.push(player.user.username);
+          players.push(player.username);
           games.push(1);
           fans.data.push(player.points.toString());
           trophies.data.push(player.trophies.toString());
@@ -159,7 +171,7 @@ const actions: ActionTree<ChallengersState, any> = {
     axios
       .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
-        commit("setGames", response.data.items);
+        commit("setGames", response.data);
       })
       .finally(() => {
         commit("setLoadingStatus", false);

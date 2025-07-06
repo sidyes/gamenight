@@ -302,11 +302,7 @@ export default class Challengers extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.CHALLENGERS,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.CHALLENGERS });
     }
   }
 
@@ -389,11 +385,7 @@ export default class Challengers extends Vue {
         this.players = [];
         this.location = "";
 
-        const payload = {
-          ...this.user,
-          collection: GameCollection.CHALLENGERS,
-        };
-        this.fetchGames(payload);
+        this.fetchGames({ game: GameCollection.CHALLENGERS });
         this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {

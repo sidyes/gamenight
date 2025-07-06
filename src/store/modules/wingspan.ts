@@ -70,9 +70,15 @@ const getters: GetterTree<WingspanState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"](GameName.WINGSPAN);
+    const allPlayers = rootGetters["user/getPlayers"]();
 
-    return getAllTimeTable(state.games, state.newScoringType, elos);
+    return getAllTimeTable(
+      state.season,
+      state.games,
+      state.newScoringType,
+      allPlayers,
+      GameName.WINGSPAN
+    );
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
@@ -82,7 +88,12 @@ const getters: GetterTree<WingspanState, any> = {
     const userWithElo =
       allPlayers?.find((pl: Member) => pl.email === user.email) || user;
 
-    return getSummary(state.summaryHeadings, state.games, userWithElo);
+    return getSummary(
+      state.summaryHeadings,
+      state.games,
+      userWithElo,
+      GameName.WINGSPAN
+    );
   },
   getGameScores: (state): GameScoreItem[] =>
     getGameScores(state.gameScoresHeadings, state.games),
@@ -100,10 +111,10 @@ const getters: GetterTree<WingspanState, any> = {
 
     state.games.forEach((game) => {
       game.players.forEach((player) => {
-        const idx = players.indexOf(player.user.username);
+        const idx = players.indexOf(player.username);
 
         if (idx === -1) {
-          players.push(player.user.username);
+          players.push(player.username);
           games.push(1);
           birds.data.push(player.birds.toString());
           bonusCards.data.push(player.bonusCards.toString());
@@ -195,7 +206,7 @@ const actions: ActionTree<WingspanState, any> = {
     axios
       .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
-        commit("setGames", response.data.items);
+        commit("setGames", response.data);
       })
       .finally(() => {
         commit("setLoadingStatus", false);

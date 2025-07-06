@@ -1,8 +1,7 @@
-import { PlayerElo } from "./player-elo.model";
-
 // Base class for all specific game players
 export interface Player {
-  user: PlayerElo;
+  username: string;
   placement: number;
   points: number;
+  elo: number;
 }

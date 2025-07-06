@@ -119,15 +119,15 @@ const state: TerraMysticaState = {
 const getters: GetterTree<TerraMysticaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"](GameName.TERRA_MYSTICA);
+    const allPlayers = rootGetters["user/getPlayers"]();
 
-    const allTimeEntries = getAllTimeTable(
-      getGamesForSeason(state.selectedSeason, state.games),
+    return getAllTimeTable(
+      state.season,
+      state.games,
       state.newScoringType,
-      elos
+      allPlayers,
+      GameName.TERRA_MYSTICA
     );
-
-    return allTimeEntries;
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getTimePlayed: (state) => getTimePlayed(state.games),
@@ -194,7 +194,7 @@ const getters: GetterTree<TerraMysticaState, any> = {
       .map((game) => game as TerraMysticaGame)
       .map((game) => {
         game.players.forEach((player) => {
-          if (player.user.username === user.username) {
+          if (player.username === user.username) {
             const elem = characterTableEntries.find(
               (entry) => entry.character === player.faction
             );
@@ -245,7 +245,8 @@ const getters: GetterTree<TerraMysticaState, any> = {
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      userWithElo
+      userWithElo,
+      GameName.TERRA_MYSTICA
     );
   },
   getFactions: (state) => state.factions,
@@ -274,10 +275,10 @@ const getters: GetterTree<TerraMysticaState, any> = {
       .map((game) => game as TerraMysticaGame)
       .forEach((game) => {
         game.players.forEach((player) => {
-          const idx = players.indexOf(player.user.username);
+          const idx = players.indexOf(player.username);
 
           if (idx === -1) {
-            players.push(player.user.username);
+            players.push(player.username);
             games.push(1);
             points.data.push(player.gamePoints.toString());
             area.data.push(player.area.toString());
@@ -376,7 +377,7 @@ const actions: ActionTree<TerraMysticaState, any> = {
     axios
       .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
-        commit("setGames", response.data.items);
+        commit("setGames", response.data);
       })
       .finally(() => {
         commit("setLoadingStatus", false);

@@ -355,11 +355,7 @@ export default class Wingspan extends Vue {
   @Watch("isLoggedIn", { immediate: true, deep: true })
   onIsLoggedInChange(newVal: boolean) {
     if (newVal && !this.gamesLoaded) {
-      const payload = {
-        ...this.user,
-        collection: GameCollection.WINGSPAN,
-      };
-      this.fetchGames(payload);
+      this.fetchGames({ game: GameCollection.WINGSPAN });
     }
   }
 
@@ -472,11 +468,7 @@ export default class Wingspan extends Vue {
         this.players = [];
         this.location = "";
 
-        const payload = {
-          ...this.user,
-          collection: GameCollection.WINGSPAN,
-        };
-        this.fetchGames(payload);
+        this.fetchGames({ game: GameCollection.WINGSPAN });
         this.fetchAllPlayers();
 
         this.$store.dispatch(ADD_TOAST_MESSAGE, {

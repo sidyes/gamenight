@@ -1,7 +1,8 @@
 import { Player } from "./player.model";
 
 // Base class for all games
-export interface Game {
+export type Game = {
+  id?: number;
   players: Player[];
   time: number;
   location: string;

@@ -86,8 +86,8 @@ const state: ArkNovaState = {
     new TableHeading("Gewinner (Punkte)", "winner"),
   ],
   isLoading: false,
-  season: 1,
-  selectedSeason: 1,
+  season: 2,
+  selectedSeason: 2,
   newScoringType: true,
 };
 
@@ -95,20 +95,20 @@ const getters: GetterTree<ArkNovaState, any> = {
   getIsLoading: (state) => state.isLoading,
   getGamesLoaded: (state) => state.gamesLoaded,
   getAllTimeTable: (state, _getters, _rootState, rootGetters) => {
-    const elos = rootGetters["user/getElos"](GameName.ARK_NOVA);
+    const allPlayers = rootGetters["user/getPlayers"]();
 
-    const allTimeEntries = getAllTimeTable(
-      getGamesForSeason(state.selectedSeason, state.games),
+    return getAllTimeTable(
+      state.selectedSeason,
+      state.games,
       state.newScoringType,
-      elos
+      allPlayers,
+      GameName.ARK_NOVA
     );
-
-    return allTimeEntries;
   },
   getAllTimeTableHeadings: (state) => state.allTimeTableHeadings,
   getSummary: (state, _getters, _rootState, rootGetters): GameSummaryItem[] => {
     const user = rootGetters["user/getUser"];
-    const allPlayers = rootGetters["user/getPlayers"](GameName.ARK_NOVA);
+    const allPlayers = rootGetters["user/getPlayers"]();
 
     const userWithElo =
       allPlayers?.find((pl: Member) => pl.email === user.email) || user;
@@ -116,7 +116,8 @@ const getters: GetterTree<ArkNovaState, any> = {
     return getSummary(
       state.summaryHeadings,
       getGamesForSeason(state.selectedSeason, state.games),
-      userWithElo
+      userWithElo,
+      GameName.ARK_NOVA
     );
   },
   getSeason: (state) => state.season,
@@ -242,7 +243,7 @@ const actions: ActionTree<ArkNovaState, any> = {
     axios
       .get("/.netlify/functions/game-read", { params: payload })
       .then((response: any) => {
-        commit("setGames", response.data.items);
+        commit("setGames", response.data);
       })
       .finally(() => {
         commit("setLoadingStatus", false);

@@ -255,18 +255,6 @@ export default class Home extends Vue {
 
   public mounted(): void {
     this.showDice = true;
-
-    this.loadNextEvents();
-  }
-
-  public loadNextEvents(): void {
-    axios.get("/.netlify/functions/game-events-read").then((response: any) => {
-      const evt = response.data.items[response.data.items.length - 1];
-      this.nextEvent = evt.nextEvent;
-      this.nextEventEntered = evt.nextEventEntered;
-      this.nextEventsLoaded = true;
-      this.nextEventInFuture = Date.now() <= this.nextEvent;
-    });
   }
 
   public afterEnter(): void {

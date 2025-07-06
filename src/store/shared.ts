@@ -10,25 +10,43 @@ import {
   Series,
   Player,
   CharacterTableEntry,
-  PlayerElo,
 } from "@/models";
 
 export const getAllTimeTable = (
+  season: number,
+  games: Game[],
+  newScoringType: boolean,
+  players: Member[],
+  gameName: string
+) => {
+  console.log(season)
+  return getAllTimeTableEntries(
+    getGamesForSeason(season, games),
+    newScoringType,
+    players,
+    gameName
+  );
+};
+
+const getAllTimeTableEntries = (
   games: Game[],
   isNewScoringType: boolean,
-  elos: PlayerElo[]
+  players: Member[],
+  gameName: string
 ) => {
   const allTimeEntries: AllTimeTableEntry[] = [];
   games.map((game) => {
     game.players.forEach((player) => {
       let entry = allTimeEntries.find(
-        (elem) => elem.username === player.user.username
+        (elem) => elem.username === player.username
       );
 
       if (!entry) {
         entry = new AllTimeTableEntry(
-          player.user.username,
-          elos.find((p) => p.email === player.user.email)?.elo as number,
+          player.username,
+          players.find((p) => p.username === player.username)?.elo[
+            gameName as keyof Member["elo"]
+          ] as number,
           games.length,
           0,
           0,
@@ -161,12 +179,12 @@ export const getResultTable = (games: Game[]) => {
       const date = new Date(game.time).toDateString();
 
       const players = game.players
-        .map((user) => (user.user ? user.user.username : ""))
+        .map((user) => (user ? user.username : ""))
         .join(", ");
       const location = game.location;
       const playerWon = game.players.find((pl) => pl.placement === 1);
       const winner = playerWon
-        ? `${playerWon.user.username} (${playerWon.points})`
+        ? `${playerWon.username} (${playerWon.points})`
         : "-";
 
       const avg = (
@@ -210,16 +228,25 @@ export const getTimePlayed = (games: Game[]) => {
   return `${hours}h ${Math.round(minutes)}min`;
 };
 
-export const getSummary = (headings: string[], games: Game[], user: Member) => {
-  const elo = new GameSummaryItem(headings[0], `⭐ ${user.elo}`);
-  const game = new GameSummaryItem(headings[1], games.length.toString());
+export const getSummary = (
+  headings: string[],
+  games: Game[],
+  user: Member,
+  game: string
+) => {
+  const elo = new GameSummaryItem(
+    headings[0],
+    `⭐ ${(user.elo && user.elo[game as keyof typeof user.elo]) || "?"}`
+  );
+  const gameStats = new GameSummaryItem(headings[1], games.length.toString());
 
   const wins = new GameSummaryItem(
     headings[2],
     games
       .map((game) => {
         const winner = game.players.find((pl) => pl.placement === 1);
-        return winner ? winner.user.username : "";
+
+        return winner ? winner.username : "";
       })
       .filter((winner) => user && winner === user.username)
       .length.toString()
@@ -234,7 +261,7 @@ export const getSummary = (headings: string[], games: Game[], user: Member) => {
     (games
       .map((game) => {
         const player = game.players.find(
-          (pl) => user && pl.user.email === user.email
+          (pl) => user && pl.username === user.username
         );
         return player ? player.points : 0;
       })
@@ -248,7 +275,7 @@ export const getSummary = (headings: string[], games: Game[], user: Member) => {
     isNaN(+avgPoints) ? "0" : avgPoints
   );
 
-  return [elo, game, wins, winPercentage, avg];
+  return [elo, gameStats, wins, winPercentage, avg];
 };
 
 export const getGameScores = (headings: string[], games: Game[]) => {
@@ -269,7 +296,7 @@ export const getGameScores = (headings: string[], games: Game[]) => {
       // top score
       if (points > topScore.count) {
         topScore.count = points;
-        topScore.player = player.user.username;
+        topScore.player = player.username;
       }
 
       // lowest win score
@@ -278,13 +305,13 @@ export const getGameScores = (headings: string[], games: Game[]) => {
         (points < lowestWinScore.count || lowestWinScore.count === 0)
       ) {
         lowestWinScore.count = points;
-        lowestWinScore.player = player.user.username;
+        lowestWinScore.player = player.username;
       }
 
       // lowest score
       if (points < lowestScore.count || lowestScore.count === 0) {
         lowestScore.count = points;
-        lowestScore.player = player.user.username;
+        lowestScore.player = player.username;
       }
 
       // highest lose score
@@ -292,7 +319,7 @@ export const getGameScores = (headings: string[], games: Game[]) => {
         player.placement === game.players.length &&
         points > highestLosingScore.count
       ) {
-        highestLosingScore.player = player.user.username;
+        highestLosingScore.player = player.username;
         highestLosingScore.count = points;
       }
 
@@ -315,10 +342,10 @@ export const getWinDistributionPlayer = (games: Game[]) => {
 
   games.forEach((game) => {
     game.players.forEach((player) => {
-      let idx = players.indexOf(player.user.username);
+      let idx = players.indexOf(player.username);
 
       if (idx === -1) {
-        players.push(player.user.username);
+        players.push(player.username);
         idx = players.length - 1;
         wins.push(0);
       }
@@ -339,12 +366,12 @@ export const getAverageScores = (games: Game[]) => {
     let gameAverage = 0;
     game.players.forEach((player) => {
       const user = average.players.find(
-        (el) => el.username === player.user.username
+        (el) => el.username === player.username
       );
 
       if (!user) {
         average.players.push({
-          username: player.user.username,
+          username: player.username,
           average: player.points,
           games: 1,
         });

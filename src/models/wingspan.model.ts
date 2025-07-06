@@ -1,9 +1,9 @@
 import { Player } from "./player.model";
 import { Game } from "./game.model";
-import { PlayerElo } from "./player-elo.model";
 export class WingspanPlayer implements Player {
   constructor(
-    public user: PlayerElo,
+    public username: string,
+    public elo: number,
     public placement: number,
     public points: number,
     public birds: number,

@@ -40,6 +40,9 @@
               <router-link to="/ark-nova" class="navbar-item"
                 >Arche Nova</router-link
               >
+              <router-link to="/challengers" class="navbar-item"
+                >Challengers</router-link
+              >
               <router-link to="/wingspan" class="navbar-item"
                 >Flügelschlag</router-link
               >
